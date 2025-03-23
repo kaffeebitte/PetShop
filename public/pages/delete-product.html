@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xóa sản phẩm</title>
+    <link href="../styles/style.css" rel="stylesheet" type="text/css">
+    <style>
+        :root {
+            --primary-color: #00796b;
+            --primary-hover: #004d40;
+            --danger-color: #d32f2f;
+            --danger-hover: #b71c1c;
+            --text-color: #333;
+            --light-gray: #f4f4f4;
+            --border-color: #e0e0e0;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--light-gray);
+            margin: 0;
+            padding: 32px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        form {
+            background: white;
+            padding: 32px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            width: 100%;
+            max-width: 500px;
+            margin-top: 0;
+        }
+
+        form h1 {
+            text-align: center;
+            margin-bottom: 24px;
+            color: var(--text-color);
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 15px;
+        }
+
+        form button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--danger-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+            border-radius: 4px;
+            font-size: 15px;
+        }
+
+        form button:hover {
+            background-color: var(--danger-hover);
+        }
+    </style>
+</head>
+<body>
+    <form id="deleteProductForm">
+        <h1>Xóa sản phẩm</h1>
+        <label for="productId">ID sản phẩm</label>
+        <input type="text" id="productId" name="productId" required>
+        <button type="submit">Xóa sản phẩm</button>
+    </form>
+    <script>
+        document.getElementById('deleteProductForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            alert('Sản phẩm đã được xóa thành công!');
+            this.reset();
+        });
+    </script>
+</body>
+</html>

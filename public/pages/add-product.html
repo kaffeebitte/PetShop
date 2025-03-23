@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thêm sản phẩm</title>
+    <link href="../styles/style.css" rel="stylesheet" type="text/css">
+    <style>
+        :root {
+            --primary-color: #00796b;
+            --primary-hover: #004d40;
+            --text-color: #333;
+            --light-gray: #f4f4f4;
+            --border-color: #e0e0e0;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--light-gray);
+            margin: 0;
+            padding: 32px 20px; /* Adjusted padding for better spacing */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        form {
+            background: white;
+            padding: 32px; /* Increased padding for better spacing */
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            width: 100%;
+            max-width: 960px;
+            margin-top: 0;
+        }
+
+        form h1 {
+            text-align: center;
+            margin-bottom: 24px;
+            color: var(--text-color);
+            font-weight: bold; /* Made the title bold */
+            font-size: 24px;
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 8px; /* Increased spacing below labels */
+            color: #555;
+            font-weight: bold; /* Made labels bold */
+            font-size: 14px;
+        }
+
+        form input, form button, form textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px; /* Increased spacing between inputs */
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 15px;
+        }
+
+        form textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        form button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 12px;
+            font-weight: 500;
+            transition: background-color 0.2s ease;
+        }
+
+        form button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .qna-item {
+            margin-bottom: 12px; /* Increased spacing between QnA items */
+        }
+
+        #addQnaButton {
+            margin-bottom: 24px; /* Increased spacing below the QnA button */
+        }
+
+        @media (min-width: 768px) {
+            body {
+                padding: 32px;
+            }
+            
+            form {
+                padding: 32px;
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 28px; /* Increased gap between grid items */
+            }
+            
+            form h1 {
+                grid-column: span 2;
+                font-size: 26px;
+                margin-bottom: 32px;
+            }
+            
+            .form-group {
+                margin-bottom: 0;
+            }
+            
+            .full-width {
+                grid-column: span 2;
+            }
+            
+            .qna-item {
+                display: flex;
+                gap: 16px;
+                margin-bottom: 12px;
+            }
+            
+            .qna-item input {
+                margin-bottom: 0;
+            }
+            
+            .form-buttons {
+                grid-column: span 2;
+                display: flex;
+                justify-content: flex-end;
+                margin-top: 8px;
+            }
+            
+            .form-buttons button {
+                width: auto;
+                min-width: 160px;
+            }
+            
+            #addQnaButton {
+                width: auto;
+                align-self: flex-start;
+            }
+        }
+    </style>
+</head>
+<body>
+    <form id="addProductForm" enctype="multipart/form-data">
+        <h1 class="full-width">Thêm sản phẩm</h1>
+        
+        <!-- First column -->
+        <div class="form-group">
+            <label for="productId">ID sản phẩm</label>
+            <input type="text" id="productId" name="productId" required>
+            
+            <label for="title">Tên sản phẩm</label>
+            <input type="text" id="title" name="title" required>
+            
+            <label for="price">Giá</label>
+            <input type="number" id="price" name="price" required>
+            
+            <label for="quantity">Số lượng</label>
+            <input type="number" id="quantity" name="quantity" required>
+        </div>
+        
+        <!-- Second column -->
+        <div class="form-group">
+            <label for="brand">Thương hiệu</label>
+            <input type="text" id="brand" name="brand" required>
+            
+            <label for="category">Danh mục</label>
+            <input type="text" id="category" name="category" required>
+            
+            <label for="origin">Xuất xứ</label>
+            <input type="text" id="origin" name="origin" required>
+            
+            <label for="rating">Đánh giá</label>
+            <input type="number" id="rating" name="rating" step="0.1" min="0" max="5" required>
+        </div>
+        
+        <!-- Full width elements -->
+        <div class="full-width">
+            <label for="description">Mô tả</label>
+            <textarea id="description" name="description" required></textarea>
+        </div>
+        
+        <div class="full-width">
+            <label for="images">Hình ảnh</label>
+            <input type="file" id="images" name="images" multiple>
+        </div>
+        
+        <div class="full-width">
+            <label for="qna">Câu hỏi và trả lời (QnA)</label>
+            <div id="qnaContainer">
+                <div class="qna-item">
+                    <input type="text" name="questions[]" placeholder="Câu hỏi" required>
+                    <input type="text" name="answers[]" placeholder="Trả lời" required>
+                </div>
+            </div>
+            <button type="button" id="addQnaButton">Thêm QnA</button>
+        </div>
+        
+        <div class="form-buttons full-width">
+            <button type="submit">Thêm sản phẩm</button>
+        </div>
+    </form>
+    <script>
+        document.getElementById('addQnaButton').addEventListener('click', function() {
+            const qnaContainer = document.getElementById('qnaContainer');
+            const qnaItem = document.createElement('div');
+            qnaItem.classList.add('qna-item');
+            qnaItem.innerHTML = `
+                <input type="text" name="questions[]" placeholder="Câu hỏi" required>
+                <input type="text" name="answers[]" placeholder="Trả lời" required>
+            `;
+            qnaContainer.appendChild(qnaItem);
+        });
+
+        document.getElementById('addProductForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            alert('Sản phẩm đã được thêm thành công!');
+            this.reset();
+        });
+    </script>
+</body>
+</html>

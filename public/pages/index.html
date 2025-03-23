@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý sản phẩm thú cưng</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        header {
+            background-color: #f9f9f9;
+            color: #333333;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        .logo img {
+            width: 70px;
+            margin-right: 15px;
+        }
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .hero {
+            text-align: center;
+            padding: 30px;
+            background-color: #f5f5f5;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            width: 100%;
+            max-width: 800px;
+        }
+        .actions-section {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+        .action-box {
+            text-align: center;
+            padding: 30px;
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            flex: 1;
+            margin: 0 20px;
+            transition: transform 0.3s, background-color 0.3s;
+            max-width: 250px;
+            min-height: 220px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .action-box:hover {
+            transform: translateY(-5px);
+            background-color: #f5f5f5;
+        }
+        .action-box a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .action-box a:hover {
+            color: #0056b3;
+        }
+        .action-box .material-icons {
+            font-size: 50px;
+            color: #007bff;
+        }
+        footer {
+            background-color: #f9f9f9;
+            color: #333333;
+            padding: 20px;
+            text-align: center;
+            border-top: 1px solid #e0e0e0;
+        }
+        footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        footer a:hover {
+            color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <img src="../images/Logo.jpg" alt="logo">
+            <h1>Quản lý sản phẩm thú cưng</h1>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <h2>Chào mừng đến với hệ thống quản lý sản phẩm</h2>
+            <p>Quản lý sản phẩm dễ dàng với các chức năng thêm, cập nhật và xóa.</p>
+        </section>
+
+        <section class="actions-section">
+            <div class="action-box">
+                <span class="material-icons">add_circle</span>
+                <h3>Thêm sản phẩm</h3>
+                <p>Thêm sản phẩm mới vào danh sách.</p>
+                <a href="/add/product">Thực hiện</a>
+            </div>
+            <div class="action-box">
+                <span class="material-icons">edit</span>
+                <h3>Cập nhật sản phẩm</h3>
+                <p>Chỉnh sửa thông tin sản phẩm hiện có.</p>
+                <a href="/update/product">Thực hiện</a>
+            </div>
+            <div class="action-box">
+                <span class="material-icons">delete</span>
+                <h3>Xóa sản phẩm</h3>
+                <p>Xóa sản phẩm không còn kinh doanh.</p>
+                <a href="/delete/product">Thực hiện</a>
+            </div>
+            <div class="action-box">
+                <span class="material-icons">list</span>
+                <h3>Danh sách sản phẩm</h3>
+                <p>Xem danh sách tất cả các sản phẩm hiện có.</p>
+                <a href="/productlist">Thực hiện</a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Quản lý sản phẩm thú cưng. All rights reserved.</p>
+    </footer>
+</body>
+</html>

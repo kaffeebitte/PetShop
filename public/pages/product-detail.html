@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết sản phẩm</title>
+    <link href="../styles/style.css" rel="stylesheet" type="text/css">
+    <style>
+        :root {
+            --primary-color: #00796b;
+            --primary-hover: #004d40;
+            --text-color: #333;
+            --light-gray: #f4f4f4;
+            --border-color: #e0e0e0;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--light-gray);
+            margin: 0;
+            padding: 32px 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            background: white;
+            padding: 32px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            width: 100%;
+            max-width: 800px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 24px;
+            color: var(--text-color);
+            font-weight: bold;
+            font-size: 24px;
+        }
+
+        .product-image {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .product-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .product-details h2 {
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            font-size: 20px;
+        }
+
+        .product-details p {
+            margin: 10px 0;
+            color: #555;
+            font-size: 15px;
+        }
+
+        .qna-section {
+            margin-top: 30px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 20px;
+        }
+
+        .qna-section h3 {
+            color: var(--primary-color);
+            margin-bottom: 16px;
+            font-size: 18px;
+        }
+
+        .qna-item {
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+
+        .qna-item:last-child {
+            border-bottom: none;
+        }
+
+        .question {
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .answer {
+            color: #555;
+            margin-top: 8px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: bold;
+            padding: 10px 15px;
+            border: 1px solid var(--primary-color);
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            align-self: center;
+        }
+
+        .back-link:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Chi tiết sản phẩm</h1>
+        <div class="product-image">
+            <img src="../images/sample-product.jpg" alt="Sản phẩm">
+        </div>
+        <div class="product-details">
+            <h2>Tên sản phẩm</h2>
+            <p><strong>Giá:</strong> 150,000 VND</p>
+            <p><strong>Số lượng:</strong> 50</p>
+            <p><strong>Thương hiệu:</strong> Pedigree</p>
+            <p><strong>Xuất xứ:</strong> Thái Lan</p>
+            <p><strong>Đánh giá:</strong> 4.0</p>
+            <p><strong>Mô tả:</strong> Thức ăn dinh dưỡng cho chó trưởng thành, hỗ trợ tiêu hóa và tăng cường miễn dịch.</p>
+        </div>
+        <div class="qna-section">
+            <h3>Câu hỏi và trả lời</h3>
+            <div class="qna-item">
+                <p class="question">Q: Loại này có mùi không?</p>
+                <p class="answer">A: Khoảng mùi ít, không ảnh hưởng nhiều.</p>
+            </div>
+            <div class="qna-item">
+                <p class="question">Q: Sản phẩm có phù hợp cho mèo con không?</p>
+                <p class="answer">A: Có thể dùng cho mèo từ 2 tháng tuổi.</p>
+            </div>
+        </div>
+        <a href="product-list.html" class="back-link">Quay lại danh sách sản phẩm</a>
+    </div>
+</body>
+</html>
