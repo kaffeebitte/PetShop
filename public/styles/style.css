@@ -194,6 +194,13 @@ footer a:hover {
     border-radius: var(--radius-sm);
     font-size: 15px;
     transition: var(--transition);
+    height: 36px;
+    box-sizing: border-box;
+}
+
+textarea.form-control {
+    height: auto;
+    min-height: 80px; 
 }
 
 .form-control:focus {
