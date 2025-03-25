@@ -261,7 +261,7 @@
                         <th>Thương hiệu</th>
                         <th>Xuất xứ</th>
                         <th>Đánh giá</th>
-                        <th>Thao tác</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody id="productTableBody">
@@ -271,7 +271,7 @@
         </div>
         
         <div class="text-center">
-            <a href="index.html" class="btn btn-outline">Quay lại trang chủ</a>
+            <a href="/" class="btn btn-outline">Quay lại trang chủ</a>
         </div>
     </div>
     
@@ -293,104 +293,116 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const products = [
-                { productId: 'PET0001', title: 'Thức ăn cho chó Pedigree', price: 150000, quantity: 50, brand: 'Pedigree', origin: 'Thái Lan', rating: 4.0 },
-                { productId: 'PET0002', title: 'Cát vệ sinh cho mèo KitCat', price: 200000, quantity: 40, brand: 'KitCat', origin: 'Singapore', rating: 4.2 },
-                // Add more products as needed
-            ];
-
             const tableBody = document.getElementById('productTableBody');
             const productCount = document.getElementById('productCount');
             
-            function renderProducts() {
-                tableBody.innerHTML = '';
-                
-                if (products.length === 0) {
+            // Lấy dữ liệu sản phẩm từ API
+            fetch('/products')
+                .then(response => response.json())
+                .then(products => {
+                    // Xóa nội dung bảng hiện tại
+                    tableBody.innerHTML = '';
+                    
+                    // Kiểm tra nếu không có sản phẩm nào
+                    if (products.length === 0) {
+                        tableBody.innerHTML = `
+                            <tr>
+                                <td colspan="8" class="empty-state">Không có sản phẩm nào</td>
+                            </tr>
+                        `;
+                        productCount.textContent = 'Không có sản phẩm';
+                        return;
+                    }
+                    
+                    // Cập nhật số lượng sản phẩm
+                    productCount.textContent = `${products.length} sản phẩm`;
+                    
+                    // Thêm từng sản phẩm vào bảng
+                    products.forEach(product => {
+                        const row = tableBody.insertRow();
+                        row.classList.add('row-clickable');
+                        
+                        // Tạo các ô cho từng thuộc tính sản phẩm
+                        const cellID = row.insertCell(0);
+                        const cellName = row.insertCell(1);
+                        const cellPrice = row.insertCell(2);
+                        const cellQuantity = row.insertCell(3);
+                        const cellBrand = row.insertCell(4);
+                        const cellOrigin = row.insertCell(5);
+                        const cellRating = row.insertCell(6);
+                        const cellActions = row.insertCell(7);
+                        
+                        // Đặt nội dung cho từng ô dựa trên cấu trúc từ products.js
+                        cellID.textContent = product.productId;
+                        cellName.textContent = product.title;
+                        cellPrice.textContent = `${Number(product.additionalInfo.price).toLocaleString()} VND`;
+                        cellQuantity.textContent = product.additionalInfo.quantity;
+                        cellBrand.textContent = product.additionalInfo.brand;
+                        cellOrigin.textContent = product.additionalInfo.origin;
+                        cellRating.textContent = product.rating || 'N/A';
+                        cellActions.innerHTML = `
+                            <span class="material-icons action-icon edit-icon" data-id="${product.productId}">edit</span>
+                            <span class="material-icons action-icon delete-icon" data-id="${product.productId}" data-name="${product.title}">delete</span>
+                        `;
+                        cellActions.className = 'actions';
+                        
+                        // Thêm sự kiện click vào hàng để xem chi tiết sản phẩm
+                        row.addEventListener('click', (e) => {
+                            // Không chuyển hướng nếu đang nhấp vào biểu tượng hành động
+                            if (!e.target.classList.contains('action-icon') && !e.target.classList.contains('material-icons')) {
+                                showProductDetails(product.productId);
+                            }
+                        });
+                    });
+                    
+                    // Thêm sự kiện lắng nghe cho tất cả biểu tượng chỉnh sửa
+                    document.querySelectorAll('.edit-icon').forEach(icon => {
+                        icon.addEventListener('click', (e) => {
+                            e.stopPropagation(); // Ngăn sự kiện click của hàng
+                            const productId = e.target.getAttribute('data-id');
+                            redirectToUpdatePage(productId);
+                        });
+                    });
+                    
+                    // Thêm sự kiện lắng nghe cho tất cả biểu tượng xóa
+                    document.querySelectorAll('.delete-icon').forEach(icon => {
+                        icon.addEventListener('click', (e) => {
+                            e.stopPropagation(); // Ngăn sự kiện click của hàng
+                            const productId = e.target.getAttribute('data-id');
+                            const productName = e.target.getAttribute('data-name');
+                            showDeleteConfirmation(productId, productName);
+                        });
+                    });
+                })
+                .catch(error => {
+                    console.error('Lỗi khi lấy dữ liệu sản phẩm:', error);
                     tableBody.innerHTML = `
                         <tr>
-                            <td colspan="8" class="empty-state">Không có sản phẩm nào</td>
+                            <td colspan="8" class="empty-state">Không thể tải dữ liệu sản phẩm</td>
                         </tr>
                     `;
                     productCount.textContent = 'Không có sản phẩm';
-                    return;
-                }
-                
-                products.forEach(product => {
-                    const row = document.createElement('tr');
-                    row.classList.add('row-clickable');
-                    
-                    // Add row click event for product details
-                    row.addEventListener('click', (e) => {
-                        // Check if the click was on an action icon, if yes, don't navigate to details
-                        if (!e.target.classList.contains('action-icon') && !e.target.classList.contains('material-icons')) {
-                            showProductDetails(product.productId);
-                        }
-                    });
-                    
-                    row.innerHTML = `
-                        <td>${product.productId}</td>
-                        <td>${product.title}</td>
-                        <td>${product.price.toLocaleString()} VND</td>
-                        <td>${product.quantity}</td>
-                        <td>${product.brand}</td>
-                        <td>${product.origin}</td>
-                        <td>${product.rating}</td>
-                        <td class="actions">
-                            <span class="material-icons action-icon edit-icon" data-id="${product.productId}">edit</span>
-                            <span class="material-icons action-icon delete-icon" data-id="${product.productId}" data-name="${product.title}">delete</span>
-                        </td>
-                    `;
-                    tableBody.appendChild(row);
                 });
-                
-                // Update product count
-                productCount.textContent = `${products.length} sản phẩm`;
-                
-                // Add event listeners to action icons
-                document.querySelectorAll('.edit-icon').forEach(icon => {
-                    icon.addEventListener('click', (e) => {
-                        e.stopPropagation(); // Prevent row click
-                        const productId = e.target.getAttribute('data-id');
-                        redirectToUpdatePage(productId);
-                    });
-                });
-                
-                document.querySelectorAll('.delete-icon').forEach(icon => {
-                    icon.addEventListener('click', (e) => {
-                        e.stopPropagation(); // Prevent row click
-                        const productId = e.target.getAttribute('data-id');
-                        const productName = e.target.getAttribute('data-name');
-                        showDeleteConfirmation(productId, productName);
-                    });
-                });
-            }
             
             function showProductDetails(productId) {
-                // Find the product with the matching ID
-                const product = products.find(p => p.productId === productId);
-                
-                if (product) {
-                    // Store the product data in localStorage for use in the detail page
-                    localStorage.setItem('productToDetail', JSON.stringify(product));
-                    // Redirect to the product detail page
-                    window.location.href = `/productdetail?id=${productId}`;
-                } else {
-                    alert('Không tìm thấy sản phẩm!');
-                }
+                // Lấy thông tin sản phẩm trước khi chuyển hướng
+                fetch(`/products/${productId}`)
+                    .then(response => response.json())
+                    .then(product => {
+                        // Lưu thông tin sản phẩm vào localStorage
+                        localStorage.setItem('productToDetail', JSON.stringify(product));
+                        // Chuyển hướng đến trang chi tiết sản phẩm
+                        window.location.href = `/productdetail?id=${productId}`;
+                    })
+                    .catch(error => {
+                        console.error('Lỗi khi lấy thông tin sản phẩm:', error);
+                        alert('Không thể tải thông tin sản phẩm');
+                    });
             }
             
             function redirectToUpdatePage(productId) {
-                // Find the product with the matching ID
-                const product = products.find(p => p.productId === productId);
-                
-                if (product) {
-                    // Store the product data in localStorage for use in the update page
-                    localStorage.setItem('productToUpdate', JSON.stringify(product));
-                    // Redirect to the update page
-                    window.location.href = `/update/product?id=${productId}`;
-                } else {
-                    alert('Không tìm thấy sản phẩm!');
-                }
+                // Chuyển hướng đến trang cập nhật sản phẩm
+                window.location.href = `/update/product?id=${productId}`;
             }
             
             function showDeleteConfirmation(productId, productName) {
@@ -411,22 +423,100 @@
             }
             
             function deleteProduct(productId) {
-                // Find the index of the product with the matching ID
-                const productIndex = products.findIndex(p => p.productId === productId);
-                
-                if (productIndex !== -1) {
-                    // Remove the product from the array
-                    products.splice(productIndex, 1);
-                    // Re-render the product list
-                    renderProducts();
-                    alert('Sản phẩm đã được xóa thành công!');
-                } else {
-                    alert('Không tìm thấy sản phẩm!');
-                }
+                // Gửi yêu cầu DELETE đến API
+                fetch(`/api/products/${productId}`, {
+                    method: 'DELETE',
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Làm mới danh sách sản phẩm sau khi xóa thành công
+                        fetch('/products')
+                            .then(response => response.json())
+                            .then(products => {
+                                // Xóa nội dung bảng hiện tại
+                                tableBody.innerHTML = '';
+                                
+                                // Kiểm tra nếu không có sản phẩm nào
+                                if (products.length === 0) {
+                                    tableBody.innerHTML = `
+                                        <tr>
+                                            <td colspan="8" class="empty-state">Không có sản phẩm nào</td>
+                                        </tr>
+                                    `;
+                                    productCount.textContent = 'Không có sản phẩm';
+                                    return;
+                                }
+                                
+                                // Cập nhật số lượng sản phẩm
+                                productCount.textContent = `${products.length} sản phẩm`;
+                                
+                                // Thêm từng sản phẩm vào bảng
+                                products.forEach(product => {
+                                    const row = tableBody.insertRow();
+                                    row.classList.add('row-clickable');
+                                    
+                                    // Tạo các ô cho từng thuộc tính sản phẩm
+                                    const cellID = row.insertCell(0);
+                                    const cellName = row.insertCell(1);
+                                    const cellPrice = row.insertCell(2);
+                                    const cellQuantity = row.insertCell(3);
+                                    const cellBrand = row.insertCell(4);
+                                    const cellOrigin = row.insertCell(5);
+                                    const cellRating = row.insertCell(6);
+                                    const cellActions = row.insertCell(7);
+                                    
+                                    // Đặt nội dung cho từng ô dựa trên cấu trúc từ products.js
+                                    cellID.textContent = product.productId;
+                                    cellName.textContent = product.title;
+                                    cellPrice.textContent = `${Number(product.additionalInfo.price).toLocaleString()} VND`;
+                                    cellQuantity.textContent = product.additionalInfo.quantity;
+                                    cellBrand.textContent = product.additionalInfo.brand;
+                                    cellOrigin.textContent = product.additionalInfo.origin;
+                                    cellRating.textContent = product.rating || 'N/A';
+                                    cellActions.innerHTML = `
+                                        <span class="material-icons action-icon edit-icon" data-id="${product.productId}">edit</span>
+                                        <span class="material-icons action-icon delete-icon" data-id="${product.productId}" data-name="${product.title}">delete</span>
+                                    `;
+                                    cellActions.className = 'actions';
+                                    
+                                    // Thêm sự kiện click vào hàng để xem chi tiết sản phẩm
+                                    row.addEventListener('click', (e) => {
+                                        // Không chuyển hướng nếu đang nhấp vào biểu tượng hành động
+                                        if (!e.target.classList.contains('action-icon') && !e.target.classList.contains('material-icons')) {
+                                            showProductDetails(product.productId);
+                                        }
+                                    });
+                                });
+                                
+                                // Thêm sự kiện lắng nghe cho tất cả biểu tượng
+                                document.querySelectorAll('.edit-icon').forEach(icon => {
+                                    icon.addEventListener('click', (e) => {
+                                        e.stopPropagation(); // Ngăn sự kiện click của hàng
+                                        const productId = e.target.getAttribute('data-id');
+                                        redirectToUpdatePage(productId);
+                                    });
+                                });
+                                
+                                document.querySelectorAll('.delete-icon').forEach(icon => {
+                                    icon.addEventListener('click', (e) => {
+                                        e.stopPropagation(); // Ngăn sự kiện click của hàng
+                                        const productId = e.target.getAttribute('data-id');
+                                        const productName = e.target.getAttribute('data-name');
+                                        showDeleteConfirmation(productId, productName);
+                                    });
+                                });
+                                
+                                alert('Sản phẩm đã được xóa thành công!');
+                            });
+                    } else {
+                        alert('Không thể xóa sản phẩm. Vui lòng thử lại sau!');
+                    }
+                })
+                .catch(error => {
+                    console.error('Lỗi khi xóa sản phẩm:', error);
+                    alert('Đã xảy ra lỗi khi xóa sản phẩm!');
+                });
             }
-            
-            // Initial rendering
-            renderProducts();
         });
     </script>
 </body>

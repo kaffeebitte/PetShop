@@ -232,48 +232,100 @@
     </div>
     
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Get the product ID from the URL query string
-            const urlParams = new URLSearchParams(window.location.search);
-            const productId = urlParams.get('id');
+        document.addEventListener('DOMContentLoaded', () => {
+            // Biến lưu thông tin sản phẩm hiện tại
             let currentProduct = null;
             
-            // Try to get the product data from localStorage
+            // Lấy tham số ID sản phẩm từ URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+            
+            // Thử lấy dữ liệu từ localStorage trước
             const storedProduct = localStorage.getItem('productToDetail');
             
             if (storedProduct) {
+                // Nếu có dữ liệu trong localStorage
                 currentProduct = JSON.parse(storedProduct);
+                hienThiThongTinSanPham(currentProduct);
+                // Xóa dữ liệu khỏi localStorage sau khi sử dụng
+                localStorage.removeItem('productToDetail');
+            } else if (productId) {
+                // Nếu không có localStorage nhưng có ID, lấy từ API
+                fetch(`/products/${productId}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Không tìm thấy sản phẩm');
+                        }
+                        return response.json();
+                    })
+                    .then(product => {
+                        currentProduct = product;
+                        hienThiThongTinSanPham(product);
+                    })
+                    .catch(error => {
+                        console.error('Lỗi khi tải sản phẩm:', error);
+                        alert('Không thể tải thông tin sản phẩm!');
+                        window.location.href = '/pages/product-list.html';
+                    });
+            } else {
+                // Nếu không có ID, quay lại trang danh sách
+                alert('Không có thông tin sản phẩm!');
+                window.location.href = '/pages/product-list.html';
+            }
+            
+            // Hiển thị thông tin chi tiết sản phẩm
+            function hienThiThongTinSanPham(product) {
+                // Cập nhật tiêu đề trang
+                document.title = `Chi tiết: ${product.title}`;
                 
-                // Update document title
-                document.title = `Chi tiết: ${currentProduct.title}`;
+                // Điền thông tin sản phẩm vào trang
+                document.getElementById('productTitle').textContent = product.title || 'Không có tên';
+                document.getElementById('productId').textContent = `Mã sản phẩm: ${product.productId || ''}`;
                 
-                // Fill the detail page with product data
-                document.getElementById('productTitle').textContent = currentProduct.title || 'Không có tên';
-                document.getElementById('productId').textContent = `Mã sản phẩm: ${currentProduct.productId || ''}`;
-                document.getElementById('productPrice').textContent = currentProduct.price ? 
-                    `${currentProduct.price.toLocaleString()} VND` : 'Không có giá';
-                document.getElementById('productQuantity').textContent = currentProduct.quantity || '';
-                document.getElementById('productBrand').textContent = currentProduct.brand || '';
-                document.getElementById('productOrigin').textContent = currentProduct.origin || '';
-                document.getElementById('productRating').textContent = currentProduct.rating ? `${currentProduct.rating}/5` : '';
-                
-                // Set description if available
-                if (currentProduct.description && currentProduct.description.details) {
-                    document.getElementById('productDescription').textContent = currentProduct.description.details;
+                // Hiển thị giá
+                if (product.additionalInfo && product.additionalInfo.price) {
+                    document.getElementById('productPrice').textContent = 
+                        `${Number(product.additionalInfo.price).toLocaleString()} VND`;
                 } else {
-                    document.getElementById('productDescription').textContent = 'Không có mô tả';
+                    document.getElementById('productPrice').textContent = 'Không có giá';
                 }
                 
-                // Set product image if available
-                if (currentProduct.images && currentProduct.images.length > 0) {
-                    document.getElementById('productImage').src = `../images/${currentProduct.images[0]}`;
-                    document.getElementById('productImage').alt = currentProduct.title;
+                // Hiển thị các thông tin khác
+                document.getElementById('productQuantity').textContent = 
+                    product.additionalInfo ? product.additionalInfo.quantity : '';
+                document.getElementById('productBrand').textContent = 
+                    product.additionalInfo ? product.additionalInfo.brand : '';
+                document.getElementById('productOrigin').textContent = 
+                    product.additionalInfo ? product.additionalInfo.origin : '';
+                document.getElementById('productRating').textContent = 
+                    product.rating ? `${product.rating}/5` : '';
+                
+                // Hiển thị mô tả sản phẩm
+                const descriptionElement = document.getElementById('productDescription');
+                if (product.description && product.description.details) {
+                    descriptionElement.textContent = product.description.details;
+                } else {
+                    descriptionElement.textContent = 'Không có mô tả';
                 }
                 
-                // Add QnA items if available
+                // Hiển thị hình ảnh sản phẩm
+                if (product.images && product.images.length > 0) {
+                    document.getElementById('productImage').src = `../images/${product.images[0]}`;
+                    document.getElementById('productImage').alt = product.title;
+                }
+                
+                // Hiển thị phần hỏi đáp
+                hienThiPhanHoiDap(product.QnA);
+            }
+            
+            // Hiển thị phần hỏi đáp
+            function hienThiPhanHoiDap(qnaItems) {
                 const qnaContainer = document.getElementById('qnaContainer');
-                if (currentProduct.QnA && currentProduct.QnA.length > 0) {
-                    currentProduct.QnA.forEach(qna => {
+                qnaContainer.innerHTML = '<h3>Câu hỏi và trả lời</h3>';
+                
+                if (qnaItems && qnaItems.length > 0) {
+                    // Tạo các phần tử câu hỏi và trả lời
+                    qnaItems.forEach(qna => {
                         const qnaItem = document.createElement('div');
                         qnaItem.classList.add('qna-item');
                         qnaItem.innerHTML = `
@@ -285,17 +337,10 @@
                 } else {
                     qnaContainer.innerHTML += '<p class="no-qna">Không có câu hỏi nào.</p>';
                 }
-                
-                // Clear localStorage
-                localStorage.removeItem('productToDetail');
-            } else {
-                // If no product data is available, show error message
-                alert('Không có thông tin sản phẩm!');
-                window.location.href = '/productlist';
             }
             
-            // Add event listener to Edit button
-            document.getElementById('editProductBtn').addEventListener('click', function() {
+            // Thêm sự kiện cho nút chỉnh sửa
+            document.getElementById('editProductBtn').addEventListener('click', () => {
                 if (currentProduct) {
                     localStorage.setItem('productToUpdate', JSON.stringify(currentProduct));
                     window.location.href = `/update/product?id=${currentProduct.productId}`;
