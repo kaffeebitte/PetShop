@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chi tiết sản phẩm</title>
     <link href="../styles/style.css" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         :root {
             --primary-color: #00796b;
@@ -15,6 +16,13 @@
             --spacing-sm: 8px;
             --spacing-md: 16px;
             --spacing-lg: 24px;
+            --white: #fff;
+            --radius-md: 8px;
+            --shadow-md: 0 2px 8px rgba(0,0,0,0.06);
+            --radius-sm: 4px;
+            --text-light: #777;
+            --primary-dark: #004d40;
+            --spacing-xs: 4px;
         }
 
         body {
@@ -45,108 +53,257 @@
             font-size: 24px;
         }
 
-        .product-image {
+        .product-detail-container {
+            background: var(--white);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-md);
+            padding: var(--spacing-lg);
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .product-title {
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .product-id {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+        
+        .product-image-container {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: var(--spacing-lg);
+            padding: var(--spacing-md);
+            background-color: var(--light-gray);
+            border-radius: var(--radius-md);
         }
-
-        .product-image img {
+        
+        .product-image {
             max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            max-height: 300px;
+            object-fit: contain;
+            border-radius: var(--radius-sm);
         }
-
-        .product-details h2 {
-            color: var(--primary-color);
-            margin-bottom: 16px;
-            font-size: 20px;
+        
+        .product-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
         }
-
-        .product-details p {
-            margin: 10px 0;
-            color: #555;
-            font-size: 15px;
+        
+        .info-item {
+            margin-bottom: var(--spacing-md);
         }
-
+        
+        .info-label {
+            font-weight: 600;
+            display: block;
+            margin-bottom: var(--spacing-xs);
+            color: var(--text-light);
+        }
+        
+        .info-value {
+            color: var(--text-color);
+            font-size: 16px;
+        }
+        
+        .product-description {
+            margin-bottom: var(--spacing-lg);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-sm);
+            background-color: var(--light-gray);
+        }
+        
+        .product-description h3 {
+            margin-top: 0;
+        }
+        
         .qna-section {
-            margin-top: 30px;
+            margin-top: var(--spacing-lg);
+            padding-top: var(--spacing-lg);
             border-top: 1px solid var(--border-color);
-            padding-top: 20px;
         }
-
-        .qna-section h3 {
-            color: var(--primary-color);
-            margin-bottom: 16px;
-            font-size: 18px;
-        }
-
+        
         .qna-item {
-            margin-bottom: 16px;
-            padding-bottom: 16px;
-            border-bottom: 1px dashed var(--border-color);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            border-radius: var(--radius-sm);
+            background-color: var(--light-gray);
+            animation: fadeIn 0.3s ease;
         }
-
-        .qna-item:last-child {
-            border-bottom: none;
-        }
-
+        
         .question {
-            font-weight: bold;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .answer {
             color: var(--text-color);
         }
-
-        .answer {
-            color: #555;
-            margin-top: 8px;
+        
+        .no-qna {
+            color: var(--text-light);
+            font-style: italic;
         }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 20px;
-            text-decoration: none;
-            color: var(--primary-color);
-            font-weight: bold;
-            padding: 10px 15px;
-            border: 1px solid var(--primary-color);
-            border-radius: 4px;
-            transition: all 0.2s ease;
-            align-self: center;
+        
+        .action-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: var(--spacing-lg);
         }
-
-        .back-link:hover {
-            background-color: var(--primary-color);
-            color: white;
+        
+        @media (max-width: 768px) {
+            .product-info {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Chi tiết sản phẩm</h1>
-        <div class="product-image">
-            <img src="../images/sample-product.jpg" alt="Sản phẩm">
-        </div>
-        <div class="product-details">
-            <h2>Tên sản phẩm</h2>
-            <p><strong>Giá:</strong> 150,000 VND</p>
-            <p><strong>Số lượng:</strong> 50</p>
-            <p><strong>Thương hiệu:</strong> Pedigree</p>
-            <p><strong>Xuất xứ:</strong> Thái Lan</p>
-            <p><strong>Đánh giá:</strong> 4.0</p>
-            <p><strong>Mô tả:</strong> Thức ăn dinh dưỡng cho chó trưởng thành, hỗ trợ tiêu hóa và tăng cường miễn dịch.</p>
-        </div>
-        <div class="qna-section">
-            <h3>Câu hỏi và trả lời</h3>
-            <div class="qna-item">
-                <p class="question">Q: Loại này có mùi không?</p>
-                <p class="answer">A: Khoảng mùi ít, không ảnh hưởng nhiều.</p>
+        <div class="product-detail-container slide-in">
+            <h1>Chi tiết sản phẩm</h1>
+            
+            <div class="product-header">
+                <div>
+                    <h2 id="productTitle" class="product-title">Tên sản phẩm</h2>
+                    <div id="productId" class="product-id"></div>
+                </div>
+                <div class="product-rating">
+                    <span class="info-label">Đánh giá</span>
+                    <span id="productRating" class="info-value"></span>
+                </div>
             </div>
-            <div class="qna-item">
-                <p class="question">Q: Sản phẩm có phù hợp cho mèo con không?</p>
-                <p class="answer">A: Có thể dùng cho mèo từ 2 tháng tuổi.</p>
+            
+            <div class="product-image-container">
+                <img id="productImage" src="../images/sample-product.jpg" alt="Sản phẩm" class="product-image">
+            </div>
+            
+            <div class="product-info">
+                <div class="info-item">
+                    <span class="info-label">Giá</span>
+                    <span id="productPrice" class="info-value"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Số lượng</span>
+                    <span id="productQuantity" class="info-value"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Thương hiệu</span>
+                    <span id="productBrand" class="info-value"></span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">Xuất xứ</span>
+                    <span id="productOrigin" class="info-value"></span>
+                </div>
+            </div>
+            
+            <div class="product-description">
+                <h3>Mô tả sản phẩm</h3>
+                <p id="productDescription"></p>
+            </div>
+            
+            <div class="qna-section" id="qnaContainer">
+                <h3>Câu hỏi và trả lời</h3>
+                <!-- QnA items will be dynamically inserted here -->
+            </div>
+            
+            <div class="action-buttons">
+                <a href="product-list.html" class="btn btn-outline">
+                    <span class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">arrow_back</span>
+                    Danh sách sản phẩm
+                </a>
+                <button id="editProductBtn" class="btn btn-primary">
+                    <span class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">edit</span>
+                    Chỉnh sửa
+                </button>
             </div>
         </div>
-        <a href="product-list.html" class="back-link">Quay lại danh sách sản phẩm</a>
     </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Get the product ID from the URL query string
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+            let currentProduct = null;
+            
+            // Try to get the product data from localStorage
+            const storedProduct = localStorage.getItem('productToDetail');
+            
+            if (storedProduct) {
+                currentProduct = JSON.parse(storedProduct);
+                
+                // Update document title
+                document.title = `Chi tiết: ${currentProduct.title}`;
+                
+                // Fill the detail page with product data
+                document.getElementById('productTitle').textContent = currentProduct.title || 'Không có tên';
+                document.getElementById('productId').textContent = `Mã sản phẩm: ${currentProduct.productId || ''}`;
+                document.getElementById('productPrice').textContent = currentProduct.price ? 
+                    `${currentProduct.price.toLocaleString()} VND` : 'Không có giá';
+                document.getElementById('productQuantity').textContent = currentProduct.quantity || '';
+                document.getElementById('productBrand').textContent = currentProduct.brand || '';
+                document.getElementById('productOrigin').textContent = currentProduct.origin || '';
+                document.getElementById('productRating').textContent = currentProduct.rating ? `${currentProduct.rating}/5` : '';
+                
+                // Set description if available
+                if (currentProduct.description && currentProduct.description.details) {
+                    document.getElementById('productDescription').textContent = currentProduct.description.details;
+                } else {
+                    document.getElementById('productDescription').textContent = 'Không có mô tả';
+                }
+                
+                // Set product image if available
+                if (currentProduct.images && currentProduct.images.length > 0) {
+                    document.getElementById('productImage').src = `../images/${currentProduct.images[0]}`;
+                    document.getElementById('productImage').alt = currentProduct.title;
+                }
+                
+                // Add QnA items if available
+                const qnaContainer = document.getElementById('qnaContainer');
+                if (currentProduct.QnA && currentProduct.QnA.length > 0) {
+                    currentProduct.QnA.forEach(qna => {
+                        const qnaItem = document.createElement('div');
+                        qnaItem.classList.add('qna-item');
+                        qnaItem.innerHTML = `
+                            <p class="question">Q: ${qna.question}</p>
+                            <p class="answer">A: ${qna.answer}</p>
+                        `;
+                        qnaContainer.appendChild(qnaItem);
+                    });
+                } else {
+                    qnaContainer.innerHTML += '<p class="no-qna">Không có câu hỏi nào.</p>';
+                }
+                
+                // Clear localStorage
+                localStorage.removeItem('productToDetail');
+            } else {
+                // If no product data is available, show error message
+                alert('Không có thông tin sản phẩm!');
+                window.location.href = '/productlist';
+            }
+            
+            // Add event listener to Edit button
+            document.getElementById('editProductBtn').addEventListener('click', function() {
+                if (currentProduct) {
+                    localStorage.setItem('productToUpdate', JSON.stringify(currentProduct));
+                    window.location.href = `/update/product?id=${currentProduct.productId}`;
+                }
+            });
+        });
+    </script>
 </body>
 </html>

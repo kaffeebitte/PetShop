@@ -7,6 +7,7 @@ const port = 3000
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.static(path.join(__dirname, '/public/pages')));
 app.use(express.static(path.join(__dirname, '/public/images')));
+app.use(express.static(path.join(__dirname, '/public/styles')));
 
 // Định nghĩa các route để trả về các trang HTML
 app.get('/', (req, res) => {
