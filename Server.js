@@ -7,7 +7,6 @@ const port = 3000
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.static(path.join(__dirname, '/public/pages')));
 app.use(express.static(path.join(__dirname, '/public/images')));
-app.use(express.static(path.join(__dirname, '/public/styles')));
 
 // Định nghĩa các route để trả về các trang HTML
 app.get('/', (req, res) => {
@@ -37,5 +36,8 @@ app.get('/productdetail', (req, res) => {
 // Route mặc định cho các đường dẫn không hợp lệ
 app.get('*', (req, res) => res.send('Hẹn bạn trong tương lai nhé!'));
 
+//Cập nhật sản phẩm 
+
+
 // Khởi chạy server
-app.listen(port, () => console.log(`Example app listening on port ${port}!`))
+app.listen(port, () => console.log(`Example app listening on port http://localhost:${port}!`))
