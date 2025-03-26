@@ -258,7 +258,7 @@ let products = [
     {
       "productId": "PET0015",
       "title": "Lồng vận chuyển thú cưng size L",
-      "images": ["carrier_large_1.jpg", "carrier_large_2.jpg"],
+      "images": ["carrier_large_pg1.jpg", "carrier_large_pg2.jpg"],
       "description": {
         "details": "Lồng vận chuyển cỡ lớn, thoáng khí, phù hợp với chó lớn và mèo béo."
       },
@@ -279,7 +279,7 @@ let products = [
     {
       "productId": "PET0016",
       "title": "Thức ăn cho mèo Me-O 1.5kg",
-      "images": ["meo_dry_1.jpg", "meo_dry_2.jpg"],
+      "images": ["meo_dry_1.jpg"],
       "description": {
         "details": "Thức ăn dinh dưỡng dành cho mèo con và mèo trưởng thành."
       },
@@ -294,7 +294,7 @@ let products = [
     {
       "productId": "PET0017",
       "title": "Bánh thưởng cho mèo vị cá 200g",
-      "images": ["cat_treats_1.jpg", "cat_treats_2.jpg"],
+      "images": ["cat_treats_1.jpg", "cat_treats_2.png"],
       "description": {
         "details": "Bánh thưởng giúp huấn luyện mèo, hương vị cá hồi thơm ngon."
       },
@@ -309,7 +309,7 @@ let products = [
     {
       "productId": "PET0018",
       "title": "Chuồng mèo hai tầng",
-      "images": ["cat_cage_1.jpg", "cat_cage_2.jpg"],
+      "images": ["cat_cage_1.png"],
       "description": {
         "details": "Chuồng mèo bằng sắt, có hai tầng rộng rãi, dễ vệ sinh."
       },
@@ -324,7 +324,7 @@ let products = [
     {
       "productId": "PET0019",
       "title": "Cát vệ sinh hữu cơ cho mèo 10L",
-      "images": ["organic_litter_large_1.jpg", "organic_litter_large_2.jpg"],
+      "images": ["organic_litter_large_1.jpg", "organic_litter_large_2.png"],
       "description": {
         "details": "Cát hữu cơ khử mùi tốt, dễ phân hủy, an toàn cho thú cưng."
       },
@@ -332,14 +332,14 @@ let products = [
       "additionalInfo": {
         "quantity": 20,
         "price": 260000,
-        "brand": "EcoPet",
-        "origin": "Hàn Quốc"
+        "brand": "Cat's Best",
+        "origin": "Đức"
       }
     },
     {
       "productId": "PET0020",
       "title": "Balo vận chuyển chó nhỏ có lưới thoáng khí",
-      "images": ["dog_backpack_1.jpg", "dog_backpack_2.jpg"],
+      "images": ["dog_backpack_1.jpg", "dog_backpack_2.png"],
       "description": {
         "details": "Balo có lưới thoáng khí, phù hợp cho chó nhỏ dưới 5kg."
       },
@@ -354,7 +354,7 @@ let products = [
     {
       "productId": "PET0021",
       "title": "Giường nệm cho chó size M",
-      "images": ["dog_bed_1.jpg", "dog_bed_2.jpg"],
+      "images": ["dog_bed_1.jpg"],
       "description": {
         "details": "Giường nệm êm ái, giữ ấm cho chó, dễ vệ sinh."
       },
@@ -369,7 +369,7 @@ let products = [
     {
       "productId": "PET0022",
       "title": "Cây cào móng cho mèo",
-      "images": ["cat_scratcher_1.jpg", "cat_scratcher_2.jpg"],
+      "images": ["cat_scratcher_1.jpg"],
       "description": {
         "details": "Cây cào móng giúp mèo giải trí và bảo vệ nội thất."
       },
@@ -399,7 +399,7 @@ let products = [
     {
       "productId": "PET0024",
       "title": "Sữa tắm cho chó lông trắng",
-      "images": ["dog_shampoo_1.jpg", "dog_shampoo_2.jpg"],
+      "images": ["dog_shampoo_1.jpg"],
       "description": {
         "details": "Sữa tắm làm sạch và giữ màu lông trắng sáng."
       },
@@ -407,8 +407,7 @@ let products = [
       "additionalInfo": {
         "quantity": 40,
         "price": 180000,
-        "brand": "FurCare",
-        "origin": "Thái Lan"
+        "brand": "Dorrikey"
       }
     },
     {
@@ -435,7 +434,7 @@ let products = [
     {
       "productId": "PET0026",
       "title": "Xương gặm giúp sạch răng cho chó",
-      "images": ["dog_bone_1.jpg", "dog_bone_2.jpg"],
+      "images": ["dog_bone_1.jpg"],
       "description": {
         "details": "Xương gặm giúp làm sạch răng, giảm mảng bám cho chó."
       },
@@ -443,8 +442,7 @@ let products = [
       "additionalInfo": {
         "quantity": 60,
         "price": 130000,
-        "brand": "DogChew",
-        "origin": "Nhật Bản"
+        "brand": "Vegabrand"
       }
     },
     {
@@ -480,7 +478,7 @@ let products = [
     {
       "productId": "PET0029",
       "title": "Đệm nằm cho mèo size S",
-      "images": ["cat_bed_1.jpg", "cat_bed_2.jpg"],
+      "images": ["cat_bed_1.jpg"],
       "description": {
         "details": "Đệm nằm êm ái, phù hợp với mèo nhỏ và mèo con."
       },
@@ -495,7 +493,7 @@ let products = [
     {
       "productId": "PET0030",
       "title": "Bát ăn chống trượt cho chó mèo",
-      "images": ["pet_bowl_1.jpg", "pet_bowl_2.jpg"],
+      "images": ["pet_bowl_1.jpg"],
       "description": {
         "details": "Bát ăn chống trượt, dễ vệ sinh, phù hợp cho chó mèo."
       },
@@ -510,25 +508,34 @@ let products = [
 ];    
 
 
-function output(products){
-    console.log("\nDanh sách sản phẩm:");
-    products.forEach(product => {
-        console.log('ID:', product.ID);
-        console.log('Name:', product.Name);
-        console.log('Images:', product.Images.join(', '));
-        console.log('Description:', product.Description);
-        console.log('Quantity:', product.Quantity);
-        console.log('Price:', product.Price);
-        console.log('Brand:', product.Brand);
-        console.log('Origin:', product.Origin);
-        console.log('Category:', product.Category);
-        console.log('----------------------------------');    
-    });
+function output(products) {
+  console.log("\nDanh sách sản phẩm:");
+  products.forEach(product => {
+    console.log('ID:', product.productId);
+    console.log('Name:', product.title);
+    console.log('Images:', product.images.length > 0 ? product.images.join(', ') : 'No images available');
+    console.log('Description:', product.description.details);
+    console.log('Rating:', product.rating);
+    console.log('Quantity:', product.additionalInfo.quantity);
+    console.log('Price:', product.additionalInfo.price);
+    console.log('Brand:', product.additionalInfo.brand);
+    console.log('Origin:', product.additionalInfo.origin);
+    if (product.QnA && product.QnA.length > 0) {
+      console.log('QnA:');
+      product.QnA.forEach((qa, index) => {
+        console.log(`  Q${index + 1}: ${qa.question}`);
+        console.log(`  A${index + 1}: ${qa.answer}`);
+      });
+    } else {
+      console.log('QnA: No QnA available');
+    }
+    console.log('----------------------------------');
+  });
 }
 
-function addProduct(products, newProduct){
+function addProduct(products, newProduct) {
     products.push(newProduct);
-    console.log(`Đã thêm sản phẩm mới (ID: ${newProduct.ID}) vào mảng thành công!`);
+    console.log(`Đã thêm sản phẩm mới (ID: ${newProduct.productId}) vào danh sách thành công!`);
     return products;
 }
 

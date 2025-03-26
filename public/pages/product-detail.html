@@ -84,6 +84,10 @@
             padding: var(--spacing-md);
             background-color: var(--light-gray);
             border-radius: var(--radius-md);
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
         }
         
         .product-image {
@@ -91,6 +95,7 @@
             max-height: 300px;
             object-fit: contain;
             border-radius: var(--radius-sm);
+            margin: 8px;
         }
         
         .product-info {
@@ -167,11 +172,45 @@
                 grid-template-columns: 1fr;
             }
         }
+        
+        .page-navigation {
+            display: flex;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 500;
+            padding: 8px 16px;
+            border: 1px solid var(--primary-color);
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+        }
+        
+        .back-button:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .back-button .material-icons {
+            margin-right: 4px;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="product-detail-container slide-in">
+            <div class="page-navigation">
+                <a href="/productlist" class="back-button">
+                    <span class="material-icons">arrow_back</span>
+                    Danh sách sản phẩm
+                </a>
+            </div>
+            
             <h1>Chi tiết sản phẩm</h1>
             
             <div class="product-header">
@@ -186,7 +225,7 @@
             </div>
             
             <div class="product-image-container">
-                <img id="productImage" src="../images/sample-product.jpg" alt="Sản phẩm" class="product-image">
+                <!-- Hình ảnh sẽ được tải động vào đây -->
             </div>
             
             <div class="product-info">
@@ -215,14 +254,10 @@
             
             <div class="qna-section" id="qnaContainer">
                 <h3>Câu hỏi và trả lời</h3>
-                <!-- QnA items will be dynamically inserted here -->
+                <!-- Các mục hỏi đáp sẽ được chèn động tại đây -->
             </div>
             
             <div class="action-buttons">
-                <a href="product-list.html" class="btn btn-outline">
-                    <span class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">arrow_back</span>
-                    Danh sách sản phẩm
-                </a>
                 <button id="editProductBtn" class="btn btn-primary">
                     <span class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">edit</span>
                     Chỉnh sửa
@@ -240,17 +275,8 @@
             const urlParams = new URLSearchParams(window.location.search);
             const productId = urlParams.get('id');
             
-            // Thử lấy dữ liệu từ localStorage trước
-            const storedProduct = localStorage.getItem('productToDetail');
-            
-            if (storedProduct) {
-                // Nếu có dữ liệu trong localStorage
-                currentProduct = JSON.parse(storedProduct);
-                hienThiThongTinSanPham(currentProduct);
-                // Xóa dữ liệu khỏi localStorage sau khi sử dụng
-                localStorage.removeItem('productToDetail');
-            } else if (productId) {
-                // Nếu không có localStorage nhưng có ID, lấy từ API
+            if (productId) {
+                // Lấy thông tin sản phẩm từ API dựa trên ID
                 fetch(`/products/${productId}`)
                     .then(response => {
                         if (!response.ok) {
@@ -265,12 +291,12 @@
                     .catch(error => {
                         console.error('Lỗi khi tải sản phẩm:', error);
                         alert('Không thể tải thông tin sản phẩm!');
-                        window.location.href = '/pages/product-list.html';
+                        window.location.href = '/productlist';
                     });
             } else {
                 // Nếu không có ID, quay lại trang danh sách
                 alert('Không có thông tin sản phẩm!');
-                window.location.href = '/pages/product-list.html';
+                window.location.href = '/productlist';
             }
             
             // Hiển thị thông tin chi tiết sản phẩm
@@ -309,9 +335,15 @@
                 }
                 
                 // Hiển thị hình ảnh sản phẩm
-                if (product.images && product.images.length > 0) {
-                    document.getElementById('productImage').src = `../images/${product.images[0]}`;
-                    document.getElementById('productImage').alt = product.title;
+                const productImageContainer = document.querySelector('.product-image-container');
+                productImageContainer.innerHTML = ''; // Xóa nội dung hiện có
+
+                if (product.images?.length > 0) {
+                    productImageContainer.innerHTML = product.images
+                        .map(image => `<img src="../images/${image}" alt="${product.title}" class="product-image">`)
+                        .join('');
+                } else {
+                    productImageContainer.textContent = 'Không có hình ảnh nào.';
                 }
                 
                 // Hiển thị phần hỏi đáp
@@ -342,7 +374,7 @@
             // Thêm sự kiện cho nút chỉnh sửa
             document.getElementById('editProductBtn').addEventListener('click', () => {
                 if (currentProduct) {
-                    localStorage.setItem('productToUpdate', JSON.stringify(currentProduct));
+                    // Chuyển thẳng tới trang cập nhật với ID sản phẩm
                     window.location.href = `/update/product?id=${currentProduct.productId}`;
                 }
             });

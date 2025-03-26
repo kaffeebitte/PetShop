@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Danh sách sản phẩm</title>
+
     <link href="../styles/style.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
     <style>
+        /* Định nghĩa các biến CSS */
         :root {
             --primary-color: #00796b;
             --primary-hover: #004d40;
@@ -18,112 +21,10 @@
             --spacing-lg: 24px;
             --danger-color: #d32f2f;
             --danger-hover: #b71c1c;
+            --success-color: #388e3c;
         }
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: var(--light-gray);
-            margin: 0;
-            padding: 32px 20px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 1200px;
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 24px;
-            color: var(--text-color);
-            font-weight: bold;
-            font-size: 24px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 20px 0;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-            overflow: hidden;
-        }
-
-        th, td {
-            border: 1px solid var(--border-color);
-            padding: 12px 15px;
-            text-align: left;
-        }
-
-        th {
-            background-color: var(--primary-color);
-            color: white;
-            font-weight: bold;
-        }
-
-        tr:nth-child(even) {
-            background-color: rgba(0, 0, 0, 0.02);
-        }
-
-        tr:hover {
-            background-color: rgba(0, 0, 0, 0.05);
-        }
-
-        .back-link {
-            display: inline-block;
-            margin-top: 20px;
-            text-decoration: none;
-            color: var(--primary-color);
-            font-weight: bold;
-            padding: 10px 15px;
-            border: 1px solid var(--primary-color);
-            border-radius: 4px;
-            transition: all 0.2s ease;
-        }
-
-        .back-link:hover {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .actions {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .action-icon {
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 4px;
-            transition: all 0.2s ease;
-        }
-        
-        .edit-icon {
-            color: var(--primary-color);
-        }
-        
-        .edit-icon:hover {
-            background-color: rgba(0, 121, 107, 0.1);
-        }
-        
-        .delete-icon {
-            color: var(--danger-color);
-        }
-        
-        .delete-icon:hover {
-            background-color: rgba(211, 47, 47, 0.1);
-        }
-        
-        .material-icons {
-            font-size: 20px;
-        }
-        
+        /* Định dạng cho modal xác nhận xóa */
         .delete-confirmation {
             position: fixed;
             top: 0;
@@ -170,86 +71,184 @@
             background-color: #f5f5f5;
             color: var(--text-color);
         }
-        
+
         .hidden {
             display: none;
         }
         
-        tbody tr {
-            cursor: pointer;
-            transition: background-color 0.2s;
+        /* Định dạng cho phần tiêu đề và tìm kiếm */
+        .product-list-header {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin-bottom: var(--spacing-lg);
         }
         
-        tbody tr:hover {
-            background-color: rgba(0, 121, 107, 0.05);
-        }
-
-        .product-list-header {
+        .header-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: var(--spacing-lg);
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        
+        /* Định dạng cho tìm kiếm */
+        .search-container {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 16px;
+            transition: border-color 0.2s ease;
+        }
+        
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(0, 121, 107, 0.2);
+        }
+        
+        .search-button {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.2s ease;
+        }
+        
+        .search-button:hover {
+            background-color: var(--primary-hover);
+        }
+        
+        .search-button .material-icons {
+            font-size: 18px;
         }
         
         .product-count {
-            color: var(--text-light);
+            color: #666;
             font-size: 15px;
         }
-        
-        .actions {
+
+        .page-navigation {
             display: flex;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .material-icons {
-            font-size: 20px;
-        }
-        
-        .delete-confirmation-content {
-            animation: slideIn 0.3s ease;
-        }
-        
-        .table-responsive {
-            overflow-x: auto;
             margin-bottom: var(--spacing-lg);
         }
         
-        .back-link {
-            display: inline-block;
+        .back-button {
+            display: inline-flex;
+            align-items: center;
             text-decoration: none;
-            padding: 10px 20px;
-            border-radius: var(--radius-sm);
-            transition: var(--transition);
             color: var(--primary-color);
+            font-weight: 500;
+            padding: 8px 16px;
             border: 1px solid var(--primary-color);
-            font-weight: 600;
+            border-radius: var(--spacing-sm);
+            transition: all 0.2s;
         }
         
-        .back-link:hover {
+        .back-button:hover {
             background-color: var(--primary-color);
             color: white;
         }
         
-        .row-clickable:hover {
+        .back-button .material-icons {
+            margin-right: 4px;
+            font-size: 18px;
+        }
+
+        /* Styling for the add product button - updated colors */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .add-product-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background-color: #ff6f00; /* Updated to orange color */
+            color: white;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background-color 0.2s ease;
+        }
+        
+        .add-product-btn:hover {
+            background-color: #e65100; /* Darker orange on hover */
+        }
+
+        /* Định dạng cho các hàng trong bảng */
+        .row-clickable {
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        
+        .row-clickable:hover {
             background-color: rgba(0, 121, 107, 0.05);
         }
         
         .empty-state {
             text-align: center;
-            padding: var(--spacing-xl);
+            padding: var(--spacing-lg);
             color: var(--text-light);
+            font-style: italic;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="product-list-header">
-            <h1>Danh sách sản phẩm</h1>
-            <span class="product-count" id="productCount"></span>
+        <div class="page-navigation">
+            <a href="/" class="back-button">
+                <span class="material-icons">arrow_back</span>
+                Quay lại trang chủ
+            </a>
         </div>
         
+        <div class="product-list-header">
+            <div class="header-top">
+                <h1>Danh sách sản phẩm</h1>
+                <span class="product-count" id="productCount"></span>
+            </div>
+            
+            <div class="search-container">
+                <input 
+                    type="text" 
+                    id="searchInput" 
+                    class="search-input" 
+                    placeholder="Tìm kiếm sản phẩm..."
+                >
+                <div class="action-buttons">
+                    <button id="searchButton" class="search-button">
+                        <span class="material-icons">search</span>
+                        Tìm kiếm
+                    </button>
+                    <a href="/add/product" class="add-product-btn">
+                        <span class="material-icons">add</span>
+                        Thêm sản phẩm
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bảng hiển thị sản phẩm -->
         <div class="table-responsive">
             <table class="table">
                 <thead>
@@ -265,17 +264,13 @@
                     </tr>
                 </thead>
                 <tbody id="productTableBody">
-                    <!-- Product rows will be dynamically inserted here -->
+                    <!-- Các hàng sản phẩm sẽ được chèn động tại đây -->
                 </tbody>
             </table>
         </div>
-        
-        <div class="text-center">
-            <a href="/" class="btn btn-outline">Quay lại trang chủ</a>
-        </div>
     </div>
     
-    <!-- Delete Confirmation Modal -->
+    <!-- Modal xác nhận xóa -->
     <div id="deleteConfirmation" class="modal-overlay hidden">
         <div class="modal-content delete-confirmation-content">
             <div class="modal-header">
@@ -292,119 +287,170 @@
     </div>
     
     <script>
+        // JavaScript xử lý logic hiển thị và thao tác với sản phẩm
         document.addEventListener('DOMContentLoaded', () => {
             const tableBody = document.getElementById('productTableBody');
             const productCount = document.getElementById('productCount');
+            const searchInput = document.getElementById('searchInput');
+            const searchButton = document.getElementById('searchButton');
             
-            // Lấy dữ liệu sản phẩm từ API
-            fetch('/products')
-                .then(response => response.json())
-                .then(products => {
-                    // Xóa nội dung bảng hiện tại
-                    tableBody.innerHTML = '';
-                    
-                    // Kiểm tra nếu không có sản phẩm nào
-                    if (products.length === 0) {
+            // Lưu trữ tất cả sản phẩm 
+            let allProducts = [];
+            
+            // Tải danh sách sản phẩm khi trang được tải
+            loadProducts();
+            
+            // Thêm sự kiện tìm kiếm
+            searchButton.addEventListener('click', performSearch);
+            searchInput.addEventListener('keyup', function(event) {
+                if (event.key === 'Enter') {
+                    performSearch();
+                }
+            });
+            
+            // Hàm tải danh sách sản phẩm
+            function loadProducts() {
+                fetch('/products')
+                    .then(response => response.json())
+                    .then(products => {
+                        allProducts = products; // Lưu trữ tất cả sản phẩm
+                        displayProducts(products);
+                    })
+                    .catch(error => {
+                        console.error('Lỗi khi lấy dữ liệu sản phẩm:', error);
                         tableBody.innerHTML = `
                             <tr>
-                                <td colspan="8" class="empty-state">Không có sản phẩm nào</td>
+                                <td colspan="8" class="empty-state">Không thể tải dữ liệu sản phẩm</td>
                             </tr>
                         `;
                         productCount.textContent = 'Không có sản phẩm';
-                        return;
-                    }
-                    
-                    // Cập nhật số lượng sản phẩm
-                    productCount.textContent = `${products.length} sản phẩm`;
-                    
-                    // Thêm từng sản phẩm vào bảng
-                    products.forEach(product => {
-                        const row = tableBody.insertRow();
-                        row.classList.add('row-clickable');
-                        
-                        // Tạo các ô cho từng thuộc tính sản phẩm
-                        const cellID = row.insertCell(0);
-                        const cellName = row.insertCell(1);
-                        const cellPrice = row.insertCell(2);
-                        const cellQuantity = row.insertCell(3);
-                        const cellBrand = row.insertCell(4);
-                        const cellOrigin = row.insertCell(5);
-                        const cellRating = row.insertCell(6);
-                        const cellActions = row.insertCell(7);
-                        
-                        // Đặt nội dung cho từng ô dựa trên cấu trúc từ products.js
-                        cellID.textContent = product.productId;
-                        cellName.textContent = product.title;
-                        cellPrice.textContent = `${Number(product.additionalInfo.price).toLocaleString()} VND`;
-                        cellQuantity.textContent = product.additionalInfo.quantity;
-                        cellBrand.textContent = product.additionalInfo.brand;
-                        cellOrigin.textContent = product.additionalInfo.origin;
-                        cellRating.textContent = product.rating || 'N/A';
-                        cellActions.innerHTML = `
-                            <span class="material-icons action-icon edit-icon" data-id="${product.productId}">edit</span>
-                            <span class="material-icons action-icon delete-icon" data-id="${product.productId}" data-name="${product.title}">delete</span>
+                    });
+            }
+            
+            // Hàm tìm kiếm sản phẩm theo từ khóa 
+            function performSearch() {
+                const keyword = searchInput.value.trim();
+                
+                if (!keyword) {
+                    // Nếu không có từ khóa, hiển thị tất cả sản phẩm
+                    displayProducts(allProducts);
+                    return;
+                }
+                
+                console.log(`Đang tìm kiếm: "${keyword}"`);
+                
+                fetch(`/products/search?keyword=${encodeURIComponent(keyword)}`)
+                    .then(response => response.json())
+                    .then(products => {
+                        console.log(`Tìm thấy ${products.length} sản phẩm khớp với từ khóa "${keyword}"`);
+                        displayProducts(products);
+                    })
+                    .catch(error => {
+                        console.error('Lỗi khi tìm kiếm sản phẩm:', error);
+                        tableBody.innerHTML = `
+                            <tr>
+                                <td colspan="8" class="empty-state">Lỗi khi tìm kiếm sản phẩm</td>
+                            </tr>
                         `;
-                        cellActions.className = 'actions';
-                        
-                        // Thêm sự kiện click vào hàng để xem chi tiết sản phẩm
-                        row.addEventListener('click', (e) => {
-                            // Không chuyển hướng nếu đang nhấp vào biểu tượng hành động
-                            if (!e.target.classList.contains('action-icon') && !e.target.classList.contains('material-icons')) {
-                                showProductDetails(product.productId);
-                            }
-                        });
+                        productCount.textContent = 'Không có sản phẩm';
                     });
-                    
-                    // Thêm sự kiện lắng nghe cho tất cả biểu tượng chỉnh sửa
-                    document.querySelectorAll('.edit-icon').forEach(icon => {
-                        icon.addEventListener('click', (e) => {
-                            e.stopPropagation(); // Ngăn sự kiện click của hàng
-                            const productId = e.target.getAttribute('data-id');
-                            redirectToUpdatePage(productId);
-                        });
-                    });
-                    
-                    // Thêm sự kiện lắng nghe cho tất cả biểu tượng xóa
-                    document.querySelectorAll('.delete-icon').forEach(icon => {
-                        icon.addEventListener('click', (e) => {
-                            e.stopPropagation(); // Ngăn sự kiện click của hàng
-                            const productId = e.target.getAttribute('data-id');
-                            const productName = e.target.getAttribute('data-name');
-                            showDeleteConfirmation(productId, productName);
-                        });
-                    });
-                })
-                .catch(error => {
-                    console.error('Lỗi khi lấy dữ liệu sản phẩm:', error);
+            }
+            
+            // Hàm hiển thị danh sách sản phẩm
+            function displayProducts(products) {
+                // Xóa nội dung bảng hiện tại
+                tableBody.innerHTML = '';
+                
+                // Kiểm tra nếu không có sản phẩm
+                if (products.length === 0) {
                     tableBody.innerHTML = `
                         <tr>
-                            <td colspan="8" class="empty-state">Không thể tải dữ liệu sản phẩm</td>
+                            <td colspan="8" class="empty-state">Không tìm thấy sản phẩm nào</td>
                         </tr>
                     `;
                     productCount.textContent = 'Không có sản phẩm';
-                });
-            
-            function showProductDetails(productId) {
-                // Lấy thông tin sản phẩm trước khi chuyển hướng
-                fetch(`/products/${productId}`)
-                    .then(response => response.json())
-                    .then(product => {
-                        // Lưu thông tin sản phẩm vào localStorage
-                        localStorage.setItem('productToDetail', JSON.stringify(product));
-                        // Chuyển hướng đến trang chi tiết sản phẩm
-                        window.location.href = `/productdetail?id=${productId}`;
-                    })
-                    .catch(error => {
-                        console.error('Lỗi khi lấy thông tin sản phẩm:', error);
-                        alert('Không thể tải thông tin sản phẩm');
+                    return;
+                }
+                
+                // Cập nhật số lượng sản phẩm
+                productCount.textContent = `${products.length} sản phẩm`;
+                
+                // Thêm từng sản phẩm vào bảng
+                products.forEach(product => {
+                    const row = tableBody.insertRow();
+                    row.classList.add('row-clickable');
+                    
+                    // Tạo các ô cho từng thuộc tính sản phẩm
+                    const cellID = row.insertCell(0);
+                    const cellName = row.insertCell(1);
+                    const cellPrice = row.insertCell(2);
+                    const cellQuantity = row.insertCell(3);
+                    const cellBrand = row.insertCell(4);
+                    const cellOrigin = row.insertCell(5);
+                    const cellRating = row.insertCell(6);
+                    const cellActions = row.insertCell(7);
+                    
+                    // Đặt nội dung cho từng ô
+                    cellID.textContent = product.productId;
+                    cellName.textContent = product.title;
+                    cellPrice.textContent = formatPrice(product.additionalInfo.price);
+                    cellQuantity.textContent = product.additionalInfo.quantity;
+                    cellBrand.textContent = product.additionalInfo.brand;
+                    cellOrigin.textContent = product.additionalInfo.origin;
+                    cellRating.textContent = product.rating || 'N/A';
+                    cellActions.innerHTML = `
+                        <span class="material-icons action-icon edit-icon" data-id="${product.productId}">edit</span>
+                        <span class="material-icons action-icon delete-icon" data-id="${product.productId}" data-name="${product.title}">delete</span>
+                    `;
+                    cellActions.className = 'actions';
+                    
+                    // Thêm sự kiện click vào hàng để xem chi tiết sản phẩm
+                    row.addEventListener('click', (e) => {
+                        // Không chuyển hướng nếu nhấp vào biểu tượng hành động
+                        if (!e.target.classList.contains('action-icon') && !e.target.classList.contains('material-icons')) {
+                            showProductDetails(product.productId);
+                        }
                     });
+                });
+                
+                // Thêm sự kiện cho các nút chức năng
+                addActionEventListeners();
             }
             
-            function redirectToUpdatePage(productId) {
-                // Chuyển hướng đến trang cập nhật sản phẩm
-                window.location.href = `/update/product?id=${productId}`;
+            // Hàm thêm sự kiện cho các nút chức năng
+            function addActionEventListeners() {
+                // Thêm sự kiện lắng nghe cho biểu tượng chỉnh sửa
+                document.querySelectorAll('.edit-icon').forEach(icon => {
+                    icon.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Ngăn sự kiện click của hàng
+                        const productId = e.target.getAttribute('data-id');
+                        window.location.href = `/update/product?id=${productId}`;
+                    });
+                });
+                
+                // Thêm sự kiện lắng nghe cho biểu tượng xóa
+                document.querySelectorAll('.delete-icon').forEach(icon => {
+                    icon.addEventListener('click', (e) => {
+                        e.stopPropagation(); // Ngăn sự kiện click của hàng
+                        const productId = e.target.getAttribute('data-id');
+                        const productName = e.target.getAttribute('data-name');
+                        showDeleteConfirmation(productId, productName);
+                    });
+                });
             }
             
+            // Định dạng giá tiền
+            function formatPrice(price) {
+                return `${Number(price).toLocaleString()} VND`;
+            }
+            
+            // Hàm hiển thị chi tiết sản phẩm
+            function showProductDetails(productId) {
+                // Chuyển hướng đến trang chi tiết sản phẩm
+                window.location.href = `/productdetail?id=${productId}`;
+            }
+            
+            // Hàm hiển thị modal xác nhận xóa
             function showDeleteConfirmation(productId, productName) {
                 const modal = document.getElementById('deleteConfirmation');
                 const productNameSpan = document.getElementById('deleteProductName');
@@ -422,92 +468,16 @@
                 };
             }
             
+            // Hàm xóa sản phẩm
             function deleteProduct(productId) {
-                // Gửi yêu cầu DELETE đến API
                 fetch(`/api/products/${productId}`, {
                     method: 'DELETE',
                 })
                 .then(response => {
                     if (response.ok) {
                         // Làm mới danh sách sản phẩm sau khi xóa thành công
-                        fetch('/products')
-                            .then(response => response.json())
-                            .then(products => {
-                                // Xóa nội dung bảng hiện tại
-                                tableBody.innerHTML = '';
-                                
-                                // Kiểm tra nếu không có sản phẩm nào
-                                if (products.length === 0) {
-                                    tableBody.innerHTML = `
-                                        <tr>
-                                            <td colspan="8" class="empty-state">Không có sản phẩm nào</td>
-                                        </tr>
-                                    `;
-                                    productCount.textContent = 'Không có sản phẩm';
-                                    return;
-                                }
-                                
-                                // Cập nhật số lượng sản phẩm
-                                productCount.textContent = `${products.length} sản phẩm`;
-                                
-                                // Thêm từng sản phẩm vào bảng
-                                products.forEach(product => {
-                                    const row = tableBody.insertRow();
-                                    row.classList.add('row-clickable');
-                                    
-                                    // Tạo các ô cho từng thuộc tính sản phẩm
-                                    const cellID = row.insertCell(0);
-                                    const cellName = row.insertCell(1);
-                                    const cellPrice = row.insertCell(2);
-                                    const cellQuantity = row.insertCell(3);
-                                    const cellBrand = row.insertCell(4);
-                                    const cellOrigin = row.insertCell(5);
-                                    const cellRating = row.insertCell(6);
-                                    const cellActions = row.insertCell(7);
-                                    
-                                    // Đặt nội dung cho từng ô dựa trên cấu trúc từ products.js
-                                    cellID.textContent = product.productId;
-                                    cellName.textContent = product.title;
-                                    cellPrice.textContent = `${Number(product.additionalInfo.price).toLocaleString()} VND`;
-                                    cellQuantity.textContent = product.additionalInfo.quantity;
-                                    cellBrand.textContent = product.additionalInfo.brand;
-                                    cellOrigin.textContent = product.additionalInfo.origin;
-                                    cellRating.textContent = product.rating || 'N/A';
-                                    cellActions.innerHTML = `
-                                        <span class="material-icons action-icon edit-icon" data-id="${product.productId}">edit</span>
-                                        <span class="material-icons action-icon delete-icon" data-id="${product.productId}" data-name="${product.title}">delete</span>
-                                    `;
-                                    cellActions.className = 'actions';
-                                    
-                                    // Thêm sự kiện click vào hàng để xem chi tiết sản phẩm
-                                    row.addEventListener('click', (e) => {
-                                        // Không chuyển hướng nếu đang nhấp vào biểu tượng hành động
-                                        if (!e.target.classList.contains('action-icon') && !e.target.classList.contains('material-icons')) {
-                                            showProductDetails(product.productId);
-                                        }
-                                    });
-                                });
-                                
-                                // Thêm sự kiện lắng nghe cho tất cả biểu tượng
-                                document.querySelectorAll('.edit-icon').forEach(icon => {
-                                    icon.addEventListener('click', (e) => {
-                                        e.stopPropagation(); // Ngăn sự kiện click của hàng
-                                        const productId = e.target.getAttribute('data-id');
-                                        redirectToUpdatePage(productId);
-                                    });
-                                });
-                                
-                                document.querySelectorAll('.delete-icon').forEach(icon => {
-                                    icon.addEventListener('click', (e) => {
-                                        e.stopPropagation(); // Ngăn sự kiện click của hàng
-                                        const productId = e.target.getAttribute('data-id');
-                                        const productName = e.target.getAttribute('data-name');
-                                        showDeleteConfirmation(productId, productName);
-                                    });
-                                });
-                                
-                                alert('Sản phẩm đã được xóa thành công!');
-                            });
+                        loadProducts();
+                        alert('Sản phẩm đã được xóa thành công!');
                     } else {
                         alert('Không thể xóa sản phẩm. Vui lòng thử lại sau!');
                     }

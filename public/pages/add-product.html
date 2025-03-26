@@ -22,7 +22,7 @@
             font-family: Arial, sans-serif;
             background-color: var(--light-gray);
             margin: 0;
-            padding: 32px 20px; /* Adjusted padding for better spacing */
+            padding: 32px 20px; /* Điều chỉnh padding để có khoảng cách tốt hơn */
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -112,17 +112,51 @@
                 grid-template-columns: 1fr 1fr;
             }
         }
+
+        .page-navigation {
+            display: flex;
+            margin-bottom: var(--spacing-lg);
+        }
+        
+        .back-button {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 500;
+            padding: 8px 16px;
+            border: 1px solid var(--primary-color);
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+        }
+        
+        .back-button:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .back-button .material-icons {
+            margin-right: 4px;
+            font-size: 18px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <form id="addProductForm" enctype="multipart/form-data" class="form-container">
+        <form id="addProductForm" action="/products" method="POST" class="form-container">
+            <div class="page-navigation">
+                <a href="/" class="back-button">
+                    <span class="material-icons">arrow_back</span>
+                    Quay lại
+                </a>
+            </div>
+            
             <h1 class="form-title">Thêm sản phẩm mới</h1>
             
             <div class="form-row">
                 <div class="form-group">
                     <label for="productId" class="required-field">ID sản phẩm</label>
-                    <input type="text" id="productId" name="productId" class="form-control" required>
+                    <input type="text" id="productId" name="productId" class="form-control" required readonly>
                 </div>
                 <div class="form-group">
                     <label for="title" class="required-field">Tên sản phẩm</label>
@@ -133,11 +167,11 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="price" class="required-field">Giá</label>
-                    <input type="number" id="price" name="price" class="form-control" required>
+                    <input type="number" id="price" name="price" class="form-control" min="0" required>
                 </div>
                 <div class="form-group">
                     <label for="quantity" class="required-field">Số lượng</label>
-                    <input type="number" id="quantity" name="quantity" class="form-control" required>
+                    <input type="number" id="quantity" name="quantity" class="form-control" min="0" required>
                 </div>
             </div>
             
@@ -147,31 +181,27 @@
                     <input type="text" id="brand" name="brand" class="form-control" required>
                 </div>
                 <div class="form-group">
-                    <label for="category" class="required-field">Danh mục</label>
-                    <input type="text" id="category" name="category" class="form-control" required>
+                    <label for="origin" class="required-field">Xuất xứ</label>
+                    <input type="text" id="origin" name="origin" class="form-control" required>
                 </div>
             </div>
             
             <div class="form-row">
                 <div class="form-group">
-                    <label for="origin" class="required-field">Xuất xứ</label>
-                    <input type="text" id="origin" name="origin" class="form-control" required>
-                </div>
-                <div class="form-group">
                     <label for="rating" class="required-field">Đánh giá</label>
-                    <input type="number" id="rating" name="rating" step="0.1" min="0" max="5" class="form-control" required>
+                    <input type="number" id="rating" name="rating" step="0.5" min="0" max="5" class="form-control">
                 </div>
-            </div>
+                            </div>
             
             <div class="form-group">
-                <label for="description" class="required-field">Mô tả</label>
-                <textarea id="description" name="description" class="form-control" rows="3" required></textarea>
+                <label for="description">Mô tả</label>
+                <textarea id="description" name="description" class="form-control" rows="3" ></textarea>
             </div>
             
             <div class="form-group">
                 <label for="images">Hình ảnh</label>
-                <input type="file" id="images" name="images" multiple class="form-control-file">
-                <small class="text-light">Có thể chọn nhiều file hình ảnh</small>
+                <input type="file" id="images" name="images" multiple class="form-control-file" accept=".png, .jpg, .jpeg">
+                <small class="text-light">Chỉ chấp nhận các định dạng: PNG, JPG, JPEG. Có thể chọn nhiều file hình ảnh</small>
             </div>
             
             <div class="qna-section">
@@ -184,15 +214,14 @@
                 </div>
                 <div id="qnaContainer">
                     <div class="qna-item">
-                        <input type="text" name="questions[]" placeholder="Câu hỏi" class="form-control" required>
-                        <input type="text" name="answers[]" placeholder="Trả lời" class="form-control" required>
+                        <input type="text" name="questions[]" placeholder="Câu hỏi" class="form-control">
+                        <input type="text" name="answers[]" placeholder="Trả lời" class="form-control">
                         <span class="material-icons remove-qna">clear</span>
                     </div>
                 </div>
             </div>
             
             <div class="form-buttons">
-                <a href="/" class="btn btn-outline">Hủy</a>
                 <button type="submit" class="btn btn-primary">Thêm sản phẩm</button>
             </div>
         </form>
@@ -200,63 +229,93 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Add event listeners to all remove buttons
-            document.querySelectorAll('.remove-qna').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    // Only remove if there's more than one QnA item
-                    if (document.querySelectorAll('.qna-item').length > 1) {
-                        this.parentElement.remove();
-                    }
+            // Lấy ID tự động khi tải trang
+            fetch('/products')
+                .then(response => response.json())
+                .then(products => {
+                    const maxId = products.reduce((max, p) => {
+                        const num = parseInt(p.productId.substring(3));
+                        return num > max ? num : max;
+                    }, 0);
+                    document.getElementById('productId').value = 'PET' + String(maxId + 1).padStart(4, '0');
+                })
+                .catch(() => {
+                    console.log('Không thể lấy danh sách sản phẩm, sử dụng ID mặc định');
+                    document.getElementById('productId').value = 'PET0001';
                 });
-            });
-            
-            // Add event listener to add QnA button
+
+            // Xử lý QnA
+            function handleRemoveQnA() {
+                document.querySelectorAll('.remove-qna').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        if (document.querySelectorAll('.qna-item').length > 1) {
+                            this.parentElement.remove();
+                        }
+                    });
+                });
+            }
+
             document.getElementById('addQnaButton').addEventListener('click', function() {
-                const qnaContainer = document.getElementById('qnaContainer');
                 const qnaItem = document.createElement('div');
                 qnaItem.classList.add('qna-item');
                 qnaItem.innerHTML = `
-                    <input type="text" name="questions[]" placeholder="Câu hỏi" class="form-control" required>
-                    <input type="text" name="answers[]" placeholder="Trả lời" class="form-control" required>
+                    <input type="text" name="questions[]" placeholder="Câu hỏi" class="form-control">
+                    <input type="text" name="answers[]" placeholder="Trả lời" class="form-control">
                     <span class="material-icons remove-qna">clear</span>
                 `;
-                
-                // Add event listener to new remove button
-                qnaItem.querySelector('.remove-qna').addEventListener('click', function() {
-                    // Only remove if there's more than one QnA item
-                    if (document.querySelectorAll('.qna-item').length > 1) {
-                        qnaItem.remove();
-                    }
-                });
-                
-                qnaContainer.appendChild(qnaItem);
+                document.getElementById('qnaContainer').appendChild(qnaItem);
+                handleRemoveQnA();
             });
 
-            // Add event listener to form submission
-            document.getElementById('addProductForm').addEventListener('submit', function(event) {
-                event.preventDefault();
+            handleRemoveQnA();
+
+            // Xử lý form submit 
+            document.getElementById('addProductForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                // Validate required fields
+                const requiredFields = ['productId', 'title', 'price', 'quantity', 'brand', 'origin'];
+                const missingFields = requiredFields.filter(field => !this[field].value);
                 
-                // In a real application, you would save the data here
-                alert('Sản phẩm đã được thêm thành công!');
-                this.reset();
-                
-                // Reset QnA section to just one item
-                const qnaContainer = document.getElementById('qnaContainer');
-                qnaContainer.innerHTML = `
-                    <div class="qna-item">
-                        <input type="text" name="questions[]" placeholder="Câu hỏi" class="form-control" required>
-                        <input type="text" name="answers[]" placeholder="Trả lời" class="form-control" required>
-                        <span class="material-icons remove-qna">clear</span>
-                    </div>
-                `;
-                
-                // Add event listener to the new remove button
-                document.querySelector('.remove-qna').addEventListener('click', function() {
-                    // Only remove if there's more than one QnA item
-                    if (document.querySelectorAll('.qna-item').length > 1) {
-                        this.parentElement.remove();
+                if (missingFields.length > 0) {
+                    alert(`Vui lòng điền đầy đủ thông tin các trường: ${missingFields.map(field => {
+                        switch(field) {
+                            case 'productId': return 'ID sản phẩm';
+                            case 'title': return 'Tên sản phẩm';
+                            case 'price': return 'Giá';
+                            case 'quantity': return 'Số lượng';
+                            case 'brand': return 'Thương hiệu';
+                            case 'origin': return 'Xuất xứ';
+                            default: return field;
+                        }
+                    }).join(', ')}`);
+                    return;
+                }
+
+                const formData = new FormData(this);
+                const data = Object.fromEntries(formData.entries());
+
+                try {
+                    const response = await fetch('/products', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(data)
+                    });
+
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        alert('Thêm sản phẩm thành công!');
+                        this.reset();
+                        window.location.href = '/productlist';
+                    } else {
+                        alert(result.error || 'Không thể thêm sản phẩm');
                     }
-                });
+                } catch (error) {
+                    alert('Lỗi khi gửi form: ' + error.message);
+                }
             });
         });
     </script>
