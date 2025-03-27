@@ -22,12 +22,6 @@ let products = [
         "details": "Cát vệ sinh khử mùi, vón cục tốt, giúp giữ vệ sinh hiệu quả cho mèo."
       },
       "rating": 4.2,
-      "QnA": [
-        {
-          "question": "Loại này có mùi không?",
-          "answer": "Khoảng mùi ít, không ảnh hưởng nhiều."
-        }
-      ],
       "additionalInfo": {
         "quantity": 40,
         "price": 200000,
@@ -43,12 +37,6 @@ let products = [
         "details": "Dây dắt bằng nylon bền chắc, có thể điều chỉnh độ dài, phù hợp với chó dưới 30kg."
       },
       "rating": 4.5,
-      "QnA": [
-        {
-          "question": "Sản phẩm có bền không?",
-          "answer": "Dùng nylon chịu lực tốt."
-        }
-      ],
       "additionalInfo": {
         "quantity": 30,
         "price": 250000,
@@ -64,16 +52,6 @@ let products = [
         "details": "Pate thịt bò bổ sung dưỡng chất cho mèo, hỗ trợ hệ tiêu hóa và lông mượt."
       },
       "rating": 4.2,
-      "QnA": [
-        {
-          "question": "Pate này có phù hợp cho mèo con không?",
-          "answer": "Có thể dùng cho mèo từ 2 tháng tuổi."
-        },
-        {
-          "question": "Sản phẩm có cần bảo quản lạnh không?",
-          "answer": "Không cần, nhưng nên để nơi thoáng mát."
-        }
-      ],
       "additionalInfo": {
         "quantity": 100,
         "price": 25000,
@@ -89,12 +67,6 @@ let products = [
         "details": "Lồng vận chuyển có tay cầm chắc chắn, thông thoáng, phù hợp với chó và mèo."
       },
       "rating": 4.3,
-      "QnA": [
-        {
-          "question": "Kích thước phù hợp cho chó bao nhiêu kg?",
-          "answer": "Khoảng 7-10kg."
-        }
-      ],
       "additionalInfo": {
         "quantity": 20,
         "price": 450000,
@@ -125,12 +97,6 @@ let products = [
         "details": "Bánh thưởng giúp huấn luyện chó, hương vị thơm ngon, dễ tiêu hóa."
       },
       "rating": 4.3,
-      "QnA": [
-        {
-          "question": "Có phù hợp chó con không?",
-          "answer": "Dùng được cho chó từ 2 tháng tuổi."
-        }
-      ],
       "additionalInfo": {
         "quantity": 60,
         "price": 180000,
@@ -146,12 +112,6 @@ let products = [
         "details": "Chuồng chó bằng sắt chắc chắn, dễ vệ sinh, phù hợp với chó trung bình."
       },
       "rating": 4.7,
-      "QnA": [
-        {
-          "question": "Chuồng có khóa an toàn không?",
-          "answer": "Có khóa 2 lớp rất chắc chắn."
-        }
-      ],
       "additionalInfo": {
         "quantity": 15,
         "price": 600000,
@@ -182,12 +142,6 @@ let products = [
         "details": "Balo trong suốt giúp thú cưng dễ dàng quan sát bên ngoài, thoáng khí."
       },
       "rating": 4.4,
-      "QnA": [
-        {
-          "question": "Tải trọng tối đa là bao nhiêu?",
-          "answer": "Chịu được mèo nặng tới 8kg."
-        }
-      ],
       "additionalInfo": {
         "quantity": 20,
         "price": 420000,
@@ -263,12 +217,6 @@ let products = [
         "details": "Lồng vận chuyển cỡ lớn, thoáng khí, phù hợp với chó lớn và mèo béo."
       },
       "rating": 4.6,
-      "QnA": [
-        {
-          "question": "Bao lâu thì cần thay mới?",
-          "answer": "Khoảng 1 năm nếu dùng thường xuyên."
-        }
-      ],
       "additionalInfo": {
         "quantity": 15,
         "price": 550000,
@@ -418,12 +366,6 @@ let products = [
         "details": "Sữa tắm giúp khử mùi, làm mềm lông mèo."
       },
       "rating": 4.5,
-      "QnA": [
-        {
-          "question": "Có phù hợp với mèo con không?",
-          "answer": "An toàn cho mèo từ 3 tháng tuổi."
-        }
-      ],
       "additionalInfo": {
         "quantity": 40,
         "price": 190000,
@@ -520,15 +462,6 @@ function output(products) {
     console.log('Price:', product.additionalInfo.price);
     console.log('Brand:', product.additionalInfo.brand);
     console.log('Origin:', product.additionalInfo.origin);
-    if (product.QnA && product.QnA.length > 0) {
-      console.log('QnA:');
-      product.QnA.forEach((qa, index) => {
-        console.log(`  Q${index + 1}: ${qa.question}`);
-        console.log(`  A${index + 1}: ${qa.answer}`);
-      });
-    } else {
-      console.log('QnA: No QnA available');
-    }
     console.log('----------------------------------');
   });
 }
@@ -539,8 +472,13 @@ function addProduct(products, newProduct) {
     return products;
 }
 
+function findProductById(productId) {
+    return products.find(product => product.productId === productId);
+}
+
 module.exports = {
     output,
     addProduct,
+    findProductById,
     products
 };

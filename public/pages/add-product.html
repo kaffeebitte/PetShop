@@ -7,22 +7,11 @@
     <link href="../styles/style.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #00796b;
-            --primary-hover: #004d40;
-            --text-color: #333;
-            --light-gray: #f4f4f4;
-            --border-color: #e0e0e0;
-            --spacing-sm: 8px;
-            --spacing-md: 16px;
-            --spacing-lg: 24px;
-        }
-
         body {
             font-family: Arial, sans-serif;
             background-color: var(--light-gray);
             margin: 0;
-            padding: 32px 20px; /* Điều chỉnh padding để có khoảng cách tốt hơn */
+            padding: 32px 20px; 
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -58,41 +47,6 @@
         
         .form-control-file {
             padding: 10px 0;
-        }
-        
-        .qna-section {
-            margin: var(--spacing-lg) 0;
-            padding: var(--spacing-md);
-            background-color: var(--light-gray);
-            border-radius: var(--radius-sm);
-        }
-        
-        .qna-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: var(--spacing-md);
-        }
-        
-        .qna-item {
-            display: flex;
-            gap: var(--spacing-md);
-            margin-bottom: var(--spacing-md);
-            animation: fadeIn 0.3s ease;
-        }
-        
-        .qna-item input {
-            flex: 1;
-        }
-        
-        .remove-qna {
-            color: var(--danger-color);
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
         }
         
         .form-buttons {
@@ -143,11 +97,10 @@
 </head>
 <body>
     <div class="container">
-        <form id="addProductForm" action="/products" method="POST" class="form-container">
+        <form id="addProductForm" action="/products" method="POST" enctype="application/x-www-form-urlencoded" class="form-container">
             <div class="page-navigation">
                 <a href="/" class="back-button">
-                    <span class="material-icons">arrow_back</span>
-                    Quay lại
+                    « Quay lại
                 </a>
             </div>
             
@@ -156,7 +109,7 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="productId" class="required-field">ID sản phẩm</label>
-                    <input type="text" id="productId" name="productId" class="form-control" required readonly>
+                    <input type="text" id="productId" name="productId" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label for="title" class="required-field">Tên sản phẩm</label>
@@ -191,34 +144,17 @@
                     <label for="rating" class="required-field">Đánh giá</label>
                     <input type="number" id="rating" name="rating" step="0.5" min="0" max="5" class="form-control">
                 </div>
-                            </div>
+            </div>
             
             <div class="form-group">
                 <label for="description">Mô tả</label>
-                <textarea id="description" name="description" class="form-control" rows="3" ></textarea>
+                <textarea id="description" name="description" class="form-control" rows="3"></textarea>
             </div>
             
             <div class="form-group">
                 <label for="images">Hình ảnh</label>
                 <input type="file" id="images" name="images" multiple class="form-control-file" accept=".png, .jpg, .jpeg">
                 <small class="text-light">Chỉ chấp nhận các định dạng: PNG, JPG, JPEG. Có thể chọn nhiều file hình ảnh</small>
-            </div>
-            
-            <div class="qna-section">
-                <div class="qna-header">
-                    <label>Câu hỏi và trả lời (QnA)</label>
-                    <button type="button" id="addQnaButton" class="btn btn-outline">
-                        <span class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">add</span>
-                        Thêm QnA
-                    </button>
-                </div>
-                <div id="qnaContainer">
-                    <div class="qna-item">
-                        <input type="text" name="questions[]" placeholder="Câu hỏi" class="form-control">
-                        <input type="text" name="answers[]" placeholder="Trả lời" class="form-control">
-                        <span class="material-icons remove-qna">clear</span>
-                    </div>
-                </div>
             </div>
             
             <div class="form-buttons">
@@ -229,79 +165,46 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Lấy ID tự động khi tải trang
+            const productIdInput = document.getElementById('productId');
+            let existingProductIds = [];
+
+            // Lấy danh sách ID sản phẩm hiện có
             fetch('/products')
                 .then(response => response.json())
                 .then(products => {
-                    const maxId = products.reduce((max, p) => {
-                        const num = parseInt(p.productId.substring(3));
-                        return num > max ? num : max;
-                    }, 0);
-                    document.getElementById('productId').value = 'PET' + String(maxId + 1).padStart(4, '0');
+                    existingProductIds = products.map(p => p.productId);
                 })
-                .catch(() => {
-                    console.log('Không thể lấy danh sách sản phẩm, sử dụng ID mặc định');
-                    document.getElementById('productId').value = 'PET0001';
+                .catch(error => {
+                    console.error('Không thể lấy danh sách sản phẩm:', error);
                 });
 
-            // Xử lý QnA
-            function handleRemoveQnA() {
-                document.querySelectorAll('.remove-qna').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        if (document.querySelectorAll('.qna-item').length > 1) {
-                            this.parentElement.remove();
-                        }
-                    });
-                });
-            }
-
-            document.getElementById('addQnaButton').addEventListener('click', function() {
-                const qnaItem = document.createElement('div');
-                qnaItem.classList.add('qna-item');
-                qnaItem.innerHTML = `
-                    <input type="text" name="questions[]" placeholder="Câu hỏi" class="form-control">
-                    <input type="text" name="answers[]" placeholder="Trả lời" class="form-control">
-                    <span class="material-icons remove-qna">clear</span>
-                `;
-                document.getElementById('qnaContainer').appendChild(qnaItem);
-                handleRemoveQnA();
-            });
-
-            handleRemoveQnA();
-
-            // Xử lý form submit 
+            // Simplified form submission without complex validation
             document.getElementById('addProductForm').addEventListener('submit', async function(e) {
                 e.preventDefault();
 
-                // Validate required fields
-                const requiredFields = ['productId', 'title', 'price', 'quantity', 'brand', 'origin'];
-                const missingFields = requiredFields.filter(field => !this[field].value);
-                
-                if (missingFields.length > 0) {
-                    alert(`Vui lòng điền đầy đủ thông tin các trường: ${missingFields.map(field => {
-                        switch(field) {
-                            case 'productId': return 'ID sản phẩm';
-                            case 'title': return 'Tên sản phẩm';
-                            case 'price': return 'Giá';
-                            case 'quantity': return 'Số lượng';
-                            case 'brand': return 'Thương hiệu';
-                            case 'origin': return 'Xuất xứ';
-                            default: return field;
-                        }
-                    }).join(', ')}`);
+                const productId = productIdInput.value.trim();
+                const idRegex = /^PET\d{4}$/;
+
+                // Simple validation directly in submit handler
+                if (!idRegex.test(productId)) {
+                    alert('ID phải có định dạng PETxxxx (với x là các chữ số)');
                     return;
                 }
 
-                const formData = new FormData(this);
-                const data = Object.fromEntries(formData.entries());
+                if (existingProductIds.includes(productId)) {
+                    alert('ID sản phẩm này đã tồn tại');
+                    return;
+                }
+
+                const formData = new URLSearchParams(new FormData(this));
 
                 try {
                     const response = await fetch('/products', {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/json',
+                            'Content-Type': 'application/x-www-form-urlencoded'
                         },
-                        body: JSON.stringify(data)
+                        body: formData
                     });
 
                     const result = await response.json();

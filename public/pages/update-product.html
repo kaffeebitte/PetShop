@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cập nhật sản phẩm</title>
     <link href="../styles/style.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         .form-container {
             animation: slideIn 0.3s ease;
@@ -36,41 +35,6 @@
         
         .form-control-file {
             padding: 10px 0;
-        }
-        
-        .qna-section {
-            margin: var(--spacing-lg) 0;
-            padding: var(--spacing-md);
-            background-color: var(--light-gray);
-            border-radius: var(--radius-sm);
-        }
-        
-        .qna-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: var(--spacing-md);
-        }
-        
-        .qna-item {
-            display: flex;
-            gap: var(--spacing-md);
-            margin-bottom: var(--spacing-md);
-            animation: fadeIn 0.3s ease;
-        }
-        
-        .qna-item input {
-            flex: 1;
-        }
-        
-        .remove-qna {
-            color: var(--danger-color);
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
         }
         
         .form-buttons {
@@ -106,20 +70,14 @@
             background-color: var(--primary-color);
             color: white;
         }
-        
-        .back-button .material-icons {
-            margin-right: 4px;
-            font-size: 18px;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <form id="updateProductForm" enctype="multipart/form-data" class="form-container">
+        <form id="updateProductForm" action="/products" method="POST" enctype="multipart/form-data" class="form-container">
             <div class="page-navigation">
                 <a href="/productlist" class="back-button">
-                    <span class="material-icons">arrow_back</span>
-                    Quay lại
+                    « Quay lại
                 </a>
             </div>
             
@@ -153,16 +111,12 @@
                     <input type="text" id="brand" name="brand" class="form-control">
                 </div>
                 <div class="form-group">
-                    <label for="category">Danh mục</label>
-                    <input type="text" id="category" name="category" class="form-control">
+                    <label for="origin">Xuất xứ</label>
+                    <input type="text" id="origin" name="origin" class="form-control">
                 </div>
             </div>
             
             <div class="form-row">
-                <div class="form-group">
-                    <label for="origin">Xuất xứ</label>
-                    <input type="text" id="origin" name="origin" class="form-control">
-                </div>
                 <div class="form-group">
                     <label for="rating">Đánh giá</label>
                     <input type="number" id="rating" name="rating" step="0.1" min="0" max="5" class="form-control">
@@ -179,61 +133,24 @@
                 <input type="file" id="images" name="images" multiple class="form-control-file">
             </div>
             
-            <div class="qna-section">
-                <div class="qna-header">
-                    <label>Câu hỏi và trả lời (QnA)</label>
-                    <button type="button" id="addQnaButton" class="btn btn-outline">
-                        <span class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">add</span>
-                        Thêm QnA
-                    </button>
-                </div>
-                <div id="qnaContainer">
-                    <!-- QnA items will be dynamically inserted here -->
-                </div>
-            </div>
-            
             <div class="form-buttons">
-                <button type="submit" class="btn btn-primary">Cập nhật</button>
+                <button type="submit" class="btn btn-primary">Cập nhật sản phẩm</button>
             </div>
         </form>
     </div>
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Create default QnA item template
-            const createQnaItem = (question = '', answer = '') => {
-                const qnaItem = document.createElement('div');
-                qnaItem.classList.add('qna-item');
-                qnaItem.innerHTML = `
-                    <input type="text" name="questions[]" placeholder="Câu hỏi" class="form-control" value="${question}">
-                    <input type="text" name="answers[]" placeholder="Trả lời" class="form-control" value="${answer}">
-                    <span class="material-icons remove-qna">clear</span>
-                `;
-                
-                // Add event listener to remove button
-                const removeBtn = qnaItem.querySelector('.remove-qna');
-                removeBtn.addEventListener('click', function() {
-                    qnaItem.remove();
-                });
-                
-                return qnaItem;
-            };
-            
-            // Get the product ID from the URL query string
             const urlParams = new URLSearchParams(window.location.search);
             const productId = urlParams.get('id');
             
-            // Try to get the product data from localStorage
             const storedProduct = localStorage.getItem('productToUpdate');
-            const qnaContainer = document.getElementById('qnaContainer');
             
             if (storedProduct) {
                 const product = JSON.parse(storedProduct);
                 
-                // Update document title
                 document.title = `Cập nhật: ${product.title}`;
                 
-                // Fill the form with the product data
                 document.getElementById('productId').value = product.productId || '';
                 document.getElementById('title').value = product.title || '';
                 document.getElementById('price').value = product.price || '';
@@ -242,7 +159,6 @@
                 document.getElementById('origin').value = product.origin || '';
                 document.getElementById('rating').value = product.rating || '';
                 
-                // Optional fields
                 if (product.category) {
                     document.getElementById('category').value = product.category;
                 }
@@ -251,37 +167,14 @@
                     document.getElementById('description').value = product.description.details;
                 }
                 
-                // If there are QnAs, add them to the form
-                if (product.QnA && product.QnA.length > 0) {
-                    qnaContainer.innerHTML = ''; // Clear default QnA item
-                    
-                    product.QnA.forEach(qna => {
-                        qnaContainer.appendChild(createQnaItem(qna.question, qna.answer));
-                    });
-                } else {
-                    // Add one empty QnA item as default
-                    qnaContainer.appendChild(createQnaItem());
-                }
-                
-                // Clear the localStorage to avoid issues with future updates
                 localStorage.removeItem('productToUpdate');
-            } else {
-                // If no product data is available, add one empty QnA item as default
-                qnaContainer.appendChild(createQnaItem());
             }
 
-            // Add event listener to add QnA button
-            document.getElementById('addQnaButton').addEventListener('click', function() {
-                qnaContainer.appendChild(createQnaItem());
-            });
-
-            // Add event listener to form submission
             document.getElementById('updateProductForm').addEventListener('submit', function(event) {
                 event.preventDefault();
                 
-                // In a real application, you would save the data here
                 alert('Sản phẩm đã được cập nhật thành công!');
-                window.location.href = '/productlist'; // Redirect back to product list
+                window.location.href = '/productlist';
             });
         });
     </script>

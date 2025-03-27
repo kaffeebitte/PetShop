@@ -6,7 +6,6 @@
     <title>Danh sách sản phẩm</title>
 
     <link href="../styles/style.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     
     <style>
         /* Định nghĩa các biến CSS */
@@ -134,10 +133,6 @@
             background-color: var(--primary-hover);
         }
         
-        .search-button .material-icons {
-            font-size: 18px;
-        }
-        
         .product-count {
             color: #666;
             font-size: 15px;
@@ -163,11 +158,6 @@
         .back-button:hover {
             background-color: var(--primary-color);
             color: white;
-        }
-        
-        .back-button .material-icons {
-            margin-right: 4px;
-            font-size: 18px;
         }
 
         /* Styling for the add product button - updated colors */
@@ -211,14 +201,31 @@
             color: var(--text-light);
             font-style: italic;
         }
+        
+        /* Icon styles */
+        .icon {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            line-height: 24px;
+            text-align: center;
+            cursor: pointer;
+        }
+        
+        .edit-icon {
+            color: var(--primary-color);
+        }
+        
+        .delete-icon {
+            color: var(--danger-color);
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="page-navigation">
             <a href="/" class="back-button">
-                <span class="material-icons">arrow_back</span>
-                Quay lại trang chủ
+                ← Quay lại trang chủ
             </a>
         </div>
         
@@ -237,11 +244,9 @@
                 >
                 <div class="action-buttons">
                     <button id="searchButton" class="search-button">
-                        <span class="material-icons">search</span>
                         Tìm kiếm
                     </button>
                     <a href="/add/product" class="add-product-btn">
-                        <span class="material-icons">add</span>
                         Thêm sản phẩm
                     </a>
                 </div>
@@ -399,15 +404,15 @@
                     cellOrigin.textContent = product.additionalInfo.origin;
                     cellRating.textContent = product.rating || 'N/A';
                     cellActions.innerHTML = `
-                        <span class="material-icons action-icon edit-icon" data-id="${product.productId}">edit</span>
-                        <span class="material-icons action-icon delete-icon" data-id="${product.productId}" data-name="${product.title}">delete</span>
+                        <span class="icon edit-icon" data-id="${product.productId}">✎</span>
+                        <span class="icon delete-icon" data-id="${product.productId}" data-name="${product.title}">✕</span>
                     `;
                     cellActions.className = 'actions';
                     
                     // Thêm sự kiện click vào hàng để xem chi tiết sản phẩm
                     row.addEventListener('click', (e) => {
                         // Không chuyển hướng nếu nhấp vào biểu tượng hành động
-                        if (!e.target.classList.contains('action-icon') && !e.target.classList.contains('material-icons')) {
+                        if (!e.target.classList.contains('icon')) {
                             showProductDetails(product.productId);
                         }
                     });

@@ -7,24 +7,6 @@
     <link href="../styles/style.css" rel="stylesheet" type="text/css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #00796b;
-            --primary-hover: #004d40;
-            --text-color: #333;
-            --light-gray: #f4f4f4;
-            --border-color: #e0e0e0;
-            --spacing-sm: 8px;
-            --spacing-md: 16px;
-            --spacing-lg: 24px;
-            --white: #fff;
-            --radius-md: 8px;
-            --shadow-md: 0 2px 8px rgba(0,0,0,0.06);
-            --radius-sm: 4px;
-            --text-light: #777;
-            --primary-dark: #004d40;
-            --spacing-xs: 4px;
-        }
-
         body {
             font-family: Arial, sans-serif;
             background-color: var(--light-gray);
@@ -132,39 +114,10 @@
             margin-top: 0;
         }
         
-        .qna-section {
-            margin-top: var(--spacing-lg);
-            padding-top: var(--spacing-lg);
-            border-top: 1px solid var(--border-color);
-        }
-        
-        .qna-item {
-            padding: var(--spacing-md);
-            margin-bottom: var(--spacing-md);
-            border-radius: var(--radius-sm);
-            background-color: var(--light-gray);
-            animation: fadeIn 0.3s ease;
-        }
-        
-        .question {
-            font-weight: 600;
-            color: var(--primary-dark);
-            margin-bottom: var(--spacing-sm);
-        }
-        
-        .answer {
-            color: var(--text-color);
-        }
-        
-        .no-qna {
-            color: var(--text-light);
-            font-style: italic;
-        }
-        
         .action-buttons {
             display: flex;
             justify-content: space-between;
-            margin-top: var(--spacing-lg);
+            margin-top: var (--spacing-lg);
         }
         
         @media (max-width: 768px) {
@@ -194,11 +147,6 @@
             background-color: var(--primary-color);
             color: white;
         }
-        
-        .back-button .material-icons {
-            margin-right: 4px;
-            font-size: 18px;
-        }
     </style>
 </head>
 <body>
@@ -206,8 +154,7 @@
         <div class="product-detail-container slide-in">
             <div class="page-navigation">
                 <a href="/productlist" class="back-button">
-                    <span class="material-icons">arrow_back</span>
-                    Danh sách sản phẩm
+                    « Danh sách sản phẩm
                 </a>
             </div>
             
@@ -225,7 +172,6 @@
             </div>
             
             <div class="product-image-container">
-                <!-- Hình ảnh sẽ được tải động vào đây -->
             </div>
             
             <div class="product-info">
@@ -252,14 +198,8 @@
                 <p id="productDescription"></p>
             </div>
             
-            <div class="qna-section" id="qnaContainer">
-                <h3>Câu hỏi và trả lời</h3>
-                <!-- Các mục hỏi đáp sẽ được chèn động tại đây -->
-            </div>
-            
             <div class="action-buttons">
                 <button id="editProductBtn" class="btn btn-primary">
-                    <span class="material-icons" style="vertical-align: middle; font-size: 18px; margin-right: 5px;">edit</span>
                     Chỉnh sửa
                 </button>
             </div>
@@ -268,15 +208,12 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Biến lưu thông tin sản phẩm hiện tại
             let currentProduct = null;
             
-            // Lấy tham số ID sản phẩm từ URL
             const urlParams = new URLSearchParams(window.location.search);
             const productId = urlParams.get('id');
             
             if (productId) {
-                // Lấy thông tin sản phẩm từ API dựa trên ID
                 fetch(`/products/${productId}`)
                     .then(response => {
                         if (!response.ok) {
@@ -294,21 +231,16 @@
                         window.location.href = '/productlist';
                     });
             } else {
-                // Nếu không có ID, quay lại trang danh sách
                 alert('Không có thông tin sản phẩm!');
                 window.location.href = '/productlist';
             }
             
-            // Hiển thị thông tin chi tiết sản phẩm
             function hienThiThongTinSanPham(product) {
-                // Cập nhật tiêu đề trang
                 document.title = `Chi tiết: ${product.title}`;
                 
-                // Điền thông tin sản phẩm vào trang
                 document.getElementById('productTitle').textContent = product.title || 'Không có tên';
                 document.getElementById('productId').textContent = `Mã sản phẩm: ${product.productId || ''}`;
                 
-                // Hiển thị giá
                 if (product.additionalInfo && product.additionalInfo.price) {
                     document.getElementById('productPrice').textContent = 
                         `${Number(product.additionalInfo.price).toLocaleString()} VND`;
@@ -316,7 +248,6 @@
                     document.getElementById('productPrice').textContent = 'Không có giá';
                 }
                 
-                // Hiển thị các thông tin khác
                 document.getElementById('productQuantity').textContent = 
                     product.additionalInfo ? product.additionalInfo.quantity : '';
                 document.getElementById('productBrand').textContent = 
@@ -326,7 +257,6 @@
                 document.getElementById('productRating').textContent = 
                     product.rating ? `${product.rating}/5` : '';
                 
-                // Hiển thị mô tả sản phẩm
                 const descriptionElement = document.getElementById('productDescription');
                 if (product.description && product.description.details) {
                     descriptionElement.textContent = product.description.details;
@@ -334,9 +264,8 @@
                     descriptionElement.textContent = 'Không có mô tả';
                 }
                 
-                // Hiển thị hình ảnh sản phẩm
                 const productImageContainer = document.querySelector('.product-image-container');
-                productImageContainer.innerHTML = ''; // Xóa nội dung hiện có
+                productImageContainer.innerHTML = '';
 
                 if (product.images?.length > 0) {
                     productImageContainer.innerHTML = product.images
@@ -345,36 +274,10 @@
                 } else {
                     productImageContainer.textContent = 'Không có hình ảnh nào.';
                 }
-                
-                // Hiển thị phần hỏi đáp
-                hienThiPhanHoiDap(product.QnA);
             }
             
-            // Hiển thị phần hỏi đáp
-            function hienThiPhanHoiDap(qnaItems) {
-                const qnaContainer = document.getElementById('qnaContainer');
-                qnaContainer.innerHTML = '<h3>Câu hỏi và trả lời</h3>';
-                
-                if (qnaItems && qnaItems.length > 0) {
-                    // Tạo các phần tử câu hỏi và trả lời
-                    qnaItems.forEach(qna => {
-                        const qnaItem = document.createElement('div');
-                        qnaItem.classList.add('qna-item');
-                        qnaItem.innerHTML = `
-                            <p class="question">Q: ${qna.question}</p>
-                            <p class="answer">A: ${qna.answer}</p>
-                        `;
-                        qnaContainer.appendChild(qnaItem);
-                    });
-                } else {
-                    qnaContainer.innerHTML += '<p class="no-qna">Không có câu hỏi nào.</p>';
-                }
-            }
-            
-            // Thêm sự kiện cho nút chỉnh sửa
             document.getElementById('editProductBtn').addEventListener('click', () => {
                 if (currentProduct) {
-                    // Chuyển thẳng tới trang cập nhật với ID sản phẩm
                     window.location.href = `/update/product?id=${currentProduct.productId}`;
                 }
             });
