@@ -429,7 +429,7 @@
                     icon.addEventListener('click', (e) => {
                         e.stopPropagation(); // Ngăn sự kiện click của hàng
                         const productId = e.target.getAttribute('data-id');
-                        window.location.href = `/update/product?id=${productId}`;
+                        showUpdateProductForm(productId);
                     });
                 });
                 
@@ -459,16 +459,20 @@
             function showDeleteConfirmation(productId, productName) {
                 const modal = document.getElementById('deleteConfirmation');
                 const productNameSpan = document.getElementById('deleteProductName');
-                
+            
                 productNameSpan.textContent = productName;
                 modal.classList.remove('hidden');
-                
-                document.getElementById('confirmDelete').onclick = () => {
+            
+                // Đảm bảo không thay đổi class hoặc style của các nút
+                const confirmDeleteButton = document.getElementById('confirmDelete');
+                const cancelDeleteButton = document.getElementById('cancelDelete');
+            
+                confirmDeleteButton.onclick = () => {
                     deleteProduct(productId);
                     modal.classList.add('hidden');
                 };
-                
-                document.getElementById('cancelDelete').onclick = () => {
+            
+                cancelDeleteButton.onclick = () => {
                     modal.classList.add('hidden');
                 };
             }
@@ -493,6 +497,12 @@
                 });
             }
         });
+
+        // Hàm hiển thị chi tiết sản phẩm để chỉnh sửa
+        function showUpdateProductForm(productId) {
+            // Chuyển hướng đến trang cập nhật sản phẩm với `productId` trong URL
+            window.location.href = `/update/product?id=${productId}`;
+        }
     </script>
 </body>
 </html>

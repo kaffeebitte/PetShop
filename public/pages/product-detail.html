@@ -269,7 +269,7 @@
 
                 if (product.images?.length > 0) {
                     productImageContainer.innerHTML = product.images
-                        .map(image => `<img src="../images/${image}" alt="${product.title}" class="product-image">`)
+                        .map(image => `<img src="${image}" alt="${product.title}" class="product-image">`)
                         .join('');
                 } else {
                     productImageContainer.textContent = 'Không có hình ảnh nào.';

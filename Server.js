@@ -104,6 +104,82 @@ app.post('/products', (req, res) => {
     res.status(201).json({ success: true, message: 'Thêm sản phẩm thành công', product: newProduct });
 });
 
+//cập nhật sp
+app.put('/update/product/:id', (req, res) => {
+    const productId = req.params.id;
+    const productIndex = productList.findIndex(p => p.productId === productId);
+
+    if (productIndex !== -1) {
+        let images = productList[productIndex].images; // Giữ nguyên hình ảnh cũ
+
+        // Kiểm tra nếu có hình ảnh mới được tải lên
+        if (req.files && req.files.images) {
+            const uploadedImages = Array.isArray(req.files.images) ? req.files.images : [req.files.images];
+            const imagePaths = uploadedImages.map(image => {
+                const imagePath = `/images/${image.name}`;
+                image.mv(path.join(__dirname, 'public', imagePath), err => {
+                    if (err) {
+                        console.error('Lỗi khi lưu hình ảnh:', err);
+                        return res.status(500).json({ error: 'Không thể lưu hình ảnh' });
+                    }
+                });
+                return imagePath;
+            });
+            images = imagePaths; // Cập nhật danh sách hình ảnh mới
+        }
+
+        const updatedProduct = {
+            productId: productId,
+            title: req.body.title || productList[productIndex].title,
+            images: images, // Giữ nguyên hoặc cập nhật hình ảnh
+            description: {
+                details: req.body.description || productList[productIndex].description.details
+            },
+            rating: Number(req.body.rating || productList[productIndex].rating),
+            additionalInfo: {
+                quantity: Number(req.body.quantity || productList[productIndex].additionalInfo.quantity),
+                price: Number(req.body.price || productList[productIndex].additionalInfo.price),
+                brand: req.body.brand || productList[productIndex].additionalInfo.brand,
+                origin: req.body.origin || productList[productIndex].additionalInfo.origin
+            }
+        };
+
+        productList[productIndex] = updatedProduct;
+        console.log(`Đã cập nhật sản phẩm: ${updatedProduct.productId} - ${updatedProduct.title}`);
+        res.json({
+            success: true,
+            message: 'Cập nhật sản phẩm thành công',
+            product: updatedProduct
+        });
+    } else {
+        console.log(`Không tìm thấy sản phẩm với ID: ${productId}`);
+        res.status(404).json({
+            error: 'Không tìm thấy sản phẩm để cập nhật'
+        });
+    }
+});
+
+//xóa sp
+app.delete('/delete/product/:id', (req, res) => {
+    const productId = req.params.id;
+    const productIndex = productList.findIndex(p => p.productId === productId);
+
+    if (productIndex !== -1) {
+        const deletedProduct = productList.splice(productIndex, 1);
+        console.log(`Đã xóa sản phẩm: ${deletedProduct[0].productId} - ${deletedProduct[0].title}`);
+        res.json({
+            success: true,
+            message: 'Xóa sản phẩm thành công',
+            product: deletedProduct[0]
+        });
+    } else {
+        console.log(`Không tìm thấy sản phẩm với ID: ${productId}`);
+        res.status(404).json({
+            error: 'Không tìm thấy sản phẩm để xóa'
+        });
+    }
+});
+
 app.get('*', (req, res) => res.send('Hẹn bạn trong tương lai nhé!'));
 
 app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
