@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Thêm sản phẩm</title>
     <link href="../styles/style.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -97,10 +96,10 @@
 </head>
 <body>
     <div class="container">
-        <form id="addProductForm" action="/products" method="POST" enctype="application/x-www-form-urlencoded" class="form-container">
+        <form id="addProductForm" action="/products" method="POST" enctype="multipart/form-data" class="form-container">
             <div class="page-navigation">
                 <a href="/" class="back-button">
-                    « Quay lại
+                    Quay lại
                 </a>
             </div>
             
@@ -142,7 +141,7 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="rating" class="required-field">Đánh giá</label>
-                    <input type="number" id="rating" name="rating" step="0.5" min="0" max="5" class="form-control">
+                    <input type="number" id="rating" name="rating" step="0.5" min="0" max="5" class="form-control" required>
                 </div>
             </div>
             
@@ -164,61 +163,72 @@
     </div>
     
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const productIdInput = document.getElementById('productId');
-            let existingProductIds = [];
+        const productIdInput = document.getElementById('productId');
+        let productIdList = [];
+        
+        //fetch danh sách sản phẩm + danh sách id
+        fetch('/products')
+            .then(res => res.json())
+            .then(products => {
+                productIdList = products.map(product => product.productId);
+            })
+            .catch(error => {
+                console.error('Không thể lấy danh sách sản phẩm:', error);
+            });
 
-            // Lấy danh sách ID sản phẩm hiện có
-            fetch('/products')
-                .then(response => response.json())
-                .then(products => {
-                    existingProductIds = products.map(p => p.productId);
-                })
-                .catch(error => {
-                    console.error('Không thể lấy danh sách sản phẩm:', error);
-                });
+        function checkProductIdFormat(productId) {
+            let numberPart = productId.substring(3);
 
-            // Simplified form submission without complex validation
-            document.getElementById('addProductForm').addEventListener('submit', async function(e) {
-                e.preventDefault();
-
-                const productId = productIdInput.value.trim();
-                const idRegex = /^PET\d{4}$/;
-
-                // Simple validation directly in submit handler
-                if (!idRegex.test(productId)) {
-                    alert('ID phải có định dạng PETxxxx (với x là các chữ số)');
-                    return;
+            if (!productId.startsWith("PET") || numberPart.length != 4) {
+                return false;
+            }
+            
+            for (let i = 0; i < numberPart.length; i++) {
+                if (numberPart[i] < '0' || numberPart[i] > '9') {
+                    return false;
                 }
+            }
+            
+            return true;
+        }
 
-                if (existingProductIds.includes(productId)) {
-                    alert('ID sản phẩm này đã tồn tại');
-                    return;
-                }
+        // kiểm tra dữ liệu trước khi submit
+        const form = document.getElementById('addProductForm');
+        form.addEventListener('submit', (e) => {
+            e.preventDefault(); 
+            const productId = productIdInput.value.trim();
+            
+            if (!checkProductIdFormat(productId)) {
+                alert('ID phải có định dạng PETxxxx (với x là các chữ số)');
+                return;
+            }
 
-                const formData = new URLSearchParams(new FormData(this));
-
-                try {
-                    const response = await fetch('/products', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        body: formData
+            if (productIdList.includes(productId)) {
+                alert('ID sản phẩm này đã tồn tại');
+                return;
+            }
+            
+            const formData = new FormData(form);
+            // FormData có cấu trúc key-value giống như json nên có thể gửi body là formData trực tiếp mà không cần chuyển lại kiểu JSON 
+            
+            fetch('/products', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => {
+                if (!res.ok) {
+                    return res.text().then(text => {
+                        throw new Error(text);
                     });
-
-                    const result = await response.json();
-
-                    if (response.ok) {
-                        alert('Thêm sản phẩm thành công!');
-                        this.reset();
-                        window.location.href = '/productlist';
-                    } else {
-                        alert(result.error || 'Không thể thêm sản phẩm');
-                    }
-                } catch (error) {
-                    alert('Lỗi khi gửi form: ' + error.message);
                 }
+                return res.text(); 
+            })
+            .then(message => {
+                alert(message);
+                form.reset();
+            })
+            .catch(error => {
+                alert('Lỗi: ' + error.message);
             });
         });
     </script>

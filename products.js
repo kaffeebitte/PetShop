@@ -449,36 +449,6 @@ let products = [
     }
 ];    
 
-
-function output(products) {
-  console.log("\nDanh sách sản phẩm:");
-  products.forEach(product => {
-    console.log('ID:', product.productId);
-    console.log('Name:', product.title);
-    console.log('Images:', product.images.length > 0 ? product.images.join(', ') : 'No images available');
-    console.log('Description:', product.description.details);
-    console.log('Rating:', product.rating);
-    console.log('Quantity:', product.additionalInfo.quantity);
-    console.log('Price:', product.additionalInfo.price);
-    console.log('Brand:', product.additionalInfo.brand);
-    console.log('Origin:', product.additionalInfo.origin);
-    console.log('----------------------------------');
-  });
-}
-
-function addProduct(products, newProduct) {
-    products.push(newProduct);
-    console.log(`Đã thêm sản phẩm mới (ID: ${newProduct.productId}) vào danh sách thành công!`);
-    return products;
-}
-
-function findProductById(productId) {
-    return products.find(product => product.productId === productId);
-}
-
 module.exports = {
-    output,
-    addProduct,
-    findProductById,
     products
 };

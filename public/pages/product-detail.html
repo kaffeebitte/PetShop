@@ -215,11 +215,11 @@
             
             if (productId) {
                 fetch(`/products/${productId}`)
-                    .then(response => {
-                        if (!response.ok) {
+                    .then(res => {
+                        if (!res.ok) {
                             throw new Error('Không tìm thấy sản phẩm');
                         }
-                        return response.json();
+                        return res.json();
                     })
                     .then(product => {
                         currentProduct = product;
@@ -267,10 +267,16 @@
                 const productImageContainer = document.querySelector('.product-image-container');
                 productImageContainer.innerHTML = '';
 
-                if (product.images?.length > 0) {
-                    productImageContainer.innerHTML = product.images
-                        .map(image => `<img src="${image}" alt="${product.title}" class="product-image">`)
-                        .join('');
+                // Hiển thị hình ảnh - sửa đường dẫn để hiển thị đúng
+                if (product.images && product.images.length > 0) {
+                    product.images.forEach(imagePath => {
+                        // Đường dẫn hình ảnh đã được lưu trong sản phẩm, không cần thêm "../images/"
+                        const imgElement = document.createElement('img');
+                        imgElement.src = imagePath; // Sử dụng đường dẫn từ sản phẩm
+                        imgElement.alt = product.title;
+                        imgElement.className = 'product-image';
+                        productImageContainer.appendChild(imgElement);
+                    });
                 } else {
                     productImageContainer.textContent = 'Không có hình ảnh nào.';
                 }
