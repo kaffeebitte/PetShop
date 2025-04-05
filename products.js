@@ -2,6 +2,7 @@ let products = [
     {
       "productId": "PET0001",
       "title": "Thức ăn cho chó Pedigree 1.5kg",
+      "category": "Thức ăn",
       "images": ["pedigree_1.jpg"],
       "description": {
         "details": "Thức ăn dinh dưỡng cho chó trưởng thành, hỗ trợ tiêu hóa và tăng cường miễn dịch."
@@ -17,6 +18,7 @@ let products = [
     {
       "productId": "PET0002",
       "title": "Cát vệ sinh cho mèo KitCat 10L",
+      "category": "Vệ sinh",
       "images": ["kitcat_1.jpg"],
       "description": {
         "details": "Cát vệ sinh khử mùi, vón cục tốt, giúp giữ vệ sinh hiệu quả cho mèo."
@@ -32,6 +34,7 @@ let products = [
     {
       "productId": "PET0003",
       "title": "Dây dắt chó có thể thu gọn 5m",
+      "category": "Phụ kiện",
       "images": ["leash_2.jpg"],
       "description": {
         "details": "Dây dắt bằng nylon bền chắc, có thể điều chỉnh độ dài, phù hợp với chó dưới 30kg."
@@ -47,6 +50,7 @@ let products = [
     {
       "productId": "PET0004",
       "title": "Pate cho mèo Whiskas 85g",
+      "category": "Thức ăn",
       "images": ["whiskas_pate_1.jpg", "whiskas_pate_2.jpg"],
       "description": {
         "details": "Pate thịt bò bổ sung dưỡng chất cho mèo, hỗ trợ hệ tiêu hóa và lông mượt."
@@ -62,6 +66,7 @@ let products = [
     {
       "productId": "PET0005",
       "title": "Lồng vận chuyển thú cưng size M",
+      "category": "Nhà & Chuồng",
       "images": ["carrier_1.jpg", "carrier_2.jpg"],
       "description": {
         "details": "Lồng vận chuyển có tay cầm chắc chắn, thông thoáng, phù hợp với chó và mèo."
@@ -77,6 +82,7 @@ let products = [
     {
       "productId": "PET0006",
       "title": "Thức ăn cho mèo Royal Canin 2kg",
+      "category": "Thức ăn",
       "images": [],
       "description": {
         "details": "Thức ăn khô giàu dinh dưỡng, giúp lông mèo mềm mượt và hỗ trợ tiêu hóa."
@@ -92,6 +98,7 @@ let products = [
     {
       "productId": "PET0007",
       "title": "Bánh thưởng cho chó vị gà 500g",
+      "category": "Thức ăn",
       "images": ["dog_treats_1.jpg"],
       "description": {
         "details": "Bánh thưởng giúp huấn luyện chó, hương vị thơm ngon, dễ tiêu hóa."
@@ -107,6 +114,7 @@ let products = [
     {
       "productId": "PET0008",
       "title": "Chuồng chó size L",
+      "category": "Nhà & Chuồng",
       "images": ["dog_cage_1.jpg", "dog_cage_2.jpg"],
       "description": {
         "details": "Chuồng chó bằng sắt chắc chắn, dễ vệ sinh, phù hợp với chó trung bình."
@@ -122,6 +130,7 @@ let products = [
     {
       "productId": "PET0009",
       "title": "Cát vệ sinh hữu cơ cho mèo 5L",
+      "category": "Vệ sinh",
       "images": ["organic_litter_1.jpg", "organic_litter_2.jpg"],
       "description": {
         "details": "Cát vệ sinh hữu cơ thân thiện với môi trường, khử mùi tốt."
@@ -137,6 +146,7 @@ let products = [
     {
       "productId": "PET0010",
       "title": "Balo vận chuyển mèo có kính",
+      "category": "Vận chuyển",
       "images": ["cat_backpack_1.jpg"],
       "description": {
         "details": "Balo trong suốt giúp thú cưng dễ dàng quan sát bên ngoài, thoáng khí."
@@ -152,6 +162,7 @@ let products = [
     {
       "productId": "PET0011",
       "title": "Thức ăn cho chó SmartHeart 3kg",
+      "category": "Thức ăn",
       "images": ["smartheart_1.jpg", "smartheart_2.jpg"],
       "description": {
         "details": "Thức ăn hỗ trợ hệ miễn dịch và tiêu hóa cho chó trưởng thành."
@@ -167,6 +178,7 @@ let products = [
     {
       "productId": "PET0012",
       "title": "Cát vệ sinh cho mèo Me-O 5L",
+      "category": "Vệ sinh",
       "images": ["meo_litter_1.jpg", "meo_litter_2.jpg"],
       "description": {
         "details": "Cát vệ sinh không bụi, vón cục nhanh, giúp kiểm soát mùi hiệu quả."
@@ -182,6 +194,7 @@ let products = [
     {
       "productId": "PET0013",
       "title": "Dây dắt chó da cao cấp",
+      "category": "Phụ kiện",
       "images": ["leash_leather_1.jpg", "leash_leather_2.jpg"],
       "description": {
         "details": "Dây dắt bằng da thật bền chắc, phù hợp với chó lớn."
@@ -197,6 +210,7 @@ let products = [
     {
       "productId": "PET0014",
       "title": "Pate cho mèo Me-O 80g",
+      "category": "Thức ăn",
       "images": ["meo_pate_1.jpg", "meo_pate_2.jpg"],
       "description": {
         "details": "Pate cá hồi bổ sung dinh dưỡng, giúp lông mèo khỏe mạnh."
@@ -212,6 +226,7 @@ let products = [
     {
       "productId": "PET0015",
       "title": "Lồng vận chuyển thú cưng size L",
+      "category": "Vận chuyển",
       "images": ["carrier_large_pg1.jpg", "carrier_large_pg2.jpg"],
       "description": {
         "details": "Lồng vận chuyển cỡ lớn, thoáng khí, phù hợp với chó lớn và mèo béo."
@@ -227,6 +242,7 @@ let products = [
     {
       "productId": "PET0016",
       "title": "Thức ăn cho mèo Me-O 1.5kg",
+      "category": "Thức ăn",
       "images": ["meo_dry_1.jpg"],
       "description": {
         "details": "Thức ăn dinh dưỡng dành cho mèo con và mèo trưởng thành."
@@ -242,6 +258,7 @@ let products = [
     {
       "productId": "PET0017",
       "title": "Bánh thưởng cho mèo vị cá 200g",
+      "category": "Thức ăn",
       "images": ["cat_treats_1.jpg", "cat_treats_2.png"],
       "description": {
         "details": "Bánh thưởng giúp huấn luyện mèo, hương vị cá hồi thơm ngon."
@@ -257,6 +274,7 @@ let products = [
     {
       "productId": "PET0018",
       "title": "Chuồng mèo hai tầng",
+      "category": "Nhà & Chuồng",
       "images": ["cat_cage_1.png"],
       "description": {
         "details": "Chuồng mèo bằng sắt, có hai tầng rộng rãi, dễ vệ sinh."
@@ -272,6 +290,7 @@ let products = [
     {
       "productId": "PET0019",
       "title": "Cát vệ sinh hữu cơ cho mèo 10L",
+      "category": "Vệ sinh",
       "images": ["organic_litter_large_1.jpg", "organic_litter_large_2.png"],
       "description": {
         "details": "Cát hữu cơ khử mùi tốt, dễ phân hủy, an toàn cho thú cưng."
@@ -287,6 +306,7 @@ let products = [
     {
       "productId": "PET0020",
       "title": "Balo vận chuyển chó nhỏ có lưới thoáng khí",
+      "category": "Vận chuyển",
       "images": ["dog_backpack_1.jpg", "dog_backpack_2.png"],
       "description": {
         "details": "Balo có lưới thoáng khí, phù hợp cho chó nhỏ dưới 5kg."
@@ -302,6 +322,7 @@ let products = [
     {
       "productId": "PET0021",
       "title": "Giường nệm cho chó size M",
+      "category": "Nhà & Chuồng",
       "images": ["dog_bed_1.jpg"],
       "description": {
         "details": "Giường nệm êm ái, giữ ấm cho chó, dễ vệ sinh."
@@ -317,6 +338,7 @@ let products = [
     {
       "productId": "PET0022",
       "title": "Cây cào móng cho mèo",
+      "category": "Đồ chơi",
       "images": ["cat_scratcher_1.jpg"],
       "description": {
         "details": "Cây cào móng giúp mèo giải trí và bảo vệ nội thất."
@@ -332,6 +354,7 @@ let products = [
     {
       "productId": "PET0023",
       "title": "Dụng cụ cắt móng cho chó mèo",
+      "category": "Chăm sóc",
       "images": ["nail_clipper_1.jpg", "nail_clipper_2.jpg"],
       "description": {
         "details": "Dụng cụ cắt móng sắc bén, an toàn cho chó mèo."
@@ -347,6 +370,7 @@ let products = [
     {
       "productId": "PET0024",
       "title": "Sữa tắm cho chó lông trắng",
+      "category": "Chăm sóc",
       "images": ["dog_shampoo_1.jpg"],
       "description": {
         "details": "Sữa tắm làm sạch và giữ màu lông trắng sáng."
@@ -361,6 +385,7 @@ let products = [
     {
       "productId": "PET0025",
       "title": "Sữa tắm cho mèo khử mùi",
+      "category": "Chăm sóc",
       "images": [],
       "description": {
         "details": "Sữa tắm giúp khử mùi, làm mềm lông mèo."
@@ -376,6 +401,7 @@ let products = [
     {
       "productId": "PET0026",
       "title": "Xương gặm giúp sạch răng cho chó",
+      "category": "Đồ chơi",
       "images": ["dog_bone_1.jpg"],
       "description": {
         "details": "Xương gặm giúp làm sạch răng, giảm mảng bám cho chó."
@@ -390,6 +416,7 @@ let products = [
     {
       "productId": "PET0027",
       "title": "Đồ chơi bóng chuông cho mèo",
+      "category": "Đồ chơi",
       "images": ["cat_toy_1.jpg", "cat_toy_2.jpg"],
       "description": {
         "details": "Bóng chuông kích thích sự vui chơi của mèo."
@@ -405,6 +432,7 @@ let products = [
     {
       "productId": "PET0028",
       "title": "Máy lọc nước tự động cho chó mèo",
+      "category": "Phụ kiện",
       "images": ["water_fountain_1.jpg", "water_fountain_2.jpg"],
       "description": {
         "details": "Máy lọc nước giúp thú cưng có nước sạch liên tục."
@@ -420,6 +448,7 @@ let products = [
     {
       "productId": "PET0029",
       "title": "Đệm nằm cho mèo size S",
+      "category": "Nhà & Chuồng",
       "images": ["cat_bed_1.jpg"],
       "description": {
         "details": "Đệm nằm êm ái, phù hợp với mèo nhỏ và mèo con."
@@ -435,7 +464,8 @@ let products = [
     {
       "productId": "PET0030",
       "title": "Bát ăn chống trượt cho chó mèo",
-      "images": ["pet_bowl_1.jpg"],
+      "category": "Phụ kiện",
+      "images": ["pet_bowl_1.jpg","pet_bowl_1.jpg","cat_bed_1.jpg","cat_bed_1.jpg"],
       "description": {
         "details": "Bát ăn chống trượt, dễ vệ sinh, phù hợp cho chó mèo."
       },
