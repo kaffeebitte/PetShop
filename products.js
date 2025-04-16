@@ -1,6 +1,6 @@
 let products = [
     {
-      "productId": "PET0001",
+      "productId": "FOOD0001",
       "title": "Thức ăn cho chó Pedigree 1.5kg",
       "category": "Thức ăn",
       "images": ["pedigree_1.jpg"],
@@ -16,7 +16,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0002",
+      "productId": "CARE0001",
       "title": "Cát vệ sinh cho mèo KitCat 10L",
       "category": "Vệ sinh",
       "images": ["kitcat_1.jpg"],
@@ -32,7 +32,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0003",
+      "productId": "ACCE0001",
       "title": "Dây dắt chó có thể thu gọn 5m",
       "category": "Phụ kiện",
       "images": ["leash_2.jpg"],
@@ -48,7 +48,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0004",
+      "productId": "FOOD0002",
       "title": "Pate cho mèo Whiskas 85g",
       "category": "Thức ăn",
       "images": ["whiskas_pate_1.jpg", "whiskas_pate_2.jpg"],
@@ -64,7 +64,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0005",
+      "productId": "CAGE0001",
       "title": "Lồng vận chuyển thú cưng size M",
       "category": "Nhà & Chuồng",
       "images": ["carrier_1.jpg", "carrier_2.jpg"],
@@ -80,7 +80,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0006",
+      "productId": "FOOD0003",
       "title": "Thức ăn cho mèo Royal Canin 2kg",
       "category": "Thức ăn",
       "images": [],
@@ -96,7 +96,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0007",
+      "productId": "FOOD0004",
       "title": "Bánh thưởng cho chó vị gà 500g",
       "category": "Thức ăn",
       "images": ["dog_treats_1.jpg"],
@@ -112,7 +112,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0008",
+      "productId": "CAGE0002",
       "title": "Chuồng chó size L",
       "category": "Nhà & Chuồng",
       "images": ["dog_cage_1.jpg", "dog_cage_2.jpg"],
@@ -128,7 +128,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0009",
+      "productId": "CARE0002",
       "title": "Cát vệ sinh hữu cơ cho mèo 5L",
       "category": "Vệ sinh",
       "images": ["organic_litter_1.jpg", "organic_litter_2.jpg"],
@@ -144,7 +144,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0010",
+      "productId": "TRAN0001",
       "title": "Balo vận chuyển mèo có kính",
       "category": "Vận chuyển",
       "images": ["cat_backpack_1.jpg"],
@@ -160,7 +160,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0011",
+      "productId": "FOOD0005",
       "title": "Thức ăn cho chó SmartHeart 3kg",
       "category": "Thức ăn",
       "images": ["smartheart_1.jpg", "smartheart_2.jpg"],
@@ -176,7 +176,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0012",
+      "productId": "CARE0003",
       "title": "Cát vệ sinh cho mèo Me-O 5L",
       "category": "Vệ sinh",
       "images": ["meo_litter_1.jpg", "meo_litter_2.jpg"],
@@ -192,7 +192,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0013",
+      "productId": "ACCE0002",
       "title": "Dây dắt chó da cao cấp",
       "category": "Phụ kiện",
       "images": ["leash_leather_1.jpg", "leash_leather_2.jpg"],
@@ -208,7 +208,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0014",
+      "productId": "FOOD0006",
       "title": "Pate cho mèo Me-O 80g",
       "category": "Thức ăn",
       "images": ["meo_pate_1.jpg", "meo_pate_2.jpg"],
@@ -224,7 +224,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0015",
+      "productId": "TRAN0002",
       "title": "Lồng vận chuyển thú cưng size L",
       "category": "Vận chuyển",
       "images": ["carrier_large_pg1.jpg", "carrier_large_pg2.jpg"],
@@ -240,7 +240,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0016",
+      "productId": "FOOD0007",
       "title": "Thức ăn cho mèo Me-O 1.5kg",
       "category": "Thức ăn",
       "images": ["meo_dry_1.jpg"],
@@ -256,7 +256,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0017",
+      "productId": "FOOD0008",
       "title": "Bánh thưởng cho mèo vị cá 200g",
       "category": "Thức ăn",
       "images": ["cat_treats_1.jpg", "cat_treats_2.png"],
@@ -272,7 +272,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0018",
+      "productId": "CAGE0003",
       "title": "Chuồng mèo hai tầng",
       "category": "Nhà & Chuồng",
       "images": ["cat_cage_1.png"],
@@ -288,7 +288,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0019",
+      "productId": "CARE0004",
       "title": "Cát vệ sinh hữu cơ cho mèo 10L",
       "category": "Vệ sinh",
       "images": ["organic_litter_large_1.jpg", "organic_litter_large_2.png"],
@@ -304,7 +304,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0020",
+      "productId": "TRAN0003",
       "title": "Balo vận chuyển chó nhỏ có lưới thoáng khí",
       "category": "Vận chuyển",
       "images": ["dog_backpack_1.jpg", "dog_backpack_2.png"],
@@ -320,7 +320,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0021",
+      "productId": "CAGE0004",
       "title": "Giường nệm cho chó size M",
       "category": "Nhà & Chuồng",
       "images": ["dog_bed_1.jpg"],
@@ -336,7 +336,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0022",
+      "productId": "TOYS0001",
       "title": "Cây cào móng cho mèo",
       "category": "Đồ chơi",
       "images": ["cat_scratcher_1.jpg"],
@@ -352,7 +352,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0023",
+      "productId": "CARE0005",
       "title": "Dụng cụ cắt móng cho chó mèo",
       "category": "Chăm sóc",
       "images": ["nail_clipper_1.jpg", "nail_clipper_2.jpg"],
@@ -368,7 +368,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0024",
+      "productId": "CARE0006",
       "title": "Sữa tắm cho chó lông trắng",
       "category": "Chăm sóc",
       "images": ["dog_shampoo_1.jpg"],
@@ -383,7 +383,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0025",
+      "productId": "CARE0007",
       "title": "Sữa tắm cho mèo khử mùi",
       "category": "Chăm sóc",
       "images": [],
@@ -399,7 +399,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0026",
+      "productId": "TOYS0002",
       "title": "Xương gặm giúp sạch răng cho chó",
       "category": "Đồ chơi",
       "images": ["dog_bone_1.jpg"],
@@ -414,7 +414,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0027",
+      "productId": "TOYS0003",
       "title": "Đồ chơi bóng chuông cho mèo",
       "category": "Đồ chơi",
       "images": ["cat_toy_1.jpg", "cat_toy_2.jpg"],
@@ -430,7 +430,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0028",
+      "productId": "ACCE0003",
       "title": "Máy lọc nước tự động cho chó mèo",
       "category": "Phụ kiện",
       "images": ["water_fountain_1.jpg", "water_fountain_2.jpg"],
@@ -446,7 +446,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0029",
+      "productId": "CAGE0005",
       "title": "Đệm nằm cho mèo size S",
       "category": "Nhà & Chuồng",
       "images": ["cat_bed_1.jpg"],
@@ -462,7 +462,7 @@ let products = [
       }
     },
     {
-      "productId": "PET0030",
+      "productId": "ACCE0004",
       "title": "Bát ăn chống trượt cho chó mèo",
       "category": "Phụ kiện",
       "images": ["pet_bowl_1.jpg","pet_bowl_1.jpg","cat_bed_1.jpg","cat_bed_1.jpg"],
