@@ -476,16 +476,26 @@
         }
         
         // Hàm xóa sản phẩm
+        // Hàm xóa sản phẩm
         function deleteProduct(productId) {
-            fetch(`/api/products/${productId}`, {
+            fetch(`/delete/product/${productId}`, {
                 method: 'DELETE',
             })
             .then(response => {
                 if (response.ok) {
                     // Làm mới danh sách sản phẩm sau khi xóa thành công
-                    loadProducts();
+                    fetch('/products')
+                        .then(res => res.json())
+                        .then(products => {
+                            allProducts = products;
+                            displayProducts(products);
                             alert('Sản phẩm đã được xóa thành công!');
-                                        } else {
+                        })
+                        .catch(error => {
+                            console.error('Lỗi khi làm mới danh sách sản phẩm:', error);
+                            alert('Lỗi khi làm mới danh sách sản phẩm!');
+                        });
+                } else {
                     alert('Không thể xóa sản phẩm. Vui lòng thử lại sau!');
                 }
             })
