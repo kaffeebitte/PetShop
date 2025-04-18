@@ -43,6 +43,20 @@
             margin-top: var(--spacing-lg);
         }
         
+        .image-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .image-preview {
+            max-width: 150px;
+            height: auto;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+        }
+        
         @media (min-width: 768px) {
             .form-row {
                 grid-template-columns: 1fr 1fr;
@@ -86,35 +100,33 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="productId">ID sản phẩm</label>
-                    <select id="productId" name="productId" class="form-control" required>
-                        <option value="" disabled selected>Chọn ID sản phẩm</option>
-                    </select>
+                    <input type="text" id="productId" name="productId" class="form-control" readonly required>
                 </div>
                 <div class="form-group">
                     <label for="title">Tên sản phẩm</label>
-                    <input type="text" id="title" name="title" class="form-control">
+                    <input type="text" id="title" name="title" class="form-control" required>
                 </div>
             </div>
             
             <div class="form-row">
                 <div class="form-group">
                     <label for="price">Giá</label>
-                    <input type="number" id="price" name="price" class="form-control">
+                    <input type="number" id="price" name="price" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label for="quantity">Số lượng</label>
-                    <input type="number" id="quantity" name="quantity" class="form-control">
+                    <input type="number" id="quantity" name="quantity" class="form-control" required>
                 </div>
             </div>
             
             <div class="form-row">
                 <div class="form-group">
                     <label for="brand">Thương hiệu</label>
-                    <input type="text" id="brand" name="brand" class="form-control">
+                    <input type="text" id="brand" name="brand" class="form-control" required>
                 </div>
                 <div class="form-group">
                     <label for="origin">Xuất xứ</label>
-                    <input type="text" id="origin" name="origin" class="form-control">
+                    <input type="text" id="origin" name="origin" class="form-control" required>
                 </div>
             </div>
             
@@ -131,8 +143,9 @@
             </div>
             
             <div class="form-group">
-                <label for="images">Hình ảnh mới</label>
+                <label for="images">Hình ảnh</label>
                 <input type="file" id="images" name="images" multiple class="form-control-file">
+                <div id="imagePreviewContainer" class="image-preview-container"></div>
             </div>
             
             <div class="form-buttons">
@@ -143,71 +156,77 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const productIdSelect = document.getElementById('productId');
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+            const title = urlParams.get('title');
+            const brand = urlParams.get('brand');
+            const origin = urlParams.get('origin');
+            const imagePreviewContainer = document.getElementById('imagePreviewContainer');
 
-            // Gọi API để lấy danh sách sản phẩm
-            fetch('/products')
-                .then(response => response.json())
-                .then(products => {
-                    products.forEach(product => {
-                        const option = document.createElement('option');
-                        option.value = product.productId;
-                        option.textContent = `${product.productId}`;
-                        productIdSelect.appendChild(option);
-                    });
-                })
-                .catch(error => console.error('Error fetching product list:', error));
-
-            // Khi chọn một sản phẩm, tự động điền thông tin vào form
-            productIdSelect.addEventListener('change', function () {
-                const selectedProductId = this.value;
-
-                fetch(`/products/${selectedProductId}`)
+            if (productId) {
+                // Fetch thông tin sản phẩm từ server
+                fetch(`/products/${productId}`)
                     .then(response => response.json())
                     .then(product => {
                         if (product) {
-                            document.getElementById('title').value = product.title || '';
+                            // Điền thông tin sản phẩm vào form
+                            document.getElementById('productId').value = product.productId || '';
+                            document.getElementById('title').value = title || product.title || '';
                             document.getElementById('price').value = product.additionalInfo.price || '';
                             document.getElementById('quantity').value = product.additionalInfo.quantity || '';
-                            document.getElementById('brand').value = product.additionalInfo.brand || '';
-                            document.getElementById('origin').value = product.additionalInfo.origin || '';
+                            document.getElementById('brand').value = brand || product.additionalInfo.brand || '';
+                            document.getElementById('origin').value = origin || product.additionalInfo.origin || '';
                             document.getElementById('rating').value = product.rating || '';
                             if (product.description && product.description.details) {
                                 document.getElementById('description').value = product.description.details;
                             }
+
+                            // Hiển thị tất cả ảnh hiện có
+                            if (product.images && product.images.length > 0) {
+                                product.images.forEach(image => {
+                                    const img = document.createElement('img');
+                                    img.src = `/images/${image}`;
+                                    img.className = 'image-preview';
+                                    img.alt = 'Product Image';
+                                    imagePreviewContainer.appendChild(img);
+                                });
+                            }
+                        } else {
+                            alert('Không tìm thấy sản phẩm!');
                         }
                     })
-                    .catch(error => console.error('Error fetching product details:', error));
-            });
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const productId = urlParams.get('id');
-            
-            const storedProduct = localStorage.getItem('productToUpdate');
-            
-            if (storedProduct) {
-                const product = JSON.parse(storedProduct);
-                
-                document.title = `Cập nhật: ${product.title}`;
-                
-                document.getElementById('productId').value = product.productId || '';
-                document.getElementById('title').value = product.title || '';
-                document.getElementById('price').value = product.price || '';
-                document.getElementById('quantity').value = product.quantity || '';
-                document.getElementById('brand').value = product.brand || '';
-                document.getElementById('origin').value = product.origin || '';
-                document.getElementById('rating').value = product.rating || '';
-                
-                if (product.description && product.description.details) {
-                    document.getElementById('description').value = product.description.details;
-                }
-                
-                localStorage.removeItem('productToUpdate');
+                    .catch(error => {
+                        console.error('Lỗi khi lấy thông tin sản phẩm:', error);
+                        alert('Lỗi khi tải thông tin sản phẩm!');
+                    });
             }
 
-            document.getElementById('updateProductForm').addEventListener('submit', function(event) {
+            // Xử lý khi chọn file ảnh mới
+            const imageInput = document.getElementById('images');
+            imageInput.addEventListener('change', function () {
+                const files = this.files;
+                if (files.length > 0) {
+                    // Xóa các ảnh preview cũ của file mới (nếu có)
+                    const existingNewImages = imagePreviewContainer.querySelectorAll('.new-image');
+                    existingNewImages.forEach(img => img.remove());
+
+                    // Hiển thị preview các ảnh mới
+                    Array.from(files).forEach(file => {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.className = 'image-preview new-image';
+                            img.alt = 'New Image Preview';
+                            imagePreviewContainer.appendChild(img);
+                        };
+                        reader.readAsDataURL(file);
+                    });
+                }
+            });
+
+            // Xử lý submit form
+            document.getElementById('updateProductForm').addEventListener('submit', function (event) {
                 event.preventDefault();
 
                 const formData = new FormData(this);
@@ -221,48 +240,22 @@
 
                 fetch(`/update/product/${productId}`, {
                     method: 'PUT',
-                    body: formData // Gửi FormData trực tiếp
+                    body: formData
                 })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Sản phẩm đã được cập nhật thành công!');
-                        window.location.href = '/productlist';
-                    } else {
-                        alert(data.error || 'Đã xảy ra lỗi khi cập nhật sản phẩm.');
-                    }
-                })
-                .catch(error => console.error('Error updating product:', error));
-            });
-        });
-
-        document.addEventListener('DOMContentLoaded', function () {
-            const urlParams = new URLSearchParams(window.location.search);
-            const productId = urlParams.get('id'); // Lấy `productId` từ URL
-
-            if (productId) {
-                // Fetch thông tin sản phẩm từ server
-                fetch(`/products/${productId}`)
                     .then(response => response.json())
-                    .then(product => {
-                        if (product) {
-                            // Điền thông tin sản phẩm vào form
-                            document.getElementById('productId').value = product.productId || '';
-                            document.getElementById('title').value = product.title || '';
-                            document.getElementById('price').value = product.additionalInfo.price || '';
-                            document.getElementById('quantity').value = product.additionalInfo.quantity || '';
-                            document.getElementById('brand').value = product.additionalInfo.brand || '';
-                            document.getElementById('origin').value = product.additionalInfo.origin || '';
-                            document.getElementById('rating').value = product.rating || '';
-                            if (product.description && product.description.details) {
-                                document.getElementById('description').value = product.description.details;
-                            }
+                    .then(data => {
+                        if (data.success) {
+                            alert('Sản phẩm đã được cập nhật thành công!');
+                            window.location.href = '/productlist';
                         } else {
-                            alert('Không tìm thấy sản phẩm!');
+                            alert(data.error || 'Đã xảy ra lỗi khi cập nhật sản phẩm.');
                         }
                     })
-                    .catch(error => console.error('Lỗi khi lấy thông tin sản phẩm:', error));
-            }
+                    .catch(error => {
+                        console.error('Error updating product:', error);
+                        alert('Lỗi khi cập nhật sản phẩm!');
+                    });
+            });
         });
     </script>
 </body>

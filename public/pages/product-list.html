@@ -350,10 +350,9 @@
         let allProducts = [];
         let categories = new Set();
 
-        // Remove the loadProducts function and replace it with direct fetch
         fetch('/products')
-            .then(res => res.json()) //res.json ở client giúp chuyển kiểu json sang js object, ở server thì ngược lại
-            .then(products => { //xử lý dữ liệu data json -> ở đây là 'products'
+            .then(res => res.json())
+            .then(products => {
                 allProducts = products;
                 displayProducts(products);
                 
@@ -448,7 +447,7 @@
             if (price == null || isNaN(price)) {
                 return 0;
             }
-            return `${Number(price).toLocaleString()} VND`; //chuyển kiểu số sang string
+            return `${Number(price).toLocaleString()} VND`;
         }
                     
         function showProductDetails(productId) {
@@ -463,7 +462,6 @@
             productNameSpan.textContent = productName;
             modal.classList.remove('hidden');
         
-            // Đảm bảo không thay đổi class hoặc style của các nút
             const confirmDeleteButton = document.getElementById('confirmDelete');
             const cancelDeleteButton = document.getElementById('cancelDelete');
         
@@ -479,14 +477,15 @@
         
         // Hàm xóa sản phẩm
         function deleteProduct(productId) {
-            fetch(`/delete/product/${productId}`, { 
+            fetch(`/api/products/${productId}`, {
                 method: 'DELETE',
             })
             .then(response => {
                 if (response.ok) {
-                    window.location.reload(); // dùng reload() thay thế cho hàm loadProducts()
-                    alert('Sản phẩm đã được xóa thành công!');
-                } else {
+                    // Làm mới danh sách sản phẩm sau khi xóa thành công
+                    loadProducts();
+                            alert('Sản phẩm đã được xóa thành công!');
+                                        } else {
                     alert('Không thể xóa sản phẩm. Vui lòng thử lại sau!');
                 }
             })
@@ -494,12 +493,24 @@
                 console.error('Lỗi khi xóa sản phẩm:', error);
                 alert('Đã xảy ra lỗi khi xóa sản phẩm!');
             });
-        };
+        }
 
         // Hàm hiển thị chi tiết sản phẩm để chỉnh sửa
         function showUpdateProductForm(productId) {
-            // Chuyển hướng đến trang cập nhật sản phẩm với `productId` trong URL
-            window.location.href = `/update/product?id=${productId}`;
+            fetch(`/products/${productId}`)
+                .then(response => response.json())
+                .then(product => {
+                    if (product) {
+                        const url = `/update/product?id=${encodeURIComponent(product.productId)}&title=${encodeURIComponent(product.title)}&brand=${encodeURIComponent(product.additionalInfo.brand)}&origin=${encodeURIComponent(product.additionalInfo.origin)}`;
+                        window.location.href = url;
+                    } else {
+                        alert('Không tìm thấy sản phẩm!');
+                    }
+                })
+                .catch(error => {
+                    console.error('Lỗi khi lấy thông tin sản phẩm:', error);
+                    alert('Lỗi khi tải thông tin sản phẩm!');
+                });
         }
     </script>
 </body>
