@@ -1,1 +1,7 @@
-form không hiện hình ảnh (thêm, cập nhật và chi tiết)
+cuối kỳ báo cáo dựa trên slides: phần nào cần nêu rõ thì đưa snipet code vào
+
+slide:
+1- slide 1 chứa danh sách sinh viên
+2- slide 2 có link github nộp bài
+3- slide 3 phân công công việc 
+Còn lại - Trình bày chi tiết chức năng: luồng dữ liệu, quá trình hoạt động

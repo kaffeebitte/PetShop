@@ -5,11 +5,36 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = 3000;
 
-const productsModule = require('./products.js');
-let productList = productsModule.products;
+const MongoClient = require('mongodb').MongoClient;
 
-function findProductById(productId) {
-    return productList.find(product => product.productId === productId);
+const url = 'mongodb://127.0.0.1:27017';
+const client = new MongoClient(url);
+const dbName = 'mydatabase';
+const collectionName = 'DoDungThuCung';
+
+async function findProductById(productId) {
+    try {
+        await client.connect();
+        const db = client.db(dbName);
+        const collection = db.collection(collectionName);
+        return await collection.findOne({ productId: productId });
+    } catch (error) {
+        console.error("Lỗi khi tìm sản phẩm theo ID:", error);
+        throw error;
+    }
+}
+
+async function getUniqueCategories() {
+    try {
+        await client.connect();
+        const db = client.db(dbName);
+        const collection = db.collection(collectionName);
+        const categories = await collection.distinct('category');
+        return categories.sort();
+    } catch (error) {
+        console.error("Error getting categories:", error);
+        throw error;
+    }
 }
 
 app.use(bodyParser.json());
@@ -21,8 +46,18 @@ app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.static(path.join(__dirname, '/public/pages')));
 app.use(express.static(path.join(__dirname, '/public/images')));
 
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/pages/index.html'));
+app.get('/products', async (req, res) => {
+    try{
+        await client.connect(); 
+        const db = client.db(dbName);
+        const collection = db.collection(collectionName);
+        const products = await collection.find({}).toArray();
+        res.json(products);
+    }
+    catch (error) {
+        console.error("Lỗi kết nối DB:", error);
+        res.status(500).send("Lỗi máy chủ");
+    }
 });
 
 app.get('/productlist', (req, res) => {
@@ -45,8 +80,19 @@ app.get('/productdetail', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/pages/product-detail.html'));
 });
 
-app.get('/products', (req, res) => {
-    res.json(productList);
+app.get('/products', async (req, res) =>{
+    try{
+        await client.connect(); // ham connect co co che bat dong bo
+        console.log("Connected to MongoDB successfully");
+        const db = client.db(dbName);
+        const collection = db.collection(collectionName);
+        const products = await collection.find({}).toArray();
+        res.json(products);
+    }
+    catch (error) {
+        console.error("DB connection error: ", error);
+        res.status(500).send("Internal Server Error");
+    }
 });
 
 // tìm kiếm dựa vào id, tên, brand, xuất xứ
@@ -68,22 +114,23 @@ app.get('/products/search', (req, res) => {
 });
 
 //api thêm sản phẩm mới (thêm hình ảnh vào folder images)
-app.post('/products', (req, res) => {
-    const { productId, title, price, quantity, brand, origin } = req.body; 
+app.post('/products', async (req, res) => {
+    const { productId, title, price, quantity, brand, origin, category } = req.body; 
 
     try {
-        // kiểm tra thông tin bắt buộc và kiểm tra trùng id
         if (!productId || !title || !price || !quantity || !brand || !origin) {
             return res.status(400).send('Vui lòng điền đầy đủ thông tin sản phẩm.');
         }
 
-        if (findProductById(productId)) {
+        const existingProduct = await findProductById(productId);
+        if (existingProduct) {
             return res.status(400).send('ID sản phẩm đã tồn tại.');
         }
 
         const newProduct = {
             productId,
             title: title.trim(),
+            category: category || "Chưa phân loại", 
             images: [],
             description: { details: req.body.description ? req.body.description.trim() : '' },
             rating: req.body.rating ? Number(req.body.rating) : 0,
@@ -102,7 +149,6 @@ app.post('/products', (req, res) => {
                 const fileName = image.name; 
                 const uploadPath = path.join(__dirname, 'public/images/', fileName);
 
-                //dùng hàm move để lưu ảnh vào folder (mv() là hàm của thư viện express-fileupload)
                 image.mv(uploadPath, (err) => {
                     if (err){
                         console.error('Lỗi lưu ảnh:', err);
@@ -113,9 +159,12 @@ app.post('/products', (req, res) => {
             });
         }
 
-        productList.push(newProduct);
+        await client.connect();
+        const db = client.db(dbName);
+        const collection = db.collection(collectionName);
+        await collection.insertOne(newProduct);
 
-        console.log(`Đã thêm sản phẩm mới (ID: ${newProduct.productId}) vào danh sách thành công!`);
+        console.log(`Đã thêm sản phẩm mới (ID: ${newProduct.productId}) vào cơ sở dữ liệu thành công!`);
         res.status(201).send(`Sản phẩm ${newProduct.title} đã được thêm thành công!`);
     } catch (err) {
         console.error('Server error:', err);
@@ -206,6 +255,12 @@ app.delete('/delete/product/:id', (req, res) => {
             error: 'Không tìm thấy sản phẩm để xóa'
         });
     }
+});
+
+// New endpoint to get all categories
+app.get('/categories', (req, res) => {
+    const categories = getUniqueCategories();
+    res.json(categories);
 });
 
 app.get('*', (req, res) => res.send('Hẹn bạn trong tương lai nhé!'));

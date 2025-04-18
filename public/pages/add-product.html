@@ -92,6 +92,50 @@
             margin-right: 4px;
             font-size: 18px;
         }
+
+        /* Styles for image previews */
+        .image-preview-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .image-preview {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            border: 1px solid #ddd;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+        
+        .image-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .image-preview .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 0, 0, 0.7);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            line-height: 18px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0;
+        }
+        
+        .image-preview .remove-btn:hover {
+            background: rgba(255, 0, 0, 1);
+        }
     </style>
 </head>
 <body>
@@ -108,7 +152,7 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="productId" class="required-field">ID sản phẩm</label>
-                    <input type="text" id="productId" name="productId" class="form-control" required>
+                    <input type="text" id="productId" name="productId" class="form-control" readonly required>
                 </div>
                 <div class="form-group">
                     <label for="title" class="required-field">Tên sản phẩm</label>
@@ -140,8 +184,20 @@
             
             <div class="form-row">
                 <div class="form-group">
-                    <label for="rating" class="required-field">Đánh giá</label>
-                    <input type="number" id="rating" name="rating" step="0.5" min="0" max="5" class="form-control" required>
+                    <label for="rating">Đánh giá</label>
+                    <input type="number" id="rating" name="rating" step="0.5" min="0" max="5" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="category" class="required-field">Danh mục</label>
+                    <select id="category" name="category" class="form-control" required>
+                        <option value="" disabled selected>Chọn danh mục</option>
+                        <option value="Thức ăn">Thức ăn</option>
+                        <option value="Phụ kiện">Phụ kiện</option>
+                        <option value="Đồ chơi">Đồ chơi</option>
+                        <option value="Vệ sinh">Vệ sinh</option>
+                        <option value="Quần áo">Quần áo</option>
+                        <option value="Chuồng">Chuồng</option>
+                    </select>
                 </div>
             </div>
             
@@ -153,7 +209,8 @@
             <div class="form-group">
                 <label for="images">Hình ảnh</label>
                 <input type="file" id="images" name="images" multiple class="form-control-file" accept=".png, .jpg, .jpeg">
-                <small class="text-light">Chỉ chấp nhận các định dạng: PNG, JPG, JPEG. Có thể chọn nhiều file hình ảnh</small>
+                <small class="text-light">Chỉ chấp nhận các định dạng: PNG, JPG, JPEG. Có thể chọn tối đa 10 file hình ảnh</small>
+                <div id="imagePreviewContainer" class="image-preview-container"></div>
             </div>
             
             <div class="form-buttons">
@@ -166,20 +223,39 @@
         const productIdInput = document.getElementById('productId');
         let productIdList = [];
         
-        //fetch danh sách sản phẩm + danh sách id
-        fetch('/products')
-            .then(res => res.json())
-            .then(products => {
-                productIdList = products.map(product => product.productId);
-            })
-            .catch(error => {
-                console.error('Không thể lấy danh sách sản phẩm:', error);
-            });
+        const categoryPrefixes = {
+            'Thức ăn': 'FOOD',
+            'Phụ kiện': 'ACCE',
+            'Đồ chơi': 'TOYS',
+            'Vệ sinh': 'CARE',
+            'Quần áo': 'CLTH',
+            'Chuồng': 'CAGE'
+        };
+        
+        function loadProductList() {
+            return fetch('/products')
+                .then(res => res.json())
+                .then(products => {
+                    productIdList = products.map(product => product.productId);
+                    return productIdList;
+                })
+                .catch(error => {
+                    console.error('Không thể lấy danh sách sản phẩm:', error);
+                    return [];
+                });
+        }
 
-        function checkProductIdFormat(productId) {
-            let numberPart = productId.substring(3);
+        function getCategoryPrefix(category) {
+            return categoryPrefixes[category] || category.substring(0, 4).toUpperCase();
+        }
 
-            if (!productId.startsWith("PET") || numberPart.length != 4) {
+        function checkProductIdFormat(productId, selectedCategory) {
+            if (!selectedCategory) return false;
+            
+            const prefix = getCategoryPrefix(selectedCategory);
+            const numberPart = productId.substring(prefix.length);
+            
+            if (!productId.startsWith(prefix) || numberPart.length !== 4) {
                 return false;
             }
             
@@ -192,14 +268,56 @@
             return true;
         }
 
-        // kiểm tra dữ liệu trước khi submit
+        function autoGenerateID(category) {
+            if (!category) return '';
+            
+            const prefix = getCategoryPrefix(category);
+            
+            const categoryIds = productIdList.filter(id => 
+                id && typeof id === 'string' && id.startsWith(prefix)
+            );
+            
+            if (categoryIds.length === 0) {
+                return prefix + '0001';
+            }
+            
+            let maxNumber = 0;
+            
+            categoryIds.forEach(id => {
+                const numberPart = id.substring(prefix.length);
+                const num = parseInt(numberPart, 10);
+                if (!isNaN(num) && num > maxNumber) {
+                    maxNumber = num;
+                }
+            });
+            
+            const nextNumber = maxNumber + 1;
+            const formattedNumber = nextNumber.toString().padStart(4, '0');
+            
+            return prefix + formattedNumber;
+        }
+
+        document.getElementById('category').addEventListener('change', function() {
+            const selectedCategory = this.value;
+            if (selectedCategory) {
+                productIdInput.value = autoGenerateID(selectedCategory);
+            }
+        });
+
         const form = document.getElementById('addProductForm');
         form.addEventListener('submit', (e) => {
-            e.preventDefault(); 
+            e.preventDefault();
             const productId = productIdInput.value.trim();
+            const selectedCategory = document.getElementById('category').value;
             
-            if (!checkProductIdFormat(productId)) {
-                alert('ID phải có định dạng PETxxxx (với x là các chữ số)');
+            if (!selectedCategory) {
+                alert('Vui lòng chọn danh mục sản phẩm');
+                return;
+            }
+            
+            if (!checkProductIdFormat(productId, selectedCategory)) {
+                const prefix = getCategoryPrefix(selectedCategory);
+                alert(`ID phải có định dạng ${prefix}xxxx (với x là các chữ số)`);
                 return;
             }
 
@@ -209,7 +327,6 @@
             }
             
             const formData = new FormData(form);
-            // FormData có cấu trúc key-value giống như json nên có thể gửi body là formData trực tiếp mà không cần chuyển lại kiểu JSON 
             
             fetch('/products', {
                 method: 'POST',
@@ -226,11 +343,93 @@
             .then(message => {
                 alert(message);
                 form.reset();
+                productIdInput.value = '';
+                loadProductList();
             })
             .catch(error => {
                 alert('Lỗi: ' + error.message);
             });
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProductList().then(() => {
+                const selectedCategory = document.getElementById('category').value;
+                if (selectedCategory) {
+                    productIdInput.value = autoGenerateID(selectedCategory);
+                }
+            });
+        });
+
+        // Thêm ràng buộc số lượng hình ảnh
+        document.getElementById('images').addEventListener('change', function(e) {
+            if (this.files.length > 10) {
+                alert('Bạn chỉ được chọn tối đa 10 hình ảnh');
+                this.value = ''; // Xóa các file đã chọn
+            }
+        });
+
+        // Xử lý hiển thị ảnh xem trước và xóa ảnh
+        const imagesInput = document.getElementById('images');
+        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+        let selectedFiles = new DataTransfer();
+        
+        imagesInput.addEventListener('change', function() {
+            // Lưu trữ các file đã chọn
+            if (this.files) {
+                Array.from(this.files).forEach(file => {
+                    // Kiểm tra số lượng ảnh không vượt quá 10
+                    if (selectedFiles.files.length < 10) {
+                        selectedFiles.items.add(file);
+                        displayImagePreview(file);
+                    }
+                });
+                
+                // Cập nhật lại input file với danh sách file đã chọn
+                updateFileInput();
+                
+                // Kiểm tra và hiển thị cảnh báo nếu chọn quá nhiều ảnh
+                if (this.files.length + selectedFiles.files.length - this.files.length > 10) {
+                    alert('Chỉ được chọn tối đa 10 hình ảnh. Chỉ 10 ảnh đầu tiên được thêm vào.');
+                }
+            }
+        });
+        
+        function displayImagePreview(file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.createElement('div');
+                preview.className = 'image-preview';
+                preview.innerHTML = `
+                    <img src="${e.target.result}" alt="Preview">
+                    <button type="button" class="remove-btn" data-name="${file.name}">×</button>
+                `;
+                imagePreviewContainer.appendChild(preview);
+                
+                // Thêm sự kiện click cho nút xóa
+                preview.querySelector('.remove-btn').addEventListener('click', function() {
+                    const fileName = this.getAttribute('data-name');
+                    removeFile(fileName);
+                    preview.remove();
+                });
+            }
+            reader.readAsDataURL(file);
+        }
+        
+        function removeFile(fileName) {
+            const newFileList = new DataTransfer();
+            
+            // Thêm tất cả các file trừ file cần xóa
+            Array.from(selectedFiles.files)
+                .filter(file => file.name !== fileName)
+                .forEach(file => newFileList.items.add(file));
+            
+            selectedFiles = newFileList;
+            updateFileInput();
+        }
+        
+        function updateFileInput() {
+            imagesInput.files = selectedFiles.files;
+        }
     </script>
 </body>
 </html>
