@@ -4,107 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản lý sản phẩm thú cưng</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #ffffff;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-        header {
-            background-color: #f9f9f9;
-            color: #333333;
-            padding: 20px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid #e0e0e0;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-        .logo {
-            display: flex;
-            align-items: center;
-        }
-        .logo img {
-            width: 70px;
-            margin-right: 15px;
-        }
-        main {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-        .hero {
-            text-align: center;
-            padding: 30px;
-            background-color: #f5f5f5;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            width: 100%;
-            max-width: 800px;
-        }
-        .actions-section {
-            display: flex;
-            justify-content: space-around;
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 1200px;
-        }
-        .action-box {
-            text-align: center;
-            padding: 30px;
-            background-color: #ffffff;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            flex: 1;
-            margin: 0 20px;
-            transition: transform 0.3s, background-color 0.3s;
-            max-width: 250px;
-            min-height: 220px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-        .action-box:hover {
-            transform: translateY(-5px);
-            background-color: #f5f5f5;
-        }
-        .action-box a {
-            text-decoration: none;
-            color: #007bff;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-        .action-box a:hover {
-            color: #0056b3;
-        }
-        .action-icon {
-            font-size: 50px;
-            color: #007bff;
-            margin-bottom: 15px;
-        }
-        footer {
-            background-color: #f9f9f9;
-            color: #333333;
-            padding: 20px;
-            text-align: center;
-            border-top: 1px solid #e0e0e0;
-        }
-        footer a {
-            color: #007bff;
-            text-decoration: none;
-        }
-        footer a:hover {
-            color: #0056b3;
-        }
-    </style>
+    <link href="../styles/style.css" rel="stylesheet" type="text/css">
+    <link href="../styles/index.css" rel="stylesheet" type="text/css">
 </head>
 <body>
     <header>
@@ -126,8 +27,8 @@
                 <h3>Thêm sản phẩm</h3>
                 <p>Thêm sản phẩm mới vào danh sách.</p>
                 <a href="/add/product">Thêm một sản phẩm</a>
-                <a href="/add/product">Thêm nhiều sản phẩm</a> <!--chua thuc hien-->
-                <a href="/add/product">Nhập file JSON</a> <!--chua thuc hien-->
+                <a href="/add/product">Thêm nhiều sản phẩm</a>
+                <a href="/add/product">Nhập file JSON</a>
             </div>
             <div class="action-box">
                 <div class="action-icon">☰</div>

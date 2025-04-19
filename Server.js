@@ -2,20 +2,23 @@ const express = require('express');
 const path = require('path');
 const fileUpload = require('express-fileupload');
 const bodyParser = require('body-parser');
-const MongoClient = require('mongodb').MongoClient;
+const { connectDB, getCollection, dbName, collectionName } = require('./public/javascripts/mongodb'); // Import connection logic
 const app = express();
 const port = 3000;
 
-const url = 'mongodb://127.0.0.1:27017';
-const client = new MongoClient(url);
-const dbName = 'dsDoDungThuCung';
-const collectionName = 'ThuCung';
+// Connect to MongoDB when the server starts
+let db;
+connectDB().then(database => {
+    db = database.db; // Store the db object for use in routes
+    console.log(`Cơ sở dữ liệu ${dbName} đã sẵn sàng.`);
+}).catch(err => {
+    console.error("Không thể kết nối đến cơ sở dữ liệu khi khởi động:", err);
+    process.exit(1);
+});
 
 async function findProductById(productId) {
     try {
-        await client.connect();
-        const db = client.db(dbName);
-        const collection = db.collection(collectionName);
+        const collection = getCollection(); // Use the getter function
         return await collection.findOne({ productId: productId });
     } catch (error) {
         console.error("Lỗi khi tìm sản phẩm theo ID:", error);
@@ -25,13 +28,11 @@ async function findProductById(productId) {
 
 async function getUniqueCategories() {
     try {
-        await client.connect();
-        const db = client.db(dbName);
-        const collection = db.collection(collectionName);
+        const collection = getCollection(); // Use the getter function
         const categories = await collection.distinct('category');
         return categories.sort();
     } catch (error) {
-        console.error("Error getting categories:", error);
+        console.error("Lỗi khi lấy danh mục sản phẩm:", error);
         throw error;
     }
 }
@@ -70,13 +71,11 @@ app.get('/productdetail', (req, res) => {
 // Get all products
 app.get('/products', async (req, res) => {
     try {
-        await client.connect();
-        const db = client.db(dbName);
-        const collection = db.collection(collectionName);
+        const collection = getCollection(); // Use getter
         const products = await collection.find({}).toArray();
         res.json(products);
     } catch (error) {
-        console.error("Lỗi kết nối DB:", error);
+        console.error("Lỗi kết nối cơ sở dữ liệu:", error);
         res.status(500).send("Lỗi máy chủ");
     }
 });
@@ -84,13 +83,11 @@ app.get('/products', async (req, res) => {
 // Search products
 app.get('/products/search', async (req, res) => {
     const keyword = req.query.keyword?.toLowerCase();
-    
+
     try {
-        await client.connect();
-        const db = client.db(dbName);
-        const collection = db.collection(collectionName);
+        const collection = getCollection(); // Use getter
         let query = {};
-        
+
         if (keyword) {
             query = {
                 $or: [
@@ -101,7 +98,7 @@ app.get('/products/search', async (req, res) => {
                 ]
             };
         }
-        
+
         const products = await collection.find(query).toArray();
         res.json(products);
     } catch (error) {
@@ -119,7 +116,7 @@ app.post('/products', async (req, res) => {
             return res.status(400).send('Vui lòng điền đầy đủ thông tin sản phẩm.');
         }
 
-        const existingProduct = await findProductById(productId);
+        const existingProduct = await findProductById(productId); // Uses the updated function
         if (existingProduct) {
             return res.status(400).send('ID sản phẩm đã tồn tại.');
         }
@@ -153,15 +150,13 @@ app.post('/products', async (req, res) => {
             });
         }
 
-        await client.connect();
-        const db = client.db(dbName);
-        const collection = db.collection(collectionName);
+        const collection = getCollection(); // Use getter
         await collection.insertOne(newProduct);
 
         console.log(`Đã thêm sản phẩm mới (ID: ${newProduct.productId}) vào cơ sở dữ liệu thành công!`);
         res.status(201).send(`Sản phẩm ${newProduct.title} đã được thêm thành công!`);
     } catch (err) {
-        console.error('Server error:', err);
+        console.error('Lỗi máy chủ:', err);
         res.status(500).send('Lỗi máy chủ: ' + err.message);
     }
 });
@@ -169,7 +164,7 @@ app.post('/products', async (req, res) => {
 // Get product by ID
 app.get('/products/:id', async (req, res) => {
     try {
-        const product = await findProductById(req.params.id);
+        const product = await findProductById(req.params.id); // Uses the updated function
         if (product) {
             res.json(product);
         } else {
@@ -186,9 +181,7 @@ app.put('/update/product/:id', async (req, res) => {
     const productId = req.params.id;
 
     try {
-        await client.connect();
-        const db = client.db(dbName);
-        const collection = db.collection(collectionName);
+        const collection = getCollection(); // Use getter
         const existingProduct = await collection.findOne({ productId: productId });
 
         if (!existingProduct) {
@@ -314,9 +307,7 @@ app.delete('/delete/product/:id', async (req, res) => {
     const productId = req.params.id;
 
     try {
-        await client.connect();
-        const db = client.db(dbName);
-        const collection = db.collection(collectionName);
+        const collection = getCollection(); // Use getter
         const result = await collection.deleteOne({ productId: productId });
 
         if (result.deletedCount === 1) {
@@ -369,7 +360,7 @@ app.delete('/delete/products', async (req, res) => {
 // Get all categories
 app.get('/categories', async (req, res) => {
     try {
-        const categories = await getUniqueCategories();
+        const categories = await getUniqueCategories(); // Uses the updated function
         res.json(categories);
     } catch (error) {
         console.error('Lỗi khi lấy danh mục:', error);
@@ -379,4 +370,4 @@ app.get('/categories', async (req, res) => {
 
 app.get('*', (req, res) => res.send('Hẹn bạn trong tương lai nhé!'));
 
-app.listen(port, () => console.log(`Server running at http://localhost:${port}`));
+app.listen(port, () => console.log(`Máy chủ đang chạy tại địa chỉ http://localhost:${port}`));

@@ -5,346 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Danh sách sản phẩm</title>
     <link href="../styles/style.css" rel="stylesheet" type="text/css">
-    <style>
-        :root {
-            --primary-color: #00796b;
-            --primary-hover: #004d40;
-            --text-color: #333;
-            --border-color: #e0e0e0;
-            --spacing-sm: 8px;
-            --spacing-md: 16px;
-            --spacing-lg: 24px;
-            --danger-color: #d32f2f;
-            --danger-hover: #b71c1c;
-            --success-color: #388e3c;
-            --success-hover: #2e7d32;
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        
-        .modal-content {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
-            width: 90%;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        
-        .modal-buttons {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 20px;
-            gap: 10px;
-        }
-        
-        .modal-buttons button {
-            padding: 8px 16px;
-            border-radius: 4px;
-            border: none;
-            font-weight: bold;
-            cursor: pointer;
-        }
-        
-        .confirm-button {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .confirm-button:hover {
-            background-color: var(--primary-hover);
-        }
-        
-        .cancel-button {
-            background-color: #f5f5f5;
-            color: var(--text-color);
-        }
-
-        .confirm-delete {
-            background-color: var(--danger-color);
-            color: white;
-        }
-        
-        .confirm-delete:hover {
-            background-color: var(--danger-hover);
-        }
-
-        .hidden {
-            display: none;
-        }
-        
-        .product-list-header {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            margin-bottom: var(--spacing-lg);
-        }
-        
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            width: 100%;
-        }
-        
-        .search-container {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        
-        .search-input {
-            flex: 1;
-            padding: 12px 15px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-            font-size: 16px;
-            transition: border-color 0.2s ease;
-        }
-        
-        .search-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(0, 121, 107, 0.2);
-        }
-        
-        .search-button {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.2s ease;
-        }
-        
-        .search-button:hover {
-            background-color: var(--primary-hover);
-        }
-        
-        .delete-selected-button, .update-selected-button {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.2s ease;
-        }
-        
-        .delete-selected-button {
-            background-color: var(--danger-color);
-            color: white;
-        }
-        
-        .delete-selected-button:hover {
-            background-color: var(--danger-hover);
-        }
-        
-        .update-selected-button {
-            background-color: var(--success-color);
-            color: white;
-        }
-        
-        .update-selected-button:hover {
-            background-color: var(--success-hover);
-        }
-        
-        .delete-selected-button:disabled, .update-selected-button:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
-        
-        .product-count {
-            color: #666;
-            font-size: 15px;
-        }
-
-        .page-navigation {
-            display: flex;
-            margin-bottom: var(--spacing-lg);
-        }
-        
-        .back-button {
-            display: inline-flex;
-            align-items: center;
-            text-decoration: none;
-            color: var(--primary-color);
-            font-weight: 500;
-            padding: 8px 16px;
-            border: 1px solid var(--primary-color);
-            border-radius: var(--spacing-sm);
-            transition: all 0.2s;
-        }
-        
-        .back-button:hover {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .action-buttons {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .add-product-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 20px;
-            background-color: #ff6f00;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-            text-decoration: none;
-            transition: background-color 0.2s ease;
-        }
-        
-        .add-product-btn:hover {
-            background-color: #e65100;
-        }
-
-        .row-clickable {
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-        
-        .row-clickable:hover {
-            background-color: rgba(0, 121, 107, 0.05);
-        }
-        
-        .empty-state {
-            text-align: center;
-            padding: var(--spacing-lg);
-            color: var(--text-light);
-            font-style: italic;
-        }
-        
-        .action-icon {
-            display: inline-flex;
-            justify-content: center;
-            align-items: center;
-            width: 24px;
-            height: 24px;
-            border-radius: 3px;
-            margin: 0 2px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 12px;
-        }
-        
-        .edit-icon {
-            color: var(--primary-color);
-            font-weight: bold;
-        }
-        
-        .edit-icon:hover {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        
-        .delete-icon {
-            color: var(--danger-color);
-            font-weight: bold;
-        }
-        
-        .delete-icon:hover {
-            background-color: var(--danger-color);
-            color: white;
-        }
-
-        .checkbox-column {
-            width: 40px;
-            text-align: center;
-        }
-
-        .select-all-checkbox {
-            cursor: pointer;
-        }
-
-        .product-update-section {
-            margin-bottom: var(--spacing-lg);
-            border: 1px solid var(--border-color);
-            padding: var(--spacing-md);
-            border-radius: 4px;
-        }
-
-        .product-update-section h4 {
-            margin: 0 0 var(--spacing-md) 0;
-            color: var(--primary-color);
-        }
-
-        .form-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: var(--spacing-md);
-        }
-
-        .form-group label {
-            flex: 0 0 120px;
-            font-weight: 500;
-        }
-
-        .form-group input, .form-group select, .form-group textarea {
-            flex: 1;
-            padding: 8px;
-            border: 1px solid var(--border-color);
-            border-radius: 4px;
-        }
-
-        .form-group input[type="file"] {
-            padding: 3px;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 80px;
-        }
-
-        .form-group input[readonly] {
-            background-color: #f5f5f5;
-            cursor: not-allowed;
-        }
-
-        .update-product-button {
-            background-color: var(--success-color);
-            color: white;
-            padding: 8px 16px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .update-product-button:hover {
-            background-color: var(--success-hover);
-        }
-    </style>
+    <link href="../styles/product-list.css" rel="stylesheet" type="text/css">
 </head>
 <body>
     <div class="container">
@@ -353,13 +14,17 @@
                 Quay lại trang chủ
             </a>
         </div>
-        
+
         <div class="product-list-header">
             <div class="header-top">
                 <h1>Danh sách sản phẩm</h1>
-                <span class="product-count" id="productCount"></span>
+                <div class="header-top-right">
+                    <span class="product-count" id="productCount"></span>
+                    <a href="/add/product" class="add-product-btn">
+                        Thêm sản phẩm
+                    </a>
+                </div>
             </div>
-            
             <div class="search-container">
                 <input 
                     type="text" 
@@ -367,52 +32,147 @@
                     class="search-input" 
                     placeholder="Tìm kiếm sản phẩm..."
                 >
-                <div class="category-filter">
-                    <select id="categoryFilter" class="category-select">
-                        <option value="">Tất cả danh mục</option>
-                    </select>
-                </div>
                 <div class="action-buttons">
-                    <button id="searchButton" class="search-button" onclick="SearchProducts();">
-                        Tìm kiếm
-                    </button>
-                    <a href="/add/product" class="add-product-btn">
-                        Thêm sản phẩm
-                    </a>
-                    <button id="updateSelectedButton" class="update-selected-button" onclick="showUpdateSelectedProductsModal()" disabled>
-                        Cập nhật sản phẩm
-                    </button>
-                    <button id="deleteSelectedButton" class="delete-selected-button" onclick="showDeleteManyConfirmation()" disabled>
-                        Xóa sản phẩm
-                    </button>
+                        <button id="searchButton" class="search-button">
+                            Tìm kiếm
+                        </button>
+                        <button id="updateSelectedButton" class="update-selected-button" disabled>
+                            Cập nhật sản phẩm
+                        </button>
+                        <button id="deleteSelectedButton" class="delete-selected-button" disabled>
+                            Xóa sản phẩm
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
-        
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th class="checkbox-column">
-                            <input type="checkbox" id="selectAll" class="select-all-checkbox" onclick="toggleSelectAll()">
-                        </th>
-                        <th>ID</th>
-                        <th>Tên sản phẩm</th>
-                        <th>Danh mục</th>
-                        <th>Giá</th>
-                        <th>Số lượng</th>
-                        <th>Thương hiệu</th>
-                        <th>Xuất xứ</th>
-                        <th>Đánh giá</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody id="productTableBody">
-                </tbody>
-            </table>
+
+        <div class="main-container">
+            <div class="filter-sidebar">
+                <div class="filter-section">
+                    <div class="filter-header" id="sortFilterHeader">
+                        <h3>Sắp xếp</h3>
+                    </div>
+                    <div class="filter-content" id="sortFilterContent">
+                        <div class="sort-filter">
+                            <select id="sortFieldFilter" class="sort-select">
+                                <option value="title">Tên</option>
+                                <option value="productId">ID</option>
+                                <option value="price">Giá</option>
+                                <option value="rating">Đánh giá</option>
+                            </select>
+                            <select id="sortDirectionFilter" class="sort-select">
+                                <option value="asc">Tăng dần</option>
+                                <option value="desc">Giảm dần</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <div class="filter-header" onclick="toggleFilterSection('categoryFilter')">
+                        <h3>Danh mục</h3>
+                        <span class="toggle-icon" id="categoryFilterIcon">▼</span>
+                    </div>
+                    <div class="filter-content collapsed" id="categoryFilterContent">
+                        <div id="categoryFilterContainer" class="checkbox-filter-container">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <div class="filter-header" onclick="toggleFilterSection('originFilter')">
+                        <h3>Xuất xứ</h3>
+                        <span class="toggle-icon" id="originFilterIcon">▼</span>
+                    </div>
+                    <div class="filter-content collapsed" id="originFilterContent">
+                        <div id="originFilterContainer" class="checkbox-filter-container">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <div class="filter-header" onclick="toggleFilterSection('priceFilter')">
+                        <h3>Khoảng giá</h3>
+                        <span class="toggle-icon" id="priceFilterIcon">▼</span>
+                    </div>
+                    <div class="filter-content" id="priceFilterContent">
+                        <div class="price-range-filter">
+                            <button id="togglePriceMode" class="toggle-price-mode">Nhập giá thủ công</button>
+                            <div id="priceRangeContainer" class="checkbox-filter-container">
+                                <div>
+                                    <input type="checkbox" id="price-range-1" name="priceRange" value="0-100000">
+                                    <label for="price-range-1">Dưới 100.000 VND</label>
+                                </div>
+                                <div>
+                                    <input type="checkbox" id="price-range-2" name="priceRange" value="100000-300000">
+                                    <label for="price-range-2">100.000 - 300.000 VND</label>
+                                </div>
+                                <div>
+                                    <input type="checkbox" id="price-range-3" name="priceRange" value="300000-500000">
+                                    <label for="price-range-3">300.000 - 500.000 VND</label>
+                                </div>
+                                <div>
+                                    <input type="checkbox" id="price-range-4" name="priceRange" value="500000-1000000">
+                                    <label for="price-range-4">500.000 - 1.000.000 VND</label>
+                                </div>
+                                <div>
+                                    <input type="checkbox" id="price-range-5" name="priceRange" value="1000000-">
+                                    <label for="price-range-5">Trên 1.000.000 VND</label>
+                                </div>
+                            </div>
+                            <div id="customPriceContainer" class="price-input-container hidden">
+                                <div class="price-row">
+                                    <p>Từ:</p>
+                                    <input type="number" id="customMinPrice" class="price-input" placeholder="0" step="10000" min="0">
+                                    <span>VND</span>
+                                </div>
+                                <div class="price-row">
+                                    <p>Đến:</p>
+                                    <input type="number" id="customMaxPrice" class="price-input" placeholder="0" step="10000" min="0">
+                                    <span>VND</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main content area -->
+            <div class="main-content">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="checkbox-column">
+                                    <input type="checkbox" id="selectAll" class="select-all-checkbox" onclick="toggleSelectAll()">
+                                </th>
+                                <th>ID</th>
+                                <th>Tên sản phẩm</th>
+                                <th>Danh mục</th>
+                                <th>Giá</th>
+                                <th>Số lượng</th>
+                                <th>Thương hiệu</th>
+                                <th>Xuất xứ</th>
+                                <th>Đánh giá</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="productTableBody">
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Pagination controls -->
+                <div class="pagination-container">
+                    <ul class="pagination" id="pagination">
+                        <!-- Pagination buttons will be generated here -->
+                    </ul>
+                </div>
+                <div class="pagination-info" id="paginationInfo"></div>
+            </div>
         </div>
     </div>
-    
+
     <div id="deleteConfirmation" class="modal-overlay hidden">
         <div class="modal-content">
             <div class="modal-header">
@@ -427,7 +187,7 @@
             </div>
         </div>
     </div>
-    
+
     <div id="updateSelectedProductsModal" class="modal-overlay hidden">
         <div class="modal-content">
             <div class="modal-header">
@@ -441,68 +201,458 @@
             </div>
         </div>
     </div>
-    
+
     <script>
         let allProducts = [];
         let categories = new Set();
+        let origins = new Set();
+        let currentPage = 1;
+        const productsPerPage = 10;
+        let filteredProducts = [];
 
-        // Load products and categories
-        fetch('/products')
-            .then(res => res.json())
-            .then(products => {
-                allProducts = products;
-                displayProducts(products);
-                
-                // Populate categories
-                categories = new Set();
-                products.forEach(product => {
-                    if (product.category) {
-                        categories.add(product.category);
-                    }
-                });
-                
-                const categoryFilter = document.getElementById('categoryFilter');
-                while (categoryFilter.options.length > 1) {
-                    categoryFilter.remove(1);
+        // Event listener for when the DOM content is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load products and categories
+            loadProductsData();
+            
+            // Set up initial event listeners
+            document.getElementById('searchButton').addEventListener('click', SearchProducts);
+            document.getElementById('updateSelectedButton').addEventListener('click', showUpdateSelectedProductsModal);
+            document.getElementById('deleteSelectedButton').addEventListener('click', showDeleteManyConfirmation);
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    SearchProducts();
                 }
-                
-                categories.forEach(category => {
-                    const option = document.createElement('option');
-                    option.value = category;
-                    option.textContent = category;
-                    categoryFilter.appendChild(option);
-                });
-            })
-            .catch(error => {
-                console.error('Lỗi khi lấy dữ liệu sản phẩm:', error);
-                alert('Không thể tải dữ liệu sản phẩm');
             });
+            
+            // Set up filter section toggle events
+            setupFilterToggleEvents();
+            
+            // Set up modal close events
+            setupModalEvents();
+        });
+
+        function setupFilterToggleEvents() {
+            const filterHeaders = document.querySelectorAll('.filter-header');
+            filterHeaders.forEach(header => {
+                header.addEventListener('click', function() {
+                    const sectionId = this.id.replace('Header', '');
+                    toggleFilterSection(sectionId);
+                });
+            });
+            
+            // Setup toggle price mode button
+            const togglePriceModeButton = document.getElementById('togglePriceMode');
+            if (togglePriceModeButton) {
+                togglePriceModeButton.addEventListener('click', function() {
+                    const priceRangeContainer = document.getElementById('priceRangeContainer');
+                    const customPriceContainer = document.getElementById('customPriceContainer');
+                    const isCustomPriceActive = customPriceContainer.classList.contains('hidden');
+
+                    if (isCustomPriceActive) {
+                        // Switch to custom price mode
+                        customPriceContainer.classList.remove('hidden');
+                        priceRangeContainer.classList.add('hidden');
+                        document.querySelectorAll('#priceRangeContainer input[type="checkbox"]').forEach(checkbox => {
+                            checkbox.checked = false;
+                        });
+                        this.textContent = 'Chọn khoảng giá';
+                    } else {
+                        // Switch to checkbox price mode
+                        customPriceContainer.classList.add('hidden');
+                        priceRangeContainer.classList.remove('hidden');
+                        document.getElementById('customMinPrice').value = '';
+                        document.getElementById('customMaxPrice').value = '';
+                        this.textContent = 'Nhập giá thủ công';
+                    }
+
+                    SearchProducts();
+                });
+            }
+        }
+
+        function setupModalEvents() {
+            // Delete confirmation modal
+            document.getElementById('cancelDelete').addEventListener('click', function() {
+                document.getElementById('deleteConfirmation').classList.add('hidden');
+            });
+            
+            // Update modal
+            document.getElementById('cancelUpdateModal').addEventListener('click', function() {
+                document.getElementById('updateSelectedProductsModal').classList.add('hidden');
+            });
+        }
+
+        // Load products data from server
+        function loadProductsData() {
+            fetch('/products')
+                .then(res => res.json())
+                .then(products => {
+                    allProducts = products;
+                    filteredProducts = products;
+                    
+                    // Extract categories and origins
+                    extractCategoriesAndOrigins(products);
+                    
+                    // Display products on the first page
+                    displayProductsByPage(currentPage);
+                    
+                    // Setup all filter event listeners after data is loaded
+                    setupFilterEventListeners();
+                })
+                .catch(error => {
+                    console.error('Lỗi khi lấy dữ liệu sản phẩm:', error);
+                    alert('Không thể tải dữ liệu sản phẩm');
+                });
+        }
+
+        function extractCategoriesAndOrigins(products) {
+            categories = new Set();
+            origins = new Set();
+
+            products.forEach(product => {
+                if (product.category) {
+                    categories.add(product.category);
+                }
+
+                if (product.additionalInfo && product.additionalInfo.origin) {
+                    origins.add(product.additionalInfo.origin);
+                }
+            });
+
+            // Populate category checkboxes
+            populateCategoryCheckboxes();
+            
+            // Populate origin checkboxes
+            populateOriginCheckboxes();
+        }
+
+        function populateCategoryCheckboxes() {
+            const categoryContainer = document.getElementById('categoryFilterContainer');
+            if (categoryContainer) {
+                categoryContainer.innerHTML = '';
+                Array.from(categories).sort().forEach((category, index) => {
+                    const div = document.createElement('div');
+                    const checkboxId = `cat-check-${index}`;
+                    div.innerHTML = `
+                        <input type="checkbox" id="${checkboxId}" value="${category}" name="categoryFilter">
+                        <label for="${checkboxId}">${category}</label>
+                    `;
+                    categoryContainer.appendChild(div);
+                });
+            }
+        }
+
+        function populateOriginCheckboxes() {
+            const originContainer = document.getElementById('originFilterContainer');
+            if (originContainer) {
+                originContainer.innerHTML = '';
+                Array.from(origins).sort().forEach((origin, index) => {
+                    const div = document.createElement('div');
+                    const checkboxId = `org-check-${index}`;
+                    div.innerHTML = `
+                        <input type="checkbox" id="${checkboxId}" value="${origin}" name="originFilter">
+                        <label for="${checkboxId}">${origin}</label>
+                    `;
+                    originContainer.appendChild(div);
+                });
+            }
+        }
 
         function SearchProducts() {
             const keyword = document.getElementById('searchInput').value.trim();
-            const selectedCategory = document.getElementById('categoryFilter').value;
-            
-            let filteredProducts = allProducts;
-            
+
+            const selectedCategories = Array.from(document.querySelectorAll('#categoryFilterContainer input[name="categoryFilter"]:checked'))
+                                            .map(checkbox => checkbox.value);
+
+            const selectedOrigins = Array.from(document.querySelectorAll('#originFilterContainer input[name="originFilter"]:checked'))
+                                          .map(checkbox => checkbox.value);
+
+            const selectedPriceRanges = Array.from(document.querySelectorAll('#priceRangeContainer input[name="priceRange"]:checked'))
+                                              .map(checkbox => checkbox.value);
+
+            let customMinPrice = document.getElementById('customMinPrice').value;
+            let customMaxPrice = document.getElementById('customMaxPrice').value;
+
+            customMinPrice = customMinPrice ? Math.max(0, Number(customMinPrice)) : null;
+            customMaxPrice = customMaxPrice ? Math.max(0, Number(customMaxPrice)) : null;
+
+            if (customMinPrice !== null && customMaxPrice !== null) {
+                if (customMinPrice > customMaxPrice) {
+                    customMaxPrice = null;
+                } else if (customMaxPrice < customMinPrice) {
+                    customMinPrice = null;
+                }
+            }
+
+            filteredProducts = allProducts;
+
             if (keyword) {
-                filteredProducts = filteredProducts.filter(product => 
-                    product.productId.toLowerCase().includes(keyword.toLowerCase()) || 
-                    product.title.toLowerCase().includes(keyword.toLowerCase()) || 
-                    (product?.additionalInfo?.brand || '').toLowerCase().includes(keyword.toLowerCase()) || 
+                filteredProducts = filteredProducts.filter(product =>
+                    product.productId.toLowerCase().includes(keyword.toLowerCase()) ||
+                    product.title.toLowerCase().includes(keyword.toLowerCase()) ||
+                    (product?.additionalInfo?.brand || '').toLowerCase().includes(keyword.toLowerCase()) ||
                     (product?.additionalInfo?.origin || '').toLowerCase().includes(keyword.toLowerCase())
                 );
             }
-            
-            if (selectedCategory) {
-                filteredProducts = filteredProducts.filter(product => 
-                    product.category === selectedCategory
+
+            if (selectedCategories.length > 0) {
+                filteredProducts = filteredProducts.filter(product =>
+                    product.category && selectedCategories.includes(product.category)
                 );
             }
-            
-            displayProducts(filteredProducts);
+
+            if (selectedOrigins.length > 0) {
+                filteredProducts = filteredProducts.filter(product =>
+                    product.additionalInfo?.origin && selectedOrigins.includes(product.additionalInfo.origin)
+                );
+            }
+
+            if (selectedPriceRanges.length > 0) {
+                filteredProducts = filteredProducts.filter(product => {
+                    const price = product.additionalInfo?.price || 0;
+                    return selectedPriceRanges.some(range => {
+                        const [min, max] = range.split('-').map(Number);
+                        return (min === undefined || price >= min) && (max === undefined || price <= max);
+                    });
+                });
+            }
+
+            if (customMinPrice !== null) {
+                filteredProducts = filteredProducts.filter(product =>
+                    product.additionalInfo?.price >= customMinPrice
+                );
+            }
+
+            if (customMaxPrice !== null) {
+                filteredProducts = filteredProducts.filter(product =>
+                    product.additionalInfo?.price <= customMaxPrice
+                );
+            }
+
+            applySort();
+
+            currentPage = 1;
+            displayProductsByPage(currentPage);
         }
 
-        document.getElementById('categoryFilter').addEventListener('change', SearchProducts);
+        function applySort() {
+            const sortField = document.getElementById('sortFieldFilter').value;
+            const sortDirection = document.getElementById('sortDirectionFilter').value;
+
+            filteredProducts = [...filteredProducts];
+
+            filteredProducts.sort((a, b) => {
+                let valueA, valueB;
+
+                if (sortField === 'price') {
+                    valueA = a.additionalInfo?.price || 0;
+                    valueB = b.additionalInfo?.price || 0;
+                } else if (sortField === 'rating') {
+                    valueA = a.rating || 0;
+                    valueB = b.rating || 0;
+                } else if (sortField === 'productId') {
+                    valueA = a.productId || '';
+                    valueB = b.productId || '';
+                } else {
+                    valueA = a.title || '';
+                    valueB = b.title || '';
+                }
+
+                if (typeof valueA === 'string' && typeof valueB === 'string') {
+                    if (sortDirection === 'asc') {
+                        return valueA.localeCompare(valueB);
+                    } else {
+                        return valueB.localeCompare(valueA);
+                    }
+                }
+
+                if (sortDirection === 'asc') {
+                    return valueA - valueB;
+                } else {
+                    return valueB - valueA;
+                }
+            });
+
+            currentPage = 1;
+            displayProductsByPage(currentPage);
+        }
+
+        function setupFilterEventListeners() {
+            // Category filter events
+            document.querySelectorAll('#categoryFilterContainer input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', SearchProducts);
+            });
+
+            // Origin filter events
+            document.querySelectorAll('#originFilterContainer input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', SearchProducts);
+            });
+
+            // Price range filter events
+            document.querySelectorAll('#priceRangeContainer input[type="checkbox"]').forEach(checkbox => {
+                checkbox.addEventListener('change', SearchProducts);
+            });
+
+            // Custom price input events
+            document.getElementById('customMinPrice').addEventListener('input', function() {
+                let customMinPrice = this.value ? Math.max(0, Number(this.value)) : null;
+                let customMaxPriceInput = document.getElementById('customMaxPrice');
+                let customMaxPrice = customMaxPriceInput.value ? Math.max(0, Number(customMaxPriceInput.value)) : null;
+
+                if (customMaxPrice !== null && customMinPrice !== null && customMinPrice > customMaxPrice) {
+                    customMaxPriceInput.value = customMinPrice;
+                }
+
+                SearchProducts();
+            });
+
+            document.getElementById('customMaxPrice').addEventListener('input', function() {
+                let customMaxPrice = this.value ? Math.max(0, Number(this.value)) : null;
+                let customMinPriceInput = document.getElementById('customMinPrice');
+                let customMinPrice = customMinPriceInput.value ? Math.max(0, Number(customMinPriceInput.value)) : null;
+
+                if (customMaxPrice !== null && customMinPrice !== null && customMaxPrice < customMinPrice) {
+                    this.value = customMinPrice;
+                }
+
+                SearchProducts();
+            });
+
+            // Sort filter events
+            document.getElementById('sortFieldFilter').addEventListener('change', applySort);
+            document.getElementById('sortDirectionFilter').addEventListener('change', applySort);
+            
+            // Select all checkbox
+            document.getElementById('selectAll').addEventListener('click', toggleSelectAll);
+        }
+
+        function toggleFilterSection(sectionId) {
+            const content = document.getElementById(`${sectionId}Content`);
+            const icon = document.getElementById(`${sectionId}Icon`);
+
+            if (content) {
+                content.classList.toggle('collapsed');
+            }
+            
+            if (icon) {
+                icon.classList.toggle('collapsed');
+            }
+        }
+
+        function toggleSelectAll() {
+            const selectAllCheckbox = document.getElementById('selectAll');
+            const productCheckboxes = document.querySelectorAll('.product-checkbox');
+            productCheckboxes.forEach(checkbox => {
+                checkbox.checked = selectAllCheckbox.checked;
+            });
+            updateActionButtonsState();
+        }
+
+        function updateActionButtonsState() {
+            const selectedCheckboxes = document.querySelectorAll('.product-checkbox:checked');
+            const deleteSelectedButton = document.getElementById('deleteSelectedButton');
+            const updateSelectedButton = document.getElementById('updateSelectedButton');
+            const isDisabled = selectedCheckboxes.length === 0;
+            deleteSelectedButton.disabled = isDisabled;
+            updateSelectedButton.disabled = isDisabled;
+        }
+
+        function displayProductsByPage(page) {
+            const startIndex = (page - 1) * productsPerPage;
+            const endIndex = startIndex + productsPerPage;
+
+            const currentProducts = filteredProducts.slice(startIndex, endIndex);
+
+            displayProducts(currentProducts);
+            updatePagination();
+
+            const start = filteredProducts.length > 0 ? startIndex + 1 : 0;
+            const end = Math.min(endIndex, filteredProducts.length);
+            document.getElementById('paginationInfo').textContent = 
+                `Hiển thị ${start} - ${end} của ${filteredProducts.length} sản phẩm`;
+        }
+
+        function updatePagination() {
+            const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
+            const paginationElement = document.getElementById('pagination');
+            paginationElement.innerHTML = '';
+
+            const prevButton = document.createElement('li');
+            prevButton.innerHTML = `<span class="pagination-button ${currentPage === 1 ? 'disabled' : ''}">&laquo;</span>`;
+            if (currentPage > 1) {
+                prevButton.querySelector('.pagination-button').addEventListener('click', () => {
+                    currentPage--;
+                    displayProductsByPage(currentPage);
+                });
+            }
+            paginationElement.appendChild(prevButton);
+
+            // Display pagination buttons logic
+            const maxVisibleButtons = 5;
+            let startPage = Math.max(1, currentPage - Math.floor(maxVisibleButtons / 2));
+            let endPage = Math.min(totalPages, startPage + maxVisibleButtons - 1);
+
+            if (endPage - startPage < maxVisibleButtons - 1) {
+                startPage = Math.max(1, endPage - maxVisibleButtons + 1);
+            }
+
+            if (startPage > 1) {
+                const firstButton = document.createElement('li');
+                firstButton.innerHTML = `<span class="pagination-button">1</span>`;
+                firstButton.querySelector('.pagination-button').addEventListener('click', () => {
+                    currentPage = 1;
+                    displayProductsByPage(currentPage);
+                });
+                paginationElement.appendChild(firstButton);
+
+                if (startPage > 2) {
+                    const ellipsis = document.createElement('li');
+                    ellipsis.innerHTML = `<span class="pagination-button">...</span>`;
+                    paginationElement.appendChild(ellipsis);
+                }
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                const pageButton = document.createElement('li');
+                pageButton.innerHTML = `<span class="pagination-button ${i === currentPage ? 'active' : ''}">${i}</span>`;
+
+                if (i !== currentPage) {
+                    pageButton.querySelector('.pagination-button').addEventListener('click', () => {
+                        currentPage = i;
+                        displayProductsByPage(currentPage);
+                    });
+                }
+
+                paginationElement.appendChild(pageButton);
+            }
+
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    const ellipsis = document.createElement('li');
+                    ellipsis.innerHTML = `<span class="pagination-button">...</span>`;
+                    paginationElement.appendChild(ellipsis);
+                }
+
+                const lastButton = document.createElement('li');
+                lastButton.innerHTML = `<span class="pagination-button">${totalPages}</span>`;
+                lastButton.querySelector('.pagination-button').addEventListener('click', () => {
+                    currentPage = totalPages;
+                    displayProductsByPage(currentPage);
+                });
+                paginationElement.appendChild(lastButton);
+            }
+
+            const nextButton = document.createElement('li');
+            nextButton.innerHTML = `<span class="pagination-button ${currentPage === totalPages ? 'disabled' : ''}">&raquo;</span>`;
+            if (currentPage < totalPages) {
+                nextButton.querySelector('.pagination-button').addEventListener('click', () => {
+                    currentPage++;
+                    displayProductsByPage(currentPage);
+                });
+            }
+            paginationElement.appendChild(nextButton);
+        }
 
         function displayProducts(products) {
             let tableHTML = '';
@@ -515,9 +665,9 @@
             } else {
                 products.forEach(product => {
                     tableHTML += `
-                        <tr class="row-clickable" onclick="showProductDetails('${product.productId}')">
+                        <tr class="row-clickable" data-product-id="${product.productId}">
                             <td class="checkbox-column" onclick="event.stopPropagation();">
-                                <input type="checkbox" class="product-checkbox" data-product-id="${product.productId}" data-product-title="${product.title}" onchange="updateActionButtonsState()">
+                                <input type="checkbox" class="product-checkbox" data-product-id="${product.productId}" data-product-title="${product.title}">
                             </td>
                             <td>${product.productId}</td>
                             <td>${product.title}</td>
@@ -528,16 +678,54 @@
                             <td>${product.additionalInfo.origin || ''}</td>
                             <td>${product.rating || 0}</td>
                             <td onclick="event.stopPropagation();">
-                                <span class="action-icon edit-icon" title="Cập nhật" onclick="showUpdateProductForm('${product.productId}')">✎</span>
-                                <span class="action-icon delete-icon" title="Xóa" onclick="showDeleteConfirmation('${product.productId}', '${product.title}')">✕</span>
+                                <span class="action-icon edit-icon" title="Cập nhật" data-product-id="${product.productId}">✎</span>
+                                <span class="action-icon delete-icon" title="Xóa" data-product-id="${product.productId}" data-product-title="${product.title}">✕</span>
                             </td>
                         </tr>
                     `;
                 });
             }
-            document.getElementById('productTableBody').innerHTML = tableHTML;
-            document.getElementById('productCount').textContent = `${products.length} sản phẩm`;
-            updateActionButtonsState();
+            
+            const productTableBody = document.getElementById('productTableBody');
+            productTableBody.innerHTML = tableHTML;
+            document.getElementById('productCount').textContent = `${filteredProducts.length} sản phẩm`;
+            
+            // Add event listeners for the newly created elements
+            attachProductRowEventListeners();
+        }
+        
+        function attachProductRowEventListeners() {
+            // Row click event
+            document.querySelectorAll('.row-clickable').forEach(row => {
+                row.addEventListener('click', function() {
+                    const productId = this.dataset.productId;
+                    showProductDetails(productId);
+                });
+            });
+            
+            // Edit icon click event
+            document.querySelectorAll('.edit-icon').forEach(icon => {
+                icon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const productId = this.dataset.productId;
+                    showUpdateProductForm(productId);
+                });
+            });
+            
+            // Delete icon click event
+            document.querySelectorAll('.delete-icon').forEach(icon => {
+                icon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const productId = this.dataset.productId;
+                    const productTitle = this.dataset.productTitle;
+                    showDeleteConfirmation(productId, productTitle);
+                });
+            });
+            
+            // Checkbox change event
+            document.querySelectorAll('.product-checkbox').forEach(checkbox => {
+                checkbox.addEventListener('change', updateActionButtonsState);
+            });
         }
 
         function formatPrice(price) {
@@ -546,30 +734,30 @@
             }
             return `${Number(price).toLocaleString()} VND`;
         }
-                    
+
         function showProductDetails(productId) {
             window.location.href = `/productdetail?id=${productId}`;
         }
-        
+
         function showDeleteConfirmation(productId, productName) {
             const modal = document.getElementById('deleteConfirmation');
             const message = document.getElementById('deleteConfirmationMessage');
             const confirmDeleteButton = document.getElementById('confirmDelete');
             const cancelDeleteButton = document.getElementById('cancelDelete');
-        
+
             message.innerHTML = `Bạn có chắc chắn muốn xóa sản phẩm <strong>${productName}</strong>?`;
             modal.classList.remove('hidden');
-        
+
             confirmDeleteButton.onclick = () => {
                 deleteProduct(productId);
                 modal.classList.add('hidden');
             };
-        
+
             cancelDeleteButton.onclick = () => {
                 modal.classList.add('hidden');
             };
         }
-        
+
         function showDeleteManyConfirmation() {
             const selectedCheckboxes = document.querySelectorAll('.product-checkbox:checked');
             if (selectedCheckboxes.length === 0) {
@@ -579,25 +767,25 @@
 
             const productIds = Array.from(selectedCheckboxes).map(cb => cb.dataset.productId);
             const productTitles = Array.from(selectedCheckboxes).map(cb => cb.dataset.productTitle);
-            
+
             const modal = document.getElementById('deleteConfirmation');
             const message = document.getElementById('deleteConfirmationMessage');
             const confirmDeleteButton = document.getElementById('confirmDelete');
             const cancelDeleteButton = document.getElementById('cancelDelete');
-        
+
             message.innerHTML = `Bạn có chắc chắn muốn xóa ${productIds.length} sản phẩm: <strong>${productTitles.join(', ')}</strong>?`;
             modal.classList.remove('hidden');
-        
+
             confirmDeleteButton.onclick = () => {
                 deleteManyProducts(productIds);
                 modal.classList.add('hidden');
             };
-        
+
             cancelDeleteButton.onclick = () => {
                 modal.classList.add('hidden');
             };
         }
-        
+
         async function showUpdateSelectedProductsModal() {
             const selectedCheckboxes = document.querySelectorAll('.product-checkbox:checked');
             if (selectedCheckboxes.length === 0) {
@@ -739,7 +927,7 @@
                         .then(res => res.json())
                         .then(products => {
                             allProducts = products;
-                            displayProducts(products);
+                            SearchProducts();
                             alert('Sản phẩm đã được xóa thành công!');
                         })
                         .catch(error => {
@@ -755,7 +943,7 @@
                 alert('Đã xảy ra lỗi khi xóa sản phẩm!');
             });
         }
-        
+
         function deleteManyProducts(productIds) {
             fetch('/delete/products', {
                 method: 'DELETE',
@@ -803,24 +991,6 @@
                     console.error('Lỗi khi lấy thông tin sản phẩm:', error);
                     alert('Lỗi khi tải thông tin sản phẩm!');
                 });
-        }
-
-        function toggleSelectAll() {
-            const selectAllCheckbox = document.getElementById('selectAll');
-            const productCheckboxes = document.querySelectorAll('.product-checkbox');
-            productCheckboxes.forEach(checkbox => {
-                checkbox.checked = selectAllCheckbox.checked;
-            });
-            updateActionButtonsState();
-        }
-
-        function updateActionButtonsState() {
-            const selectedCheckboxes = document.querySelectorAll('.product-checkbox:checked');
-            const deleteSelectedButton = document.getElementById('deleteSelectedButton');
-            const updateSelectedButton = document.getElementById('updateSelectedButton');
-            const isDisabled = selectedCheckboxes.length === 0;
-            deleteSelectedButton.disabled = isDisabled;
-            updateSelectedButton.disabled = isDisabled;
         }
     </script>
 </body>
