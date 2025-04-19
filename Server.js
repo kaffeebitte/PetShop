@@ -181,7 +181,7 @@ app.get('/products/:id', async (req, res) => {
     }
 });
 
-// Update product
+// Update single product
 app.put('/update/product/:id', async (req, res) => {
     const productId = req.params.id;
 
@@ -246,7 +246,70 @@ app.put('/update/product/:id', async (req, res) => {
     }
 });
 
-// Delete product
+// Update multiple products
+app.put('/update/products', async (req, res) => {
+    const { productIds, updates } = req.body;
+
+    if (!productIds || !Array.isArray(productIds) || productIds.length === 0) {
+        return res.status(400).json({ error: 'Danh sách productIds không hợp lệ hoặc rỗng' });
+    }
+
+    if (!updates || Object.keys(updates).length === 0) {
+        return res.status(400).json({ error: 'Không có trường nào được cung cấp để cập nhật' });
+    }
+
+    try {
+        await client.connect();
+        const db = client.db(dbName);
+        const collection = db.collection(collectionName);
+
+        // Build the update object for MongoDB
+        const updateFields = {};
+        if (updates.category) {
+            updateFields.category = updates.category.trim();
+        }
+        if (updates.price !== undefined) {
+            updateFields['additionalInfo.price'] = Number(updates.price);
+        }
+        if (updates.quantity !== undefined) {
+            updateFields['additionalInfo.quantity'] = Number(updates.quantity);
+        }
+        if (updates.brand) {
+            updateFields['additionalInfo.brand'] = updates.brand.trim();
+        }
+        if (updates.origin) {
+            updateFields['additionalInfo.origin'] = updates.origin.trim();
+        }
+        if (updates.rating !== undefined) {
+            updateFields.rating = Number(updates.rating);
+        }
+        if (updates.description !== undefined) {
+            updateFields['description.details'] = updates.description.trim();
+        }
+
+        const result = await collection.updateMany(
+            { productId: { $in: productIds } },
+            { $set: updateFields }
+        );
+
+        if (result.matchedCount > 0) {
+            console.log(`Đã cập nhật ${result.modifiedCount} sản phẩm với IDs: ${productIds.join(', ')}`);
+            res.json({
+                success: true,
+                message: `Cập nhật ${result.modifiedCount} sản phẩm thành công`,
+                modifiedCount: result.modifiedCount
+            });
+        } else {
+            console.log(`Không tìm thấy sản phẩm nào với IDs: ${productIds.join(', ')}`);
+            res.status(404).json({ error: 'Không tìm thấy sản phẩm nào để cập nhật' });
+        }
+    } catch (error) {
+        console.error('Lỗi khi cập nhật nhiều sản phẩm:', error);
+        res.status(500).json({ error: 'Lỗi máy chủ' });
+    }
+});
+
+// Delete single product
 app.delete('/delete/product/:id', async (req, res) => {
     const productId = req.params.id;
 
@@ -268,6 +331,37 @@ app.delete('/delete/product/:id', async (req, res) => {
         }
     } catch (error) {
         console.error('Lỗi khi xóa sản phẩm:', error);
+        res.status(500).json({ error: 'Lỗi máy chủ' });
+    }
+});
+
+// Delete multiple products
+app.delete('/delete/products', async (req, res) => {
+    const { productIds } = req.body;
+
+    if (!productIds || !Array.isArray(productIds) || productIds.length === 0) {
+        return res.status(400).json({ error: 'Danh sách productIds không hợp lệ hoặc rỗng' });
+    }
+
+    try {
+        await client.connect();
+        const db = client.db(dbName);
+        const collection = db.collection(collectionName);
+        const result = await collection.deleteMany({ productId: { $in: productIds } });
+
+        if (result.deletedCount > 0) {
+            console.log(`Đã xóa ${result.deletedCount} sản phẩm với IDs: ${productIds.join(', ')}`);
+            res.json({
+                success: true,
+                message: `Xóa ${result.deletedCount} sản phẩm thành công`,
+                deletedCount: result.deletedCount
+            });
+        } else {
+            console.log(`Không tìm thấy sản phẩm nào với IDs: ${productIds.join(', ')}`);
+            res.status(404).json({ error: 'Không tìm thấy sản phẩm nào để xóa' });
+        }
+    } catch (error) {
+        console.error('Lỗi khi xóa nhiều sản phẩm:', error);
         res.status(500).json({ error: 'Lỗi máy chủ' });
     }
 });
