@@ -198,6 +198,7 @@
             </div>
             <div class="modal-buttons">
                 <button class="cancel-button" id="cancelUpdateModal">Đóng</button>
+                <button class="confirm-button" id="updateAllProductsButton">Cập nhật sản phẩm</button>
             </div>
         </div>
     </div>
@@ -579,7 +580,7 @@
             paginationElement.innerHTML = '';
 
             const prevButton = document.createElement('li');
-            prevButton.innerHTML = `<span class="pagination-button ${currentPage === 1 ? 'disabled' : ''}">&laquo;</span>`;
+            prevButton.innerHTML = `<span class="pagination-button ${currentPage === 1 ? 'disabled' : ''}">«</span>`;
             if (currentPage > 1) {
                 prevButton.querySelector('.pagination-button').addEventListener('click', () => {
                     currentPage--;
@@ -644,7 +645,7 @@
             }
 
             const nextButton = document.createElement('li');
-            nextButton.innerHTML = `<span class="pagination-button ${currentPage === totalPages ? 'disabled' : ''}">&raquo;</span>`;
+            nextButton.innerHTML = `<span class="pagination-button ${currentPage === totalPages ? 'disabled' : ''}">»</span>`;
             if (currentPage < totalPages) {
                 nextButton.querySelector('.pagination-button').addEventListener('click', () => {
                     currentPage++;
@@ -806,6 +807,49 @@
                 updateProductsList.innerHTML = '';
             };
 
+            const updateAllButton = document.getElementById('updateAllProductsButton');
+            updateAllButton.onclick = async () => {
+                const forms = document.querySelectorAll('.update-product-form');
+                let allSuccessful = true;
+                const errors = [];
+
+                for (const form of forms) {
+                    const productId = form.dataset.productId;
+                    const formData = new FormData(form);
+
+                    // Handle multiple file inputs
+                    const fileInput = form.querySelector(`input[name="images"]`);
+                    if (fileInput.files.length > 0) {
+                        for (const file of fileInput.files) {
+                            formData.append('images', file);
+                        }
+                    }
+
+                    try {
+                        const response = await fetch(`/update/product/${productId}`, {
+                            method: 'PUT',
+                            body: formData
+                        });
+                        const data = await response.json();
+                        if (!data.success) {
+                            allSuccessful = false;
+                            errors.push(`Sản phẩm ${productId}: ${data.error || 'Không thể cập nhật'}`);
+                        }
+                    } catch (error) {
+                        allSuccessful = false;
+                        errors.push(`Sản phẩm ${productId}: Lỗi khi cập nhật - ${error.message}`);
+                    }
+                }
+
+                if (allSuccessful) {
+                    modal.classList.add('hidden');
+                    alert('Cập nhật tất cả sản phẩm thành công!');
+                    window.location.href = '/productlist';
+                } else {
+                    alert('Có lỗi xảy ra khi cập nhật một số sản phẩm:\n' + errors.join('\n'));
+                }
+            };
+
             try {
                 let formsHTML = '';
                 for (const productId of productIds) {
@@ -865,52 +909,12 @@
                                     <input type="file" id="images_${product.productId}" name="images" accept="image/*" multiple>
                                     <small>Hiện tại: ${product.images.length} ảnh</small>
                                 </div>
-                                <div class="form-group">
-                                    <button type="submit" class="update-product-button">Cập nhật sản phẩm</button>
-                                </div>
                             </form>
                         </div>
                     `;
                 }
 
                 updateProductsList.innerHTML = formsHTML;
-
-                // Attach event listeners to each form
-                document.querySelectorAll('.update-product-form').forEach(form => {
-                    form.addEventListener('submit', async (e) => {
-                        e.preventDefault();
-                        const productId = form.dataset.productId;
-                        const formData = new FormData(form);
-
-                        // Handle multiple file inputs
-                        const fileInput = form.querySelector(`input[name="images"]`);
-                        if (fileInput.files.length > 0) {
-                            for (const file of fileInput.files) {
-                                formData.append('images', file);
-                            }
-                        }
-
-                        try {
-                            const response = await fetch(`/update/product/${productId}`, {
-                                method: 'PUT',
-                                body: formData
-                            });
-                            const data = await response.json();
-                            if (data.success) {
-                                // Refresh product list
-                                const productsResponse = await fetch('/products');
-                                allProducts = await productsResponse.json();
-                                displayProducts(allProducts);
-                                alert(`Cập nhật sản phẩm ${productId} thành công!`);
-                            } else {
-                                alert(data.error || 'Không thể cập nhật sản phẩm. Vui lòng thử lại!');
-                            }
-                        } catch (error) {
-                            console.error('Lỗi khi cập nhật sản phẩm:', error);
-                            alert('Đã xảy ra lỗi khi cập nhật sản phẩm!');
-                        }
-                    });
-                });
             } catch (error) {
                 console.error('Lỗi khi tải dữ liệu sản phẩm:', error);
                 updateProductsList.innerHTML = '<p>Không thể tải dữ liệu sản phẩm. Vui lòng thử lại.</p>';
