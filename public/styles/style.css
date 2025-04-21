@@ -17,6 +17,8 @@
     --light-gray: #f5f5f5;
     --border-color: #e0e0e0;
     --white: #ffffff;
+    --orange-color: #FF6F00;
+    --orange-hover: #E65100;
 
     /* Shadows */
     --shadow-sm: 0 2px 4px rgba(0,0,0,0.1);
@@ -35,9 +37,17 @@
     --radius-md: 8px;
     --radius-lg: 16px;
     
+    /* Typography */
+    --font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+    --font-size-xs: 12px;
+    --font-size-sm: 14px;
+    --font-size-md: 16px;
+    --font-size-lg: 18px;
+    --font-size-xl: 24px;
+    --font-size-xxl: 28px;
+    
     /* Other */
     --transition: all 0.3s ease;
-    --font-family: 'Segoe UI', Arial, sans-serif;
 }
 
 /* ===== BASE STYLES ===== */
@@ -51,31 +61,39 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    font-size: var(--font-size-md);
 }
 
 /* Typography */
 h1, h2, h3, h4, h5, h6 {
     color: var(--text-color);
     margin-top: 0;
+    font-family: var(--font-family);
 }
 
 h1 {
-    font-size: 28px;
+    font-size: var(--font-size-xxl);
     font-weight: bold;
     text-align: center;
     margin-bottom: var(--spacing-lg);
 }
 
 h2 {
-    font-size: 24px;
+    font-size: var(--font-size-xl);
     color: var(--primary-color);
     margin-bottom: var(--spacing-md);
 }
 
 h3 {
-    font-size: 20px;
+    font-size: var(--font-size-lg);
     color: var(--primary-color);
     margin-bottom: var(--spacing-md);
+}
+
+p {
+    font-family: var(--font-family);
+    font-size: var(--font-size-md);
+    line-height: 1.6;
 }
 
 /* Layout Containers */
@@ -192,7 +210,8 @@ footer a:hover {
     padding: 10px;
     border: 1px solid var(--border-color);
     border-radius: var(--radius-sm);
-    font-size: 15px;
+    font-size: var(--font-size-md);
+    font-family: var(--font-family);
     transition: var(--transition);
     height: 36px;
     box-sizing: border-box;
@@ -200,7 +219,11 @@ footer a:hover {
 
 textarea.form-control {
     height: auto;
-    min-height: 80px; 
+    min-height: 80px;
+    font-family: var(--font-family);
+    font-size: var(--font-size-md);
+    line-height: 1.6;
+    resize: vertical;
 }
 
 .form-control:focus {
@@ -380,6 +403,9 @@ label {
 
 .qna-section .qna-item p {
     margin: 5px 0;
+    font-family: var(--font-family);
+    font-size: var(--font-size-md);
+    line-height: 1.6;
 }
 
 .qna-section .qna-item .question {
@@ -418,6 +444,17 @@ label {
 .product-detail p {
     margin: 10px 0;
     color: var(--text-light);
+    font-family: var(--font-family);
+    font-size: var(--font-size-md);
+    line-height: 1.6;
+}
+
+/* Product Description */
+.product-description p {
+    font-family: var(--font-family);
+    font-size: var(--font-size-md);
+    line-height: 1.6;
+    color: var(--text-color);
 }
 
 /* ===== ACTION ICONS ===== */

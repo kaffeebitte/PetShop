@@ -48,6 +48,14 @@
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
+#updateSelectedProductsModal .modal-content {
+    width: 800px;
+    max-width: 95%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
 .modal-header {
     background-color: #f4f4f4;
     padding: 15px;
@@ -63,6 +71,12 @@
     padding: 20px;
     overflow-y: auto;
     max-height: 60vh;
+}
+
+#updateSelectedProductsModal .modal-body {
+    padding: 20px;
+    max-height: 75vh;
+    overflow-y: auto;
 }
 
 .modal-buttons {
@@ -229,6 +243,17 @@
     border-color: var(--primary-color);
 }
 
+.sorting-divider {
+    margin: 5px 0;
+    padding: 5px 0;
+    color: var(--text-light);
+    font-size: 0.9em;
+    border-bottom: 1px dashed var(--border-color);
+    border-top: 1px dashed var(--border-color);
+    text-align: center;
+    font-style: italic;
+}
+
 /* Price Range Filter */
 .price-range-filter {
     display: flex;
@@ -320,26 +345,135 @@
 }
 
 .search-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
     margin-bottom: 20px;
+    padding: 15px 20px;
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid #eaeaea;
+}
+
+.search-inputs {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.search-field {
+    flex: 1;
+}
+
+.search-field label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+    font-size: 14px;
 }
 
 .search-input {
-    flex: 1;
-    padding: 12px 15px;
-    border: 1px solid var(--border-color);
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #eaeaea;
     border-radius: 4px;
-    font-size: 16px;
-    transition: border-color 0.2s ease;
-    box-sizing: border-box;
+    font-size: 14px;
+    background-color: #f9f9f9;
+    transition: border-color 0.2s;
 }
 
 .search-input:focus {
+    border-color: #333;
     outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px rgba(0, 121, 107, 0.2);
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.left-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.right-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.search-button {
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.search-button:hover {
+    background-color: #555;
+}
+
+.delete-selected-button, 
+.update-selected-button {
+    padding: 10px 20px;
+    border: 1px solid #333;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.delete-selected-button {
+    background-color: white;
+    color: #d32f2f;
+    border-color: #d32f2f;
+}
+
+.delete-selected-button:hover {
+    background-color: #d32f2f;
+    color: white;
+}
+
+.update-selected-button {
+    background-color: white;
+    color: #388e3c;
+    border-color: #388e3c;
+}
+
+.update-selected-button:hover {
+    background-color: #388e3c;
+    color: white;
+}
+
+.delete-selected-button:disabled, 
+.update-selected-button:disabled {
+    background-color: #f1f1f1;
+    border-color: #ccc;
+    color: #999;
+    cursor: not-allowed;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .search-field {
+        min-width: 100%;
+    }
+    
+    .action-buttons {
+        justify-content: space-between;
+    }
+    
+    .search-button, 
+    .delete-selected-button, 
+    .update-selected-button {
+        flex: 1;
+        justify-content: center;
+        padding: 10px 10px;
+    }
 }
 
 /* Button Styles */
@@ -348,18 +482,18 @@
     align-items: center;
     gap: 8px;
     padding: 10px 20px;
-    background-color: var(--primary-color);
+    background-color: #333;
     color: white;
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.2s ease;
+    font-weight: 500;
+    transition: background-color 0.2s;
     box-sizing: border-box;
 }
 
 .search-button:hover {
-    background-color: var(--primary-hover);
+    background-color: #555;
 }
 
 .delete-selected-button, .update-selected-button {
@@ -367,33 +501,39 @@
     align-items: center;
     gap: 8px;
     padding: 10px 20px;
-    border: none;
+    border: 1px solid #333;
     border-radius: 4px;
     cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.2s ease;
+    font-weight: 500;
+    transition: all 0.2s;
 }
 
 .delete-selected-button {
-    background-color: var(--danger-color);
-    color: white;
+    background-color: white;
+    color: #d32f2f;
+    border-color: #d32f2f;
 }
 
 .delete-selected-button:hover {
-    background-color: var(--danger-hover);
-}
-
-.update-selected-button {
-    background-color: var(--success-color);
+    background-color: #d32f2f;
     color: white;
 }
 
+.update-selected-button {
+    background-color: white;
+    color: #388e3c;
+    border-color: #388e3c;
+}
+
 .update-selected-button:hover {
-    background-color: var(--success-hover);
+    background-color: #388e3c;
+    color: white;
 }
 
 .delete-selected-button:disabled, .update-selected-button:disabled {
-    background-color: #ccc;
+    background-color: #f1f1f1;
+    border-color: #ccc;
+    color: #999;
     cursor: not-allowed;
 }
 
@@ -492,48 +632,87 @@
 
 /* Form and Input Styles */
 .product-update-section {
-    margin-bottom: var(--spacing-lg);
+    margin-bottom: 20px;
     border: 1px solid var(--border-color);
-    padding: var(--spacing-md);
-    border-radius: 4px;
+    padding: 16px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    transition: all 0.2s ease;
+}
+
+.product-update-section:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
 }
 
 .product-update-section h4 {
-    margin: 0 0 var(--spacing-md) 0;
+    margin: 0 0 16px 0;
     color: var(--primary-color);
+    font-size: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e0e0e0;
 }
 
-.form-group {
+.update-product-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.update-product-form .form-group {
+    margin-bottom: 10px;
     display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: var(--spacing-md);
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
 }
 
-.form-group label {
-    flex: 0 0 120px;
+.update-product-form .form-group label {
     font-weight: 500;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 3px;
 }
 
-.form-group input, .form-group select, .form-group textarea {
-    flex: 1;
-    padding: 8px;
+.update-product-form .form-group input,
+.update-product-form .form-group select,
+.update-product-form .form-group textarea {
+    width: 100%;
+    padding: 8px 10px;
     border: 1px solid var(--border-color);
     border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.2s;
 }
 
-.form-group input[type="file"] {
-    padding: 3px;
+.update-product-form .form-group input:focus,
+.update-product-form .form-group select:focus,
+.update-product-form .form-group textarea:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0, 121, 107, 0.1);
 }
 
-.form-group textarea {
-    resize: vertical;
-    min-height: 80px;
-}
-
-.form-group input[readonly] {
-    background-color: #f5f5f5;
+.update-product-form .form-group input[readonly] {
+    background-color: #f1f1f1;
     cursor: not-allowed;
+}
+
+.update-product-form .form-group small {
+    color: #777;
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+/* Mở rộng trường mô tả và hình ảnh để chiếm 2 cột */
+.update-product-form .form-group:has(textarea),
+.update-product-form .form-group:has(input[type="file"]) {
+    grid-column: span 2;
+}
+
+.update-product-form textarea {
+    min-height: 100px;
+    resize: vertical;
 }
 
 .update-product-button {
@@ -557,6 +736,8 @@
     justify-content: center;
     margin-top: 30px;
     margin-bottom: 20px;
+    width: 100%;
+    overflow-x: auto; /* Cho phép cuộn ngang khi có nhiều nút trang */
 }
 
 .pagination {
@@ -566,10 +747,12 @@
     margin: 0;
     border-radius: 4px;
     overflow: hidden;
+    flex-wrap: nowrap; /* Không cho phép các nút xuống dòng */
 }
 
 .pagination li {
     margin: 0;
+    flex-shrink: 0; /* Ngăn các phần tử co lại */
 }
 
 .pagination-button {
@@ -587,6 +770,7 @@
     transition: all 0.2s;
     user-select: none;
     box-sizing: border-box;
+    white-space: nowrap; /* Ngăn text bị ngắt dòng */
 }
 
 .pagination-button:not(:last-child) {
@@ -641,12 +825,13 @@
     display: none;
     position: absolute;
     right: 0;
-    background-color: #f9f9f9;
-    min-width: 200px;
+    background-color: #fff;
+    min-width: fit-content;
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
     border-radius: 4px;
     overflow: hidden;
+    border: 1px solid var(--border-color);
 }
 
 .add-product-dropdown-content a {
@@ -655,12 +840,20 @@
     text-decoration: none;
     display: block;
     text-align: left;
-    transition: background-color 0.2s;
+    transition: all 0.2s;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 500;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.add-product-dropdown-content a:last-child {
+    border-bottom: none;
 }
 
 .add-product-dropdown-content a:hover {
-    background-color: #f1f1f1;
-    color: #4CAF50;
+    background-color: #f9f9f9;
+    color: #FF6F00;
 }
 
 /* Hiển thị dropdown khi hover vào nút */
@@ -671,19 +864,24 @@
 /* Add product button */
 .add-product-btn {
     cursor: pointer;
-    padding: 10px 15px;
+    padding: 10px 16px;
     background-color: #FF6F00;
     color: white;
     border: none;
     border-radius: 4px;
     font-weight: 600;
+    font-family: inherit;
     display: flex;
     align-items: center;
-    transition: background-color 0.2s;
+    justify-content: center;
+    transition: all 0.2s;
+    box-shadow: 0px 2px 4px rgba(0,0,0,0.1);
+    min-width: 160px;
 }
 
 .add-product-btn:hover {
     background-color: #E65100;
+    box-shadow: 0px 4px 8px rgba(0,0,0,0.15);
 }
 
 /* File input styling */

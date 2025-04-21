@@ -6,7 +6,6 @@
     <title>Chi tiết sản phẩm</title>
     <link href="../styles/style.css" rel="stylesheet" type="text/css">
     <link href="../styles/product-detail.css" rel="stylesheet" type="text/css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 <body>
     <div class="container">
@@ -99,13 +98,13 @@
             const productId = urlParams.get('id');
             
             if (productId) {
-                loadProductDetails(productId);
+                LoadProductDetails(productId);
             } else {
                 alert('Không có thông tin sản phẩm!');
                 window.location.href = '/productlist';
             }
             
-            function loadProductDetails(productId) {
+            function LoadProductDetails(productId) {
                 fetch(`/products/${productId}`)
                     .then(res => {
                         if (!res.ok) {
@@ -115,7 +114,7 @@
                     })
                     .then(product => {
                         currentProduct = product;
-                        displayProductDetails(product);
+                        DisplayProductDetails(product);
                     })
                     .catch(error => {
                         console.error('Lỗi khi tải sản phẩm:', error);
@@ -123,8 +122,8 @@
                         window.location.href = '/productlist';
                     });
             }
-            
-            function displayProductDetails(product) {
+
+            function DisplayProductDetails(product) {
                 document.title = `Chi tiết: ${product.title || 'Sản phẩm'}`;
                 
                 document.getElementById('productTitle').textContent = product.title || 'Không có tên';
@@ -132,7 +131,7 @@
                 document.getElementById('productCategory').querySelector('span').textContent = product.category || 'Chưa phân loại';
                 
                 const additionalInfo = product.additionalInfo || {};
-                document.getElementById('productPrice').textContent = additionalInfo.price ? formatPrice(additionalInfo.price) : 'Không có giá';
+                document.getElementById('productPrice').textContent = additionalInfo.price ? FormatPrice(additionalInfo.price) : 'Không có giá';
                 document.getElementById('productQuantity').textContent = additionalInfo.quantity || '';
                 document.getElementById('productBrand').textContent = additionalInfo.brand || '';
                 document.getElementById('productOrigin').textContent = additionalInfo.origin || '';
@@ -141,11 +140,18 @@
                 document.getElementById('productDescription').textContent = 
                     (product.description && product.description.details) || 'Không có mô tả';
                 
-                setupProductImages(product);
+                SetupProductImages(product);
                 document.getElementById('deleteProductName').textContent = product.title;
             }
-            
-            function setupProductImages(product) {
+
+            function FormatPrice(price) {
+                if (price == null || isNaN(price)) {
+                    return 0;
+                }
+                return `${Number(price).toLocaleString()} VND`;
+            }
+
+            function SetupProductImages(product) {
                 const imageWrapper = document.getElementById('productImageWrapper');
                 imageWrapper.innerHTML = '';
                 const prevButton = document.getElementById('prevButton');
@@ -161,13 +167,13 @@
                     nextButton.classList.remove('hidden-button');
                 }
                 
-                updateImageDisplay();
+                UpdateImageDisplay();
                 
-                prevButton.onclick = showPreviousImages;
-                nextButton.onclick = showNextImages;
+                prevButton.onclick = ShowPreviousImages;
+                nextButton.onclick = ShowNextImages;
             }
-            
-            function updateImageDisplay() {
+
+            function UpdateImageDisplay() {
                 const imageWrapper = document.getElementById('productImageWrapper');
                 imageWrapper.innerHTML = '';
                 
@@ -181,10 +187,10 @@
                     imageWrapper.appendChild(img);
                 }
                 
-                updateNavigationButtons();
+                UpdateNavigationButtons();
             }
             
-            function updateNavigationButtons() {
+            function UpdateNavigationButtons() {
                 const prevButton = document.getElementById('prevButton');
                 const nextButton = document.getElementById('nextButton');
                 
@@ -201,28 +207,21 @@
                 }
             }
             
-            function showPreviousImages() {
+            function ShowPreviousImages() {
                 if (currentImageIndex > 0) {
                     currentImageIndex -= 2;
                     if (currentImageIndex < 0) {
                         currentImageIndex = 0;
                     }
-                    updateImageDisplay();
+                    UpdateImageDisplay();
                 }
             }
             
-            function showNextImages() {
+            function ShowNextImages() {
                 if (currentImageIndex + 2 < totalImages) {
                     currentImageIndex += 2;
-                    updateImageDisplay();
+                    UpdateImageDisplay();
                 }
-            }
-            
-            function formatPrice(price) {
-                if (price == null || isNaN(price)) {
-                    return 0;
-                }
-                return `${Number(price).toLocaleString()} VND`;
             }
             
             document.getElementById('editProductBtn').addEventListener('click', () => {
@@ -233,16 +232,16 @@
             
             document.getElementById('deleteProductBtn').addEventListener('click', () => {
                 if (currentProduct) {
-                    showDeleteConfirmation(currentProduct.productId, currentProduct.title);
+                    ShowDeleteConfirmation(currentProduct.productId, currentProduct.title);
                 }
             });
             
-            function showDeleteConfirmation(productId, productName) {
+            function ShowDeleteConfirmation(productId, productName) {
                 const modal = document.getElementById('deleteConfirmation');
                 modal.classList.remove('hidden');
                 
                 document.getElementById('confirmDelete').onclick = () => {
-                    deleteProduct(productId);
+                    DeleteProduct(productId);
                     modal.classList.add('hidden');
                 };
                 
@@ -251,7 +250,7 @@
                 };
             }
             
-            function deleteProduct(productId) {
+            function DeleteProduct(productId) {
                 fetch(`/delete/product/${productId}`, { 
                     method: 'DELETE',
                 })

@@ -5,3 +5,24 @@ slide:
 2- slide 2 có link github nộp bài
 3- slide 3 phân công công việc 
 Còn lại - Trình bày chi tiết chức năng: luồng dữ liệu, quá trình hoạt động, mô tả giải pháp kỹ thuật (sử dụng express) để thực hiện các chức năng
+
+
+~ không cần trình bày hướng dẫn sử dụng, trình bày làm thế nào để làm được chức năng đó (giải pháp kỹ thuật, trả lời bằng kỹ thuật express)
+
+Các chức năng chính:
+- Tìm kiếm sản phẩm
+- Lọc sản phẩm 
+- Sắp xếp sản phẩm
+
+- Xem danh sách sản phẩm
+- Xem danh sách sản phẩm theo danh mục
+- Xem chi tiết sản phẩm
+
+- Thêm 1 sản phẩm
+- Thêm nhiều sản phẩm (JSON)
+
+- Xóa 1 sản phẩm
+- Xóa nhiều sản phẩm
+
+- Cập nhật 1 sản phẩm
+- Cập nhật nhiều sản phẩm

@@ -1,22 +1,40 @@
+:root {
+    --primary-color: #00796b;
+    --primary-hover: #004d40;
+    --accent-color: #FF6F00;
+    --accent-hover: #E65100;
+    --text-color: #333;
+    --border-color: #e0e0e0;
+    --background-color: #ffffff;
+    --background-light: #f5f5f5;
+    --background-header: #f9f9f9;
+    --link-color: #00796b;
+    --link-hover: #004d40;
+    --shadow-color: rgba(0, 0, 0, 0.1);
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #ffffff;
+    background-color: var(--background-color);
     height: 100vh;
     display: flex;
     flex-direction: column;
 }
 
 header {
-    background-color: #f9f9f9;
-    color: #333333;
+    background-color: var(--background-header);
+    color: var(--text-color);
     padding: 20px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #e0e0e0;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 2px 5px var(--shadow-color);
 }
 
 .logo {
@@ -41,11 +59,11 @@ main {
 .hero {
     text-align: center;
     padding: 30px;
-    background-color: #f5f5f5;
+    background-color: var(--background-light);
     border-radius: 8px;
     margin-bottom: 30px;
     width: 100%;
-    max-width: 800px;
+    max-width: 1000px;
 }
 
 .actions-section {
@@ -59,10 +77,10 @@ main {
 .action-box {
     text-align: center;
     padding: 30px;
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
+    background-color: var(--background-color);
+    border: 1px solid var(--border-color);
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 5px var(--shadow-color);
     flex: 1;
     margin: 0 20px;
     transition: transform 0.3s, background-color 0.3s;
@@ -75,39 +93,39 @@ main {
 
 .action-box:hover {
     transform: translateY(-5px);
-    background-color: #f5f5f5;
+    background-color: var(--background-light);
 }
 
 .action-box a {
     text-decoration: none;
-    color: #007bff;
+    color: var(--link-color);
     font-weight: bold;
     margin-top: 10px;
 }
 
 .action-box a:hover {
-    color: #0056b3;
+    color: var(--link-hover);
 }
 
 .action-icon {
     font-size: 50px;
-    color: #007bff;
+    color: var(--primary-color);
     margin-bottom: 15px;
 }
 
 footer {
-    background-color: #f9f9f9;
-    color: #333333;
+    background-color: var(--background-header);
+    color: var(--text-color);
     padding: 20px;
     text-align: center;
-    border-top: 1px solid #e0e0e0;
+    border-top: 1px solid var(--border-color);
 }
 
 footer a {
-    color: #007bff;
+    color: var(--link-color);
     text-decoration: none;
 }
 
 footer a:hover {
-    color: #0056b3;
+    color: var(--link-hover);
 }

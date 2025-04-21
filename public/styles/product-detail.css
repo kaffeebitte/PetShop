@@ -14,10 +14,16 @@
     --text-light: #666;
     --radius-sm: 4px;
     --radius-md: 8px;
+    --font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+    --font-size-xs: 12px;
+    --font-size-sm: 14px;
+    --font-size-md: 16px;
+    --font-size-lg: 18px;
+    --font-size-xl: 24px;
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: var(--font-family);
     background-color: var(--light-gray);
     margin: 0;
     padding: 32px 20px;
@@ -25,6 +31,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    font-size: var(--font-size-md);
+    line-height: 1.6;
 }
 
 .container {
@@ -41,7 +49,8 @@ h1 {
     margin-bottom: 24px;
     color: var(--text-color);
     font-weight: bold;
-    font-size: 24px;
+    font-size: var(--font-size-xl);
+    font-family: var(--font-family);
 }
 
 .product-detail-container {
@@ -62,17 +71,21 @@ h1 {
 .product-title {
     color: var(--primary-color);
     margin-bottom: var(--spacing-sm);
+    font-family: var(--font-family);
+    font-size: var(--font-size-lg);
 }
 
 .product-id {
     color: var(--text-light);
-    font-size: 14px;
+    font-size: var(--font-size-sm);
+    font-family: var(--font-family);
 }
 
 .product-category {
     color: var(--text-light);
-    font-size: 14px;
+    font-size: var(--font-size-sm);
     margin-top: 4px;
+    font-family: var(--font-family);
 }
 
 .product-category span {
@@ -159,11 +172,14 @@ h1 {
     display: block;
     margin-bottom: var(--spacing-xs);
     color: var(--text-light);
+    font-family: var(--font-family);
+    font-size: var(--font-size-sm);
 }
 
 .info-value {
     color: var(--text-color);
-    font-size: 16px;
+    font-size: var(--font-size-md);
+    font-family: var(--font-family);
 }
 
 .product-description {
@@ -171,10 +187,21 @@ h1 {
     padding: var(--spacing-md);
     border-radius: var(--radius-sm);
     background-color: var(--light-gray);
+    font-family: var(--font-family);
 }
 
 .product-description h3 {
     margin-top: 0;
+    font-family: var(--font-family);
+    font-size: var(--font-size-lg);
+    color: var(--primary-color);
+}
+
+.product-description p {
+    font-family: var(--font-family);
+    font-size: var(--font-size-md);
+    line-height: 1.6;
+    color: var(--text-color);
 }
 
 .action-buttons {

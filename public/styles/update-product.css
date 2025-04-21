@@ -12,6 +12,8 @@
     color: var(--primary-color);
     margin-bottom: var(--spacing-lg);
     text-align: center;
+    font-family: var(--font-family);
+    font-size: var(--font-size-xl);
 }
 
 .form-row {
@@ -25,8 +27,21 @@
     margin-bottom: 0;
 }
 
+.form-group label {
+    font-family: var(--font-family);
+    font-size: var(--font-size-md);
+    font-weight: 600;
+}
+
+.form-control {
+    font-family: var(--font-family);
+    font-size: var(--font-size-md);
+}
+
 .form-control-file {
     padding: 10px 0;
+    font-family: var(--font-family);
+    font-size: var(--font-size-md);
 }
 
 .form-buttons {

@@ -12,7 +12,7 @@
         <form id="updateProductForm" action="/products" method="POST" enctype="multipart/form-data" class="form-container">
             <div class="page-navigation">
                 <a href="/productlist" class="back-button">
-                    « Quay lại
+                    Quay lại
                 </a>
             </div>
             
@@ -32,7 +32,7 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="price">Giá</label>
-                    <input type="number" id="price" name="price" class="form-control" required>
+                    <input type="number" id="price" name="price" class="form-control" step="1000" required>
                 </div>
                 <div class="form-group">
                     <label for="quantity">Số lượng</label>
@@ -54,7 +54,7 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="rating">Đánh giá</label>
-                    <input type="number" id="rating" name="rating" step="0.1" min="0" max="5" class="form-control">
+                    <input type="number" id="rating" name="rating" step="0.5" min="0" max="5" class="form-control">
                 </div>
             </div>
             
@@ -76,7 +76,7 @@
     </div>
     
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
             const productId = urlParams.get('id');
             const title = urlParams.get('title');

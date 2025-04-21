@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,6 +8,7 @@
     <link href="../styles/style.css" rel="stylesheet" type="text/css">
     <link href="../styles/add-product.css" rel="stylesheet" type="text/css">
 </head>
+
 <body>
     <div class="container">
         <form id="addProductForm" action="/products" method="POST" enctype="multipart/form-data" class="form-container">
@@ -15,9 +17,9 @@
                     Quay lại
                 </a>
             </div>
-            
+
             <h1 class="form-title">Thêm sản phẩm mới</h1>
-            
+
             <div class="form-row">
                 <div class="form-group">
                     <label for="productId" class="required-field">ID sản phẩm</label>
@@ -28,7 +30,7 @@
                     <input type="text" id="title" name="title" class="form-control" required>
                 </div>
             </div>
-            
+
             <div class="form-row">
                 <div class="form-group">
                     <label for="price" class="required-field">Giá</label>
@@ -39,7 +41,7 @@
                     <input type="number" id="quantity" name="quantity" class="form-control" min="0" required>
                 </div>
             </div>
-            
+
             <div class="form-row">
                 <div class="form-group">
                     <label for="brand" class="required-field">Thương hiệu</label>
@@ -50,7 +52,7 @@
                     <input type="text" id="origin" name="origin" class="form-control" required>
                 </div>
             </div>
-            
+
             <div class="form-row">
                 <div class="form-group">
                     <label for="rating">Đánh giá</label>
@@ -60,37 +62,38 @@
                     <label for="category" class="required-field">Danh mục</label>
                     <select id="category" name="category" class="form-control" required>
                         <option value="" disabled selected>Chọn danh mục</option>
-                        <option value="Thức ăn">Thức ăn</option>
-                        <option value="Phụ kiện">Phụ kiện</option>
-                        <option value="Đồ chơi">Đồ chơi</option>
-                        <option value="Vệ sinh">Vệ sinh</option>
-                        <option value="Quần áo">Quần áo</option>
-                        <option value="Chuồng">Chuồng</option>
                     </select>
                 </div>
             </div>
-            
+
             <div class="form-group">
                 <label for="description">Mô tả</label>
                 <textarea id="description" name="description" class="form-control" rows="3"></textarea>
             </div>
-            
+
             <div class="form-group">
                 <label for="images">Hình ảnh</label>
-                <input type="file" id="images" name="images" multiple class="form-control-file" accept=".png, .jpg, .jpeg">
-                <small class="text-light">Chỉ chấp nhận các định dạng: PNG, JPG, JPEG. Có thể chọn tối đa 10 file hình ảnh</small>
+                <input type="file" id="images" name="images" multiple class="form-control-file"
+                    accept=".png, .jpg, .jpeg">
+                <small class="text-light">Chỉ chấp nhận các định dạng: PNG, JPG, JPEG. Có thể chọn tối đa 10 file hình
+                    ảnh</small>
                 <div id="imagePreviewContainer" class="image-preview-container"></div>
             </div>
-            
+
             <div class="form-buttons">
                 <button type="submit" class="btn btn-primary">Thêm sản phẩm</button>
             </div>
         </form>
     </div>
-    
+
     <script>
         const productIdInput = document.getElementById('productId');
+        const imagesInput = document.getElementById('images');
+        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+        const form = document.getElementById('addProductForm');
         let productIdList = [];
+        let categoryList = ['Thức ăn', 'Phụ kiện', 'Đồ chơi', 'Vệ sinh', 'Quần áo', 'Chuồng', 'Vận chuyển'];
+        let selectedFiles = new DataTransfer();
         
         const categoryPrefixes = {
             'Thức ăn': 'FOOD',
@@ -101,8 +104,30 @@
             'Chuồng': 'CAGE',
             'Vận chuyển': 'TRAN'
         };
-        
-        function loadProductList() {
+
+        function GetCategoryPrefix(category) {
+            return categoryPrefixes[category] || 'PETS';
+        }
+
+        function LoadCategories() {
+            const categories = categoryList;
+            
+            const categorySelect = document.getElementById('category');
+            while(categorySelect.options.length > 1) {
+                categorySelect.remove(1);
+            }
+            
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category;
+                option.textContent = category;
+                categorySelect.appendChild(option);
+            });
+            
+            return Promise.resolve(categories);
+        }
+
+        function LoadProductList() {
             return fetch('/products')
                 .then(res => res.json())
                 .then(products => {
@@ -115,44 +140,26 @@
                 });
         }
 
-        function getCategoryPrefix(category) {
-            return categoryPrefixes[category] || category.substring(0, 4).toUpperCase();
-        }
+        function AutoGenerateID(category) {
+            if (!category)
+                return '';
 
-        function checkProductIdFormat(productId, selectedCategory) {
-            if (!selectedCategory) return false;
-            
-            const prefix = getCategoryPrefix(selectedCategory);
-            const numberPart = productId.substring(prefix.length);
-            
-            if (!productId.startsWith(prefix) || numberPart.length !== 4) {
-                return false;
-            }
-            
-            for (let i = 0; i < numberPart.length; i++) {
-                if (numberPart[i] < '0' || numberPart[i] > '9') {
-                    return false;
-                }
-            }
-            
-            return true;
-        }
+            const prefix = GetCategoryPrefix(category);
 
-        function autoGenerateID(category) {
-            if (!category) return '';
-            
-            const prefix = getCategoryPrefix(category);
-            
-            const categoryIds = productIdList.filter(id => 
+            if (!productIdList || !Array.isArray(productIdList) || productIdList.length === 0) {
+                return prefix + '0001';
+            }
+
+            const categoryIds = productIdList.filter(id =>
                 id && typeof id === 'string' && id.startsWith(prefix)
             );
-            
+
             if (categoryIds.length === 0) {
                 return prefix + '0001';
             }
-            
+
             let maxNumber = 0;
-            
+
             categoryIds.forEach(id => {
                 const numberPart = id.substring(prefix.length);
                 const num = parseInt(numberPart, 10);
@@ -160,116 +167,48 @@
                     maxNumber = num;
                 }
             });
-            
+
             const nextNumber = maxNumber + 1;
             const formattedNumber = nextNumber.toString().padStart(4, '0');
-            
+
             return prefix + formattedNumber;
         }
 
-        document.getElementById('category').addEventListener('change', function() {
-            const selectedCategory = this.value;
-            if (selectedCategory) {
-                productIdInput.value = autoGenerateID(selectedCategory);
-            }
-        });
+        function DisplayImagePreview(file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const preview = document.createElement('div');
+                preview.className = 'image-preview';
+                preview.innerHTML = `
+                    <img src="${e.target.result}" alt="Preview">
+                    <button type="button" class="remove-btn" data-name="${file.name}">×</button>
+                `;
+                imagePreviewContainer.appendChild(preview);
 
-        const form = document.getElementById('addProductForm');
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Kiểm tra đầy đủ các trường bắt buộc
-            const requiredFields = {
-                'productId': 'ID sản phẩm',
-                'title': 'Tên sản phẩm',
-                'price': 'Giá',
-                'quantity': 'Số lượng',
-                'brand': 'Thương hiệu',
-                'origin': 'Xuất xứ',
-                'category': 'Danh mục'
-            };
-            
-            const missingFields = [];
-            
-            for (const [fieldId, fieldName] of Object.entries(requiredFields)) {
-                const fieldElement = document.getElementById(fieldId);
-                if (!fieldElement.value.trim()) {
-                    missingFields.push(fieldName);
-                    fieldElement.classList.add('input-error');
-                } else {
-                    fieldElement.classList.remove('input-error');
-                }
+                preview.querySelector('.remove-btn').addEventListener('click', function () {
+                    const fileName = this.getAttribute('data-name');
+                    RemoveFile(fileName);
+                    preview.remove();
+                });
             }
-            
-            if (missingFields.length > 0) {
-                alert('Vui lòng điền đầy đủ thông tin cho các trường: ' + missingFields.join(', '));
-                return;
-            }
-            
-            const productId = productIdInput.value.trim();
-            const selectedCategory = document.getElementById('category').value;
-            
-            if (!selectedCategory) {
-                alert('Vui lòng chọn danh mục sản phẩm');
-                return;
-            }
-            
-            if (!checkProductIdFormat(productId, selectedCategory)) {
-                const prefix = getCategoryPrefix(selectedCategory);
-                alert(`ID phải có định dạng ${prefix}xxxx (với x là các chữ số)`);
-                return;
-            }
+            reader.readAsDataURL(file);
+        }
 
-            if (productIdList.includes(productId)) {
-                alert('ID sản phẩm này đã tồn tại');
-                return;
-            }
-            
-            const formData = new FormData(form);
-            
-            // Kiểm tra giá trị số cho price và quantity phải lớn hơn 0
-            const price = parseFloat(document.getElementById('price').value);
-            const quantity = parseInt(document.getElementById('quantity').value);
-            
-            if (price <= 0) {
-                alert('Giá sản phẩm phải lớn hơn 0');
-                return;
-            }
-            
-            if (quantity < 0) {
-                alert('Số lượng sản phẩm không được âm');
-                return;
-            }
-            
-            // Tiếp tục gửi form nếu tất cả kiểm tra đều thành công
-            fetch('/products', {
-                method: 'POST',
-                body: formData
-            })
-            .then(res => {
-                if (!res.ok) {
-                    return res.text().then(text => {
-                        throw new Error(text);
-                    });
-                }
-                return res.text(); 
-            })
-            .then(message => {
-                alert(message);
-                form.reset();
-                productIdInput.value = '';
-                loadProductList();
-                
-                // Xóa tất cả các preview ảnh
-                imagePreviewContainer.innerHTML = '';
-                selectedFiles = new DataTransfer();
-            })
-            .catch(error => {
-                alert('Lỗi: ' + error.message);
-            });
-        });
+        function RemoveFile(fileName) {
+            const newFileList = new DataTransfer();
 
-        // Thêm CSS cho việc hiển thị lỗi
+            Array.from(selectedFiles.files)
+                .filter(file => file.name !== fileName)
+                .forEach(file => newFileList.items.add(file));
+
+            selectedFiles = newFileList;
+            UpdateFileInput();
+        }
+
+        function UpdateFileInput() {
+            imagesInput.files = selectedFiles.files;
+        }
+
         const style = document.createElement('style');
         style.textContent = `
             .input-error {
@@ -279,95 +218,146 @@
         `;
         document.head.appendChild(style);
 
-        // Thêm sự kiện để xóa trạng thái lỗi khi người dùng sửa các trường
+        document.getElementById('category').addEventListener('change', function () {
+            const selectedCategory = this.value;
+            if (selectedCategory) {
+                productIdInput.value = AutoGenerateID(selectedCategory);
+            }
+        });
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const requiredFields = {
+                'productId': 'ID sản phẩm',
+                'title': 'Tên sản phẩm',
+                'price': 'Giá',
+                'quantity': 'Số lượng',
+                'brand': 'Thương hiệu',
+                'origin': 'Xuất xứ',
+                'category': 'Danh mục'
+            };
+
+            const missingFields = [];
+
+            for (const [fieldId, fieldName] of Object.entries(requiredFields)) {
+                const fieldElement = document.getElementById(fieldId);
+                if (!fieldElement.value.trim()) {
+                    missingFields.push(fieldName);
+                    fieldElement.classList.add('input-error');
+                } else {
+                    fieldElement.classList.remove('input-error');
+                }
+            }
+
+            if (missingFields.length > 0) {
+                alert('Vui lòng điền đầy đủ thông tin cho các trường: ' + missingFields.join(', '));
+                return;
+            }
+
+            const productId = productIdInput.value.trim();
+            const selectedCategory = document.getElementById('category').value;
+
+            if (!selectedCategory) {
+                alert('Vui lòng chọn danh mục sản phẩm');
+                return;
+            }
+
+            const expectedPrefix = GetCategoryPrefix(selectedCategory);
+            if (!productId.startsWith(expectedPrefix)) {
+                alert('ID sản phẩm không hợp lệ cho danh mục này');
+                return;
+            }
+
+            if (productIdList.includes(productId)) {
+                alert('ID sản phẩm này đã tồn tại');
+                return;
+            }
+
+            const formData = new FormData(form);
+
+            const price = parseFloat(document.getElementById('price').value);
+            const quantity = parseInt(document.getElementById('quantity').value);
+
+            if (price <= 0) {
+                alert('Giá sản phẩm phải lớn hơn 0');
+                return;
+            }
+
+            if (quantity < 0) {
+                alert('Số lượng sản phẩm không được âm');
+                return;
+            }
+
+            fetch('/products', {
+                method: 'POST',
+                body: formData
+            })
+                .then(res => {
+                    if (!res.ok) {
+                        return res.text().then(text => {
+                            throw new Error(text);
+                        });
+                    }
+                    return res.text();
+                })
+                .then(message => {
+                    alert(message);
+                    form.reset();
+                    productIdInput.value = '';
+                    LoadProductList();
+
+                    imagePreviewContainer.innerHTML = '';
+                    selectedFiles = new DataTransfer();
+                })
+                .catch(error => {
+                    alert('Lỗi: ' + error.message);
+                });
+        });
+
         const allInputs = form.querySelectorAll('input, select, textarea');
         allInputs.forEach(input => {
-            input.addEventListener('input', function() {
+            input.addEventListener('input', function () {
                 if (this.value.trim()) {
                     this.classList.remove('input-error');
                 }
             });
         });
 
-        document.addEventListener('DOMContentLoaded', function() {
-            loadProductList().then(() => {
-                const selectedCategory = document.getElementById('category').value;
-                if (selectedCategory) {
-                    productIdInput.value = autoGenerateID(selectedCategory);
-                }
-            });
-        });
-
-        // Thêm ràng buộc số lượng hình ảnh
-        document.getElementById('images').addEventListener('change', function(e) {
+        imagesInput.addEventListener('change', function () {
             if (this.files.length > 10) {
                 alert('Bạn chỉ được chọn tối đa 10 hình ảnh');
-                this.value = ''; // Xóa các file đã chọn
+                this.value = '';
+                return;
             }
-        });
 
-        // Xử lý hiển thị ảnh xem trước và xóa ảnh
-        const imagesInput = document.getElementById('images');
-        const imagePreviewContainer = document.getElementById('imagePreviewContainer');
-        let selectedFiles = new DataTransfer();
-        
-        imagesInput.addEventListener('change', function() {
-            // Lưu trữ các file đã chọn
             if (this.files) {
                 Array.from(this.files).forEach(file => {
-                    // Kiểm tra số lượng ảnh không vượt quá 10
                     if (selectedFiles.files.length < 10) {
                         selectedFiles.items.add(file);
-                        displayImagePreview(file);
+                        DisplayImagePreview(file);
                     }
                 });
-                
-                // Cập nhật lại input file với danh sách file đã chọn
-                updateFileInput();
-                
-                // Kiểm tra và hiển thị cảnh báo nếu chọn quá nhiều ảnh
+
+                UpdateFileInput();
+
                 if (this.files.length + selectedFiles.files.length - this.files.length > 10) {
                     alert('Chỉ được chọn tối đa 10 hình ảnh. Chỉ 10 ảnh đầu tiên được thêm vào.');
                 }
             }
         });
-        
-        function displayImagePreview(file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const preview = document.createElement('div');
-                preview.className = 'image-preview';
-                preview.innerHTML = `
-                    <img src="${e.target.result}" alt="Preview">
-                    <button type="button" class="remove-btn" data-name="${file.name}">×</button>
-                `;
-                imagePreviewContainer.appendChild(preview);
-                
-                // Thêm sự kiện click cho nút xóa
-                preview.querySelector('.remove-btn').addEventListener('click', function() {
-                    const fileName = this.getAttribute('data-name');
-                    removeFile(fileName);
-                    preview.remove();
-                });
-            }
-            reader.readAsDataURL(file);
-        }
-        
-        function removeFile(fileName) {
-            const newFileList = new DataTransfer();
-            
-            // Thêm tất cả các file trừ file cần xóa
-            Array.from(selectedFiles.files)
-                .filter(file => file.name !== fileName)
-                .forEach(file => newFileList.items.add(file));
-            
-            selectedFiles = newFileList;
-            updateFileInput();
-        }
-        
-        function updateFileInput() {
-            imagesInput.files = selectedFiles.files;
-        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            LoadCategories().then(() => {
+                return LoadProductList();
+            }).then(() => {
+                const selectedCategory = document.getElementById('category').value;
+                if (selectedCategory) {
+                    productIdInput.value = AutoGenerateID(selectedCategory);
+                }
+            });
+        });
     </script>
 </body>
+
 </html>

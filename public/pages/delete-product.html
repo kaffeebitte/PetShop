@@ -29,7 +29,7 @@
     </div>
     <script>
         // Laden der Produkt-IDs in das Dropdown-Menü
-        async function loadProductIds() {
+        async function LoadProductIds() {
             try {
                 const response = await fetch('/products');
                 if (response.ok) {
@@ -50,7 +50,7 @@
         }
 
         // Laden der Produkt-IDs beim Laden der Seite
-        document.addEventListener('DOMContentLoaded', loadProductIds);
+        document.addEventListener('DOMContentLoaded', LoadProductIds);
 
         // Event-Listener für das Formular
         document.getElementById('deleteProductForm').addEventListener('submit', async function(event) {
@@ -74,7 +74,7 @@
 
                     // Aktualisieren Sie die Dropdown-Liste nach dem Löschen
                     document.getElementById('productId').innerHTML = '<option value="" disabled selected>Chọn sản phẩm cần xóa</option>';
-                    loadProductIds();
+                    LoadProductIds();
                 } else {
                     const error = await response.json();
                     alert(error.error || 'Đã xảy ra lỗi khi xóa sản phẩm');
