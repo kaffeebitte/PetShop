@@ -10,6 +10,7 @@
     --danger-hover: #b71c1c;
     --success-color: #388e3c;
     --success-hover: #2e7d32;
+    --light-gray: #f5f5f5;
 }
 
 * {
@@ -23,6 +24,7 @@
     box-sizing: border-box;
 }
 
+/* Modal Styles */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -38,18 +40,36 @@
 
 .modal-content {
     background-color: white;
-    padding: 20px;
+    width: 500px;
+    max-width: 90%;
+    max-height: 80vh;
     border-radius: 8px;
+    overflow: hidden;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    max-width: 800px;
-    width: 90%;
-    box-sizing: border-box;
+}
+
+.modal-header {
+    background-color: #f4f4f4;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+}
+
+.modal-header h3 {
+    margin: 0;
+    font-size: 18px;
+}
+
+.modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    max-height: 60vh;
 }
 
 .modal-buttons {
+    padding: 15px;
+    background-color: #f4f4f4;
     display: flex;
     justify-content: flex-end;
-    margin-top: 20px;
     gap: 10px;
 }
 
@@ -70,8 +90,13 @@
     background-color: var(--primary-hover);
 }
 
+.confirm-button:disabled {
+    background-color: #b3d7ff;
+    cursor: not-allowed;
+}
+
 .cancel-button {
-    background-color: #f5f5f5;
+    background-color: var(--light-gray);
     color: var(--text-color);
 }
 
@@ -88,6 +113,7 @@
     display: none;
 }
 
+/* Main Layout */
 .main-container {
     display: flex;
     flex-direction: row;
@@ -95,6 +121,7 @@
     width: 100%;
 }
 
+/* Filter Sidebar Styles */
 .filter-sidebar {
     flex: 0 0 250px;
     padding: 15px;
@@ -179,6 +206,7 @@
     flex-grow: 1;
 }
 
+/* Sort and Filter Controls */
 .sort-filter {
     display: flex;
     flex-direction: column;
@@ -201,6 +229,7 @@
     border-color: var(--primary-color);
 }
 
+/* Price Range Filter */
 .price-range-filter {
     display: flex;
     flex-direction: column;
@@ -253,11 +282,6 @@
     color: #666;
 }
 
-.price-separator {
-    color: var(--text-color);
-    font-weight: bold;
-}
-
 .category-badge {
     display: inline-block;
     padding: 4px 8px;
@@ -265,6 +289,13 @@
     color: white;
     border-radius: 4px;
     font-size: 12px;
+}
+
+/* Header and Search Bar */
+.main-content{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
 }
 
 .product-list-header {
@@ -311,6 +342,7 @@
     box-shadow: 0 0 0 2px rgba(0, 121, 107, 0.2);
 }
 
+/* Button Styles */
 .search-button {
     display: flex;
     align-items: center;
@@ -398,26 +430,7 @@
     gap: 10px;
 }
 
-.add-product-btn {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 20px;
-    background-color: #ff6f00;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    text-decoration: none;
-    transition: background-color 0.2s ease;
-    box-sizing: border-box;
-}
-
-.add-product-btn:hover {
-    background-color: #e65100;
-}
-
+/* Table and Row Styles */
 .row-clickable {
     cursor: pointer;
     transition: background-color 0.2s ease;
@@ -477,6 +490,7 @@
     cursor: pointer;
 }
 
+/* Form and Input Styles */
 .product-update-section {
     margin-bottom: var(--spacing-lg);
     border: 1px solid var(--border-color);
@@ -615,4 +629,69 @@
     transition: background-color 0.2s ease, transform 0.2s ease;
     margin-bottom: 10px;
     display: inline-block;
+}
+
+/* Dropdown styling cho nút Thêm sản phẩm */
+.add-product-dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.add-product-dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    background-color: #f9f9f9;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.add-product-dropdown-content a {
+    color: #333;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+    transition: background-color 0.2s;
+}
+
+.add-product-dropdown-content a:hover {
+    background-color: #f1f1f1;
+    color: #4CAF50;
+}
+
+/* Hiển thị dropdown khi hover vào nút */
+.add-product-dropdown:hover .add-product-dropdown-content {
+    display: block;
+}
+
+/* Add product button */
+.add-product-btn {
+    cursor: pointer;
+    padding: 10px 15px;
+    background-color: #FF6F00;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    transition: background-color 0.2s;
+}
+
+.add-product-btn:hover {
+    background-color: #E65100;
+}
+
+/* File input styling */
+.file-input {
+    position: absolute;
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    z-index: -1;
 }

@@ -32,7 +32,7 @@
             <div class="form-row">
                 <div class="form-group">
                     <label for="price" class="required-field">Giá</label>
-                    <input type="number" id="price" name="price" class="form-control" min="0" required>
+                    <input type="number" id="price" name="price" class="form-control" min="0" step="1000" required>
                 </div>
                 <div class="form-group">
                     <label for="quantity" class="required-field">Số lượng</label>
@@ -98,7 +98,8 @@
             'Đồ chơi': 'TOYS',
             'Vệ sinh': 'CARE',
             'Quần áo': 'CLTH',
-            'Chuồng': 'CAGE'
+            'Chuồng': 'CAGE',
+            'Vận chuyển': 'TRAN'
         };
         
         function loadProductList() {
@@ -176,6 +177,35 @@
         const form = document.getElementById('addProductForm');
         form.addEventListener('submit', (e) => {
             e.preventDefault();
+            
+            // Kiểm tra đầy đủ các trường bắt buộc
+            const requiredFields = {
+                'productId': 'ID sản phẩm',
+                'title': 'Tên sản phẩm',
+                'price': 'Giá',
+                'quantity': 'Số lượng',
+                'brand': 'Thương hiệu',
+                'origin': 'Xuất xứ',
+                'category': 'Danh mục'
+            };
+            
+            const missingFields = [];
+            
+            for (const [fieldId, fieldName] of Object.entries(requiredFields)) {
+                const fieldElement = document.getElementById(fieldId);
+                if (!fieldElement.value.trim()) {
+                    missingFields.push(fieldName);
+                    fieldElement.classList.add('input-error');
+                } else {
+                    fieldElement.classList.remove('input-error');
+                }
+            }
+            
+            if (missingFields.length > 0) {
+                alert('Vui lòng điền đầy đủ thông tin cho các trường: ' + missingFields.join(', '));
+                return;
+            }
+            
             const productId = productIdInput.value.trim();
             const selectedCategory = document.getElementById('category').value;
             
@@ -197,6 +227,21 @@
             
             const formData = new FormData(form);
             
+            // Kiểm tra giá trị số cho price và quantity phải lớn hơn 0
+            const price = parseFloat(document.getElementById('price').value);
+            const quantity = parseInt(document.getElementById('quantity').value);
+            
+            if (price <= 0) {
+                alert('Giá sản phẩm phải lớn hơn 0');
+                return;
+            }
+            
+            if (quantity < 0) {
+                alert('Số lượng sản phẩm không được âm');
+                return;
+            }
+            
+            // Tiếp tục gửi form nếu tất cả kiểm tra đều thành công
             fetch('/products', {
                 method: 'POST',
                 body: formData
@@ -214,9 +259,33 @@
                 form.reset();
                 productIdInput.value = '';
                 loadProductList();
+                
+                // Xóa tất cả các preview ảnh
+                imagePreviewContainer.innerHTML = '';
+                selectedFiles = new DataTransfer();
             })
             .catch(error => {
                 alert('Lỗi: ' + error.message);
+            });
+        });
+
+        // Thêm CSS cho việc hiển thị lỗi
+        const style = document.createElement('style');
+        style.textContent = `
+            .input-error {
+                border-color: #d32f2f !important;
+                background-color: #fff8f8 !important;
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Thêm sự kiện để xóa trạng thái lỗi khi người dùng sửa các trường
+        const allInputs = form.querySelectorAll('input, select, textarea');
+        allInputs.forEach(input => {
+            input.addEventListener('input', function() {
+                if (this.value.trim()) {
+                    this.classList.remove('input-error');
+                }
             });
         });
 

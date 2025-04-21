@@ -4,4 +4,4 @@ slide:
 1- slide 1 chứa danh sách sinh viên
 2- slide 2 có link github nộp bài
 3- slide 3 phân công công việc 
-Còn lại - Trình bày chi tiết chức năng: luồng dữ liệu, quá trình hoạt động
+Còn lại - Trình bày chi tiết chức năng: luồng dữ liệu, quá trình hoạt động, mô tả giải pháp kỹ thuật (sử dụng express) để thực hiện các chức năng
