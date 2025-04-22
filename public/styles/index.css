@@ -6,10 +6,10 @@
     --text-color: #333;
     --border-color: #e0e0e0;
     --background-color: #ffffff;
-    --background-light: #f5f5f5;
+    --background-light: #f1fcf3;
     --background-header: #f9f9f9;
-    --link-color: #00796b;
-    --link-hover: #004d40;
+    --link-color: #11776b;
+    --link-hover: #001e1a;
     --shadow-color: rgba(0, 0, 0, 0.1);
     --spacing-sm: 8px;
     --spacing-md: 16px;
@@ -66,6 +66,11 @@ main {
     max-width: 1000px;
 }
 
+.hero p {
+    margin: 0;
+    color: var(--text-color);
+}
+
 .actions-section {
     display: flex;
     justify-content: space-around;
@@ -77,22 +82,23 @@ main {
 .action-box {
     text-align: center;
     padding: 30px;
+    box-sizing: border-box;
     background-color: var(--background-color);
     border: 1px solid var(--border-color);
     border-radius: 8px;
     box-shadow: 0 2px 5px var(--shadow-color);
     flex: 1;
-    margin: 0 20px;
+    margin: 0 10px;
     transition: transform 0.3s, background-color 0.3s;
-    max-width: 250px;
-    min-height: 220px;
+    max-width: 400px; 
+    min-height: 250px; 
+    font-size: 16px; 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
 }
 
 .action-box:hover {
-    transform: translateY(-5px);
     background-color: var(--background-light);
 }
 
@@ -100,7 +106,8 @@ main {
     text-decoration: none;
     color: var(--link-color);
     font-weight: bold;
-    margin-top: 10px;
+    margin-top: 5px;
+    font-size: 14px; /* Adjusted font size for links */
 }
 
 .action-box a:hover {

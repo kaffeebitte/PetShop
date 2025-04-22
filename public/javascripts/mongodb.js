@@ -6,7 +6,8 @@ let client;
 let db;
 
 async function connectDB() {
-    if (db) return { client, db }; // Return existing connection if available
+    if (db) 
+        return { client, db }; 
     try {
         client = new MongoClient(url);
         await client.connect();
@@ -15,7 +16,7 @@ async function connectDB() {
         return { client, db };
     } catch (error) {
         console.error("Không thể kết nối đến MongoDB:", error);
-        process.exit(1); // Exit the process if DB connection fails
+        process.exit(1); 
     }
 }
 
@@ -26,4 +27,4 @@ function getCollection() {
     return db.collection(collectionName);
 }
 
-module.exports = { connectDB, getCollection, dbName, collectionName }; // Export client as well if needed elsewhere, but usually db is enough
+module.exports = { connectDB, getCollection, dbName, collectionName }; 

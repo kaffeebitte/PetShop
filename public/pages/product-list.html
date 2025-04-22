@@ -250,26 +250,9 @@
             document.getElementById('searchButton').addEventListener('click', SearchProducts);
             document.getElementById('updateSelectedButton').addEventListener('click', ShowUpdateSelectedProductsModal);
             document.getElementById('deleteSelectedButton').addEventListener('click', ShowDeleteManyConfirmation);
-            document.getElementById('searchProductId').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    SearchProducts();
-                }
-            });
-            document.getElementById('searchProductName').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    SearchProducts();
-                }
-            });
-            document.getElementById('searchBrand').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    SearchProducts();
-                }
-            });
 
             SetupFilters();
-
             SetupModals();
-
             SetupJsonImport();
         });
 
@@ -281,9 +264,7 @@
                     filteredProducts = products;
 
                     ExtractFilters(products);
-
                     ShowCurrentPage(currentPage);
-
                     SetupFilterEvents();
                 })
                 .catch(error => {
@@ -300,14 +281,12 @@
                 if (product.category) {
                     categories.add(product.category);
                 }
-
                 if (product.additionalInfo && product.additionalInfo.origin) {
                     origins.add(product.additionalInfo.origin);
                 }
             });
 
             PopulateCategories();
-
             PopulateOrigins();
         }
 
@@ -872,37 +851,34 @@
 
         function SearchProducts() {
             const filters = GetFilters();
-
             const searchParams = new URLSearchParams();
 
+            // tham số từ các trường tìm kiếm
             if (filters.productId) {
                 searchParams.append('productId', filters.productId);
             }
-
             if (filters.productName) {
                 searchParams.append('productName', filters.productName);
             }
-
             if (filters.brand) {
                 searchParams.append('brand', filters.brand);
             }
 
+            // tham số từ các danh mục/điều kiện có sẵn
             filters.categories.forEach(category => {
                 searchParams.append('categories', category);
             });
-
             filters.origins.forEach(origin => {
                 searchParams.append('origins', origin);
             });
-
             filters.priceRanges.forEach(range => {
                 searchParams.append('priceRanges', range);
             });
 
+            // tham số từ khảong giá tuỳ chỉnh
             if (filters.customMinPrice !== null) {
                 searchParams.append('minPrice', filters.customMinPrice);
             }
-
             if (filters.customMaxPrice !== null) {
                 searchParams.append('maxPrice', filters.customMaxPrice);
             }
@@ -932,7 +908,7 @@
                     .map(checkbox => checkbox.value),
                 origins: Array.from(document.querySelectorAll('#originFilterContainer input[name="originFilter"]:checked'))
                     .map(checkbox => checkbox.value),
-                priceRanges: Array.from(document.querySelectorAll('#priceRangeContainer input[name="priceRange"]:checked'))
+                priceRanges: Array.from(document.querySelectorAll('#priceRangeContainer input[type="priceRange"]:checked'))
                     .map(checkbox => checkbox.value),
                 customMinPrice: ParsePrice('customMinPrice'),
                 customMaxPrice: ParsePrice('customMaxPrice')
@@ -950,6 +926,7 @@
             const sortField2 = document.getElementById('sortFieldFilter2').value;
             const sortDirection2 = document.getElementById('sortDirectionFilter2').value === 'asc' ? 1 : -1;
 
+            // lưu trường và hướng sắp xếp vào một đối tượng dưới dạng key-value
             const sortObj = {};
             if (sortField1)
                 sortObj[sortField1] = sortDirection1;
@@ -958,8 +935,8 @@
 
             console.log('Sắp xếp theo:', sortObj);
 
+            // tạo một bản sao của filteredProducts để không làm thay đổi dữ liệu gốc
             filteredProducts = [...filteredProducts];
-
             filteredProducts.sort((a, b) => {
                 for (const [field, direction] of Object.entries(sortObj)) {
                     let valueA, valueB;
@@ -993,7 +970,6 @@
 
         const ProcessJsonFile = async (e) => {
             const file = e.target.files[0];
-            const importJsonBtn = document.getElementById('importJsonBtn');
             const jsonFileInput = document.getElementById('jsonFileInput');
 
             if (!file) {
@@ -1008,62 +984,52 @@
             }
 
             try {
-                importJsonBtn.disabled = true;
-                importJsonBtn.textContent = 'Đang nhập...';
-
                 await ReadAndUploadJson(file);
-
             } catch (error) {
                 console.error('Lỗi khi nhập dữ liệu JSON:', error);
             } finally {
-                importJsonBtn.disabled = false;
-                importJsonBtn.textContent = 'Nhập file JSON';
-                jsonFileInput.value = '';
+                jsonFileInput.value = ''; 
             }
         };
 
-        const ReadAndUploadJson = (file) => {
-            return new Promise((resolve, reject) => {
+        const ReadAndUploadJson = async (file) => {
+            try {
                 const reader = new FileReader();
 
-                reader.onload = async (event) => {
-                    try {
-                        const jsonContent = event.target.result;
+                // đọc nội dung tệp JSON
+                const jsonContent = await new Promise((resolve, reject) => {
+                    reader.onload = (event) => resolve(event.target.result);
+                    reader.onerror = () => reject(new Error('Không thể đọc file JSON.'));
+                    reader.readAsText(file);
+                });
 
-                        const parsedJson = JSON.parse(jsonContent);
+                // kiểm tra xem nội dung JSON có hợp lệ không
+                let parsedJson;
+                try {
+                    parsedJson = JSON.parse(jsonContent); 
+                } catch (parseError) {
+                    throw new Error('File JSON không đúng định dạng. Vui lòng kiểm tra nội dung tệp.');
+                }
 
-                        const response = await fetch('/import/products/json', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json'
-                            },
-                            body: jsonContent
-                        });
+                const response = await fetch('/import/products/json', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(parsedJson) 
+                });
 
-                        const result = await response.json();
-
-                        if (result.success) {
-                            alert(result.message);
-                            LoadProducts();
-                            resolve(result);
-                        } else {
-                            alert(result.error);
-                            reject(new Error(result.error));
-                        }
-                    } catch (parseError) {
-                        alert('File JSON không đúng định dạng. Vui lòng kiểm tra và thử lại.');
-                        console.error('Lỗi phân tích JSON:', parseError);
-                        reject(parseError);
-                    }
-                };
-
-                reader.onerror = () => {
-                    alert('Không thể đọc file.');
-                    reject(new Error('File reading error'));
-                };
-
-                reader.readAsText(file);
-            });
+                const result = await response.json();
+                if (result.success) {
+                    alert(result.message);
+                    LoadProducts(); s
+                } else {
+                    throw new Error(result.error || 'Không thể nhập dữ liệu JSON.');
+                }
+            } catch (error) {
+                alert(error.message || 'Đã xảy ra lỗi khi nhập dữ liệu JSON.');
+                console.error('Lỗi khi xử lý JSON:', error);
+            }
         };
     </script>
 </body>
