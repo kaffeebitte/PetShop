@@ -24,10 +24,6 @@
     "images": [
       "kitcat_1.jpg"
     ],
-    "description": {
-      "details": "Cát vệ sinh khử mùi, vón cục tốt, giúp giữ vệ sinh hiệu quả cho mèo."
-    },
-    "rating": 4.2,
     "additionalInfo": {
       "quantity": 40,
       "price": 200000,
@@ -61,9 +57,6 @@
       "whiskas_pate_1.jpg",
       "whiskas_pate_2.jpg"
     ],
-    "description": {
-      "details": "Pate thịt bò bổ sung dưỡng chất cho mèo, hỗ trợ hệ tiêu hóa và lông mượt."
-    },
     "rating": 4.2,
     "additionalInfo": {
       "quantity": 100,
@@ -83,7 +76,6 @@
     "description": {
       "details": "Lồng vận chuyển có tay cầm chắc chắn, thông thoáng, phù hợp với chó và mèo."
     },
-    "rating": 4.3,
     "additionalInfo": {
       "quantity": 20,
       "price": 450000,
@@ -246,10 +238,6 @@
       "meo_pate_1.jpg",
       "meo_pate_2.jpg"
     ],
-    "description": {
-      "details": "Pate cá hồi bổ sung dinh dưỡng, giúp lông mèo khỏe mạnh."
-    },
-    "rating": 4.2,
     "additionalInfo": {
       "quantity": 90,
       "price": 27000,
@@ -395,9 +383,8 @@
       "cat_scratcher_1.jpg"
     ],
     "description": {
-      "details": "Cây cào móng giúp mèo giải trí và bảo vệ nội thất."
+      "details": "Cây cào móng giúp mèo giải trí và bảo vệ nội thất. Làm từ vật liệu bền, an toàn cho thú cưng."
     },
-    "rating": 4.1,
     "additionalInfo": {
       "quantity": 20,
       "price": 280000,
@@ -413,10 +400,7 @@
       "nail_clipper_1.jpg",
       "nail_clipper_2.jpg"
     ],
-    "description": {
-      "details": "Dụng cụ cắt móng sắc bén, an toàn cho chó mèo."
-    },
-    "rating": 4.0,
+    "rating": null,
     "additionalInfo": {
       "quantity": 50,
       "price": 120000,
@@ -438,7 +422,8 @@
     "additionalInfo": {
       "quantity": 40,
       "price": 180000,
-      "brand": "Dorrikey"
+      "brand": "Dorrikey",
+      "origin": "Mỹ"
     }
   },
   {
@@ -471,7 +456,8 @@
     "additionalInfo": {
       "quantity": 60,
       "price": 130000,
-      "brand": "Vegabrand"
+      "brand": "Vegabrand",
+      "origin": "Trung Quốc"
     }
   },
   {
@@ -483,9 +469,8 @@
       "cat_toy_2.jpg"
     ],
     "description": {
-      "details": "Bóng chuông kích thích sự vui chơi của mèo."
+      "details": "Bóng chuông kích thích sự vui chơi của mèo. Có chuông bên trong, màu sắc bắt mắt, phù hợp với mèo mọi lứa tuổi."
     },
-    "rating": 4.0,
     "additionalInfo": {
       "quantity": 50,
       "price": 50000,
@@ -535,14 +520,8 @@
     "title": "Bát ăn chống trượt cho chó mèo",
     "category": "Phụ kiện",
     "images": [
-      "pet_bowl_1.jpg",
-      "pet_bowl_1.jpg",
-      "cat_bed_1.jpg",
-      "cat_bed_1.jpg"
+      "pet_bowl_1.jpg"
     ],
-    "description": {
-      "details": "Bát ăn chống trượt, dễ vệ sinh, phù hợp cho chó mèo."
-    },
     "rating": 4.0,
     "additionalInfo": {
       "quantity": 50,

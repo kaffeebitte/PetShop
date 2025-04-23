@@ -83,6 +83,7 @@ app.get('/products/search', async (req, res) => {
         const productId = req.query.productId?.trim();
         if (productId) {
             conditions.push({ productId: { $regex: productId, $options: 'i' } });
+            // dùng regex để tìm kiếm không phân biệt chữ hoa chữ thường
         }
 
         const productName = req.query.productName?.trim();
@@ -268,11 +269,32 @@ app.post('/import/products/json', async (req, res) => {
         const validProducts = [];
 
         for (const product of productsToImport) {
-            // kiểm tra các thuộc tính bắt buộc
-            if (!product.productId || !product.title || !product.price || !product.quantity || !product.brand || !product.origin) {
+            // Kiểm tra productId và title ở cấp cao nhất
+            if (!product.productId || !product.title) {
                 invalidProducts.push({
                     product,
-                    error: 'Thiếu các thuộc tính bắt buộc: productId, title, price, quantity, brand, origin'
+                    error: 'Thiếu thuộc tính bắt buộc: productId hoặc title'
+                });
+                continue;
+            }
+
+            // Kiểm tra additionalInfo
+            if (!product.additionalInfo) {
+                invalidProducts.push({
+                    product,
+                    error: 'Thiếu đối tượng additionalInfo'
+                });
+                continue;
+            }
+
+            // Kiểm tra các thuộc tính trong additionalInfo
+            if (product.additionalInfo.price === undefined || 
+                product.additionalInfo.quantity === undefined || 
+                !product.additionalInfo.brand || 
+                !product.additionalInfo.origin) {
+                invalidProducts.push({
+                    product,
+                    error: 'Thiếu các thuộc tính bắt buộc trong additionalInfo: price, quantity, brand, origin'
                 });
                 continue;
             }
@@ -281,21 +303,20 @@ app.post('/import/products/json', async (req, res) => {
             if (!isValidProductId(product.productId)) {
                 invalidProducts.push({
                     product,
-                    error: 'ID sản phẩm không hợp lệ. Sử dụng đúng định dạng: [FOOD/ACCE/TOYS/CARE/CLTH/CAGE] + 4 chữ số'
+                    error: 'ID sản phẩm không hợp lệ. Sử dụng đúng định dạng: [FOOD/ACCE/TOYS/CARE/CLTH/CAGE/TRAN] + 4 chữ số'
                 });
                 continue;
             }
 
+            // Đảm bảo các trường có giá trị mặc định nếu thiếu
             product.category = product.category || "Chưa phân loại";
             product.images = product.images || [];
             product.description = product.description || { details: "" };
             product.rating = Number(product.rating || 0);
-            product.additionalInfo = {
-                quantity: Number(product.quantity),
-                price: Number(product.price),
-                brand: product.brand.trim(),
-                origin: product.origin.trim()
-            };
+            
+            // Đảm bảo price và quantity là số
+            product.additionalInfo.price = Number(product.additionalInfo.price);
+            product.additionalInfo.quantity = Number(product.additionalInfo.quantity);
 
             validProducts.push(product);
         }
@@ -314,6 +335,7 @@ app.post('/import/products/json', async (req, res) => {
 
         if (existingProducts.length > 0) {
             const duplicateIds = existingProducts.map(p => p.productId);
+            
             return res.status(400).json({
                 success: false,
                 error: `Trùng ID sản phẩm: ${duplicateIds.join(', ')}`
